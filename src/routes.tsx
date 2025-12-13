@@ -5,6 +5,8 @@ import Contact from "./pages/Contact";
 import About from "./pages/About"; 
 import Tours from "./pages/Tours"; 
 import TourDetail from "./pages/TourDetail";
+import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -16,6 +18,7 @@ import TourManagement from "./pages/admin/TourManagement";
 import BookingManagement from "./pages/admin/BookingManagement";
 import AboutManagement from "./pages/admin/AboutManagement";
 import ContactManagement from "./pages/admin/ContactManagement";
+import BlogManagement from "./pages/admin/BlogManagement";
 import AgentLayout from "./pages/agent/AgentLayout";
 import AgentTourManagement from "./pages/agent/AgentTourManagement";
 import AgentBookings from "./pages/agent/AgentBookings";
@@ -33,6 +36,8 @@ const routes: RouteType[] = [
   { path: "/hakkimizda", element: <About /> }, 
   { path: "/turlar", element: <Tours /> }, 
   { path: "/tour/:id", element: <TourDetail /> },
+  { path: "/blog", element: <Blog /> },
+  { path: "/blog/:slug", element: <BlogDetail /> },
   { path: "/giris", element: <Login /> },
   { path: "/kayit", element: <Register /> },
   { 
@@ -58,6 +63,7 @@ const routes: RouteType[] = [
       { path: "bookings", element: <BookingManagement /> },
       { path: "about", element: <AboutManagement /> },
       { path: "contact", element: <ContactManagement /> },
+      { path: "blogs", element: <BlogManagement /> },
     ],
   },
   {

@@ -306,6 +306,24 @@ const Header: React.FC = () => {
                 ></span>
               </Link>
               <Link
+                to="/blog"
+                className="relative px-4 py-2 text-gray-700 font-medium rounded-lg transition-all duration-200 group"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#9E0102";
+                  e.currentTarget.style.backgroundColor = "#FFEBEE";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "";
+                  e.currentTarget.style.backgroundColor = "";
+                }}
+              >
+                <span className="relative z-10">Blog</span>
+                <span
+                  className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ backgroundColor: "rgba(158, 1, 2, 0.1)" }}
+                ></span>
+              </Link>
+              <Link
                 to="/iletisim"
                 className="relative px-4 py-2 text-gray-700 font-medium rounded-lg transition-all duration-200 group"
                 onMouseEnter={(e) => {
@@ -553,6 +571,23 @@ const Header: React.FC = () => {
                   }}
                 >
                   Hakkımızda
+                </Link>
+                <Link
+                  to="/blog"
+                  className="px-4 py-3 text-gray-700 font-medium rounded-xl transition-all duration-200 border border-transparent"
+                  onClick={closeMobileMenu}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#9E0102";
+                    e.currentTarget.style.backgroundColor = "#FFEBEE";
+                    e.currentTarget.style.borderColor = "#9E0102";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "";
+                    e.currentTarget.style.backgroundColor = "";
+                    e.currentTarget.style.borderColor = "";
+                  }}
+                >
+                  Blog
                 </Link>
                 <Link
                   to="/iletisim"

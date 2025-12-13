@@ -1,6 +1,6 @@
 // pages/admin/AdminLayout.tsx
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Avatar, Dropdown, Badge, Button, Drawer } from 'antd';
+import { Layout, Menu, Avatar, Dropdown, Badge, Button, Drawer, List, Empty, Divider, Tag, Spin } from 'antd';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
   DashboardOutlined,
@@ -16,11 +16,23 @@ import {
   CloseOutlined,
   InfoCircleOutlined,
   PhoneFilled,
+  FileTextOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 import './AdminLayout.css';
 
 const { Header, Sider, Content } = Layout;
+
+interface NotificationItem {
+  id: string;
+  type: 'user' | 'booking';
+  title: string;
+  description: string;
+  date: string;
+  status?: string;
+  link: string;
+}
 
 const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -29,6 +41,9 @@ const AdminLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,6 +60,445 @@ const AdminLayout: React.FC = () => {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    // Her 30 saniyede bir bildirimleri güncelle
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      setLoadingNotifications(true);
+      
+      // Kullanıcıları çek
+      const usersResponse = await fetch('http://localhost:3005/users');
+      const users = usersResponse.ok ? await usersResponse.json() : [];
+      
+      // Rezervasyonları çek
+      const bookingsResponse = await fetch('http://localhost:3005/bookings');
+      const bookings = bookingsResponse.ok ? await bookingsResponse.json() : [];
+
+      const notificationList: NotificationItem[] = [];
+
+      // Son 7 gün içinde eklenen onay bekleyen kullanıcılar
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const newPendingUsers = users
+        .filter((u: any) => 
+          u.role === 'user' && 
+          !u.isApproved && 
+          new Date(u.createdAt) >= sevenDaysAgo
+        )
+        .sort((a: any, b: any) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        .slice(0, 5)
+        .map((u: any) => ({
+          id: `user-${u.id}`,
+          type: 'user' as const,
+          title: 'Yeni Kullanıcı Kaydı',
+          description: `${u.name} (${u.email}) onay bekliyor`,
+          date: u.createdAt,
+          status: 'pending',
+          link: '/admin/users',
+        }));
+
+      // Son 7 gün içinde eklenen bekleyen rezervasyonlar
+      const newPendingBookings = bookings
+        .filter((b: any) => 
+          b.status === 'pending' && 
+          new Date(b.createdAt) >= sevenDaysAgo
+        )
+        .sort((a: any, b: any) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        .slice(0, 5)
+        .map((b: any) => ({
+          id: `booking-${b.id}`,
+          type: 'booking' as const,
+          title: 'Yeni Rezervasyon',
+          description: `${b.tourTitle} - ${b.persons} kişi`,
+          date: b.createdAt,
+          status: 'pending',
+          link: '/admin/bookings',
+        }));
+
+      notificationList.push(...newPendingUsers, ...newPendingBookings);
+      
+      // Tarihe göre sırala (en yeni önce)
+      notificationList.sort((a, b) => 
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+
+      setNotifications(notificationList.slice(0, 10)); // En fazla 10 bildirim
+      setNotificationCount(notificationList.length);
+    } catch (error) {
+      console.error('Bildirimler yüklenirken hata:', error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  };
+
+  const handleNotificationClick = (notification: NotificationItem) => {
+    navigate(notification.link);
+  };
+
+  const formatNotificationDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Az önce';
+    if (diffMins < 60) return `${diffMins} dakika önce`;
+    if (diffHours < 24) return `${diffHours} saat önce`;
+    if (diffDays < 7) return `${diffDays} gün önce`;
+    return date.toLocaleDateString('tr-TR');
+  };
+
+  const userNotifications = notifications.filter(n => n.type === 'user');
+  const bookingNotifications = notifications.filter(n => n.type === 'booking');
+
+  const notificationMenu = (
+    <div 
+      className={isMobile ? 'notification-menu-mobile' : ''}
+      style={{ 
+        width: isMobile ? 'calc(100vw - 32px)' : 380, 
+        maxWidth: isMobile ? 'calc(100vw - 32px)' : 380,
+        maxHeight: isMobile ? 'calc(100vh - 120px)' : 600, 
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        backgroundColor: '#fff',
+        borderRadius: isMobile ? '12px' : '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        WebkitOverflowScrolling: 'touch',
+        position: 'relative',
+        margin: 0,
+        padding: 0
+      }}
+    >
+      {/* Header */}
+      <div style={{ 
+        padding: isMobile ? '12px 16px' : '16px 20px', 
+        borderBottom: '2px solid #f0f0f0',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <BellOutlined style={{ fontSize: isMobile ? '16px' : '18px' }} />
+          <span style={{ fontSize: isMobile ? '14px' : '16px', fontWeight: 600 }}>Bildirimler</span>
+        </div>
+        {notificationCount > 0 && (
+          <Badge 
+            count={notificationCount} 
+            style={{ 
+              backgroundColor: 'rgba(255,255,255,0.3)',
+              border: '1px solid rgba(255,255,255,0.5)'
+            }}
+          />
+        )}
+      </div>
+
+      {loadingNotifications ? (
+        <div style={{ padding: isMobile ? '40px 20px' : '60px', textAlign: 'center' }}>
+          <Spin size={isMobile ? 'default' : 'large'} />
+          <div style={{ marginTop: '16px', color: '#666', fontSize: isMobile ? '13px' : '14px' }}>Yükleniyor...</div>
+        </div>
+      ) : notifications.length === 0 ? (
+        <div style={{ padding: isMobile ? '40px 16px' : '60px 20px', textAlign: 'center' }}>
+          <div style={{ 
+            fontSize: isMobile ? '36px' : '48px', 
+            marginBottom: '16px',
+            opacity: 0.3
+          }}>🔔</div>
+          <div style={{ color: '#999', fontSize: isMobile ? '13px' : '14px' }}>Yeni bildirim yok</div>
+        </div>
+      ) : (
+        <div>
+          {/* Kullanıcı Bildirimleri */}
+          {userNotifications.length > 0 && (
+            <div>
+              <div style={{ 
+                padding: isMobile ? '10px 16px' : '12px 20px', 
+                backgroundColor: '#f8f9fa',
+                borderBottom: '1px solid #e9ecef',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <UserOutlined style={{ color: '#1890ff', fontSize: isMobile ? '14px' : '16px' }} />
+                <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: 600, color: '#495057' }}>
+                  Yeni Kullanıcılar ({userNotifications.length})
+                </span>
+              </div>
+              {userNotifications.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => handleNotificationClick(item)}
+                  style={{
+                    padding: isMobile ? '12px 16px' : '16px 20px',
+                    borderBottom: '1px solid #f0f0f0',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    backgroundColor: '#fff'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                      e.currentTarget.style.paddingLeft = '24px';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.backgroundColor = '#fff';
+                      e.currentTarget.style.paddingLeft = '20px';
+                    }
+                  }}
+                  onTouchStart={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f8f9fa';
+                  }}
+                  onTouchEnd={(e) => {
+                    setTimeout(() => {
+                      e.currentTarget.style.backgroundColor = '#fff';
+                    }, 200);
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: isMobile ? '10px' : '12px' }}>
+                    <div style={{
+                      width: isMobile ? 40 : 48,
+                      height: isMobile ? 40 : 48,
+                      borderRadius: isMobile ? '10px' : '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'linear-gradient(135deg, #1890ff 0%, #096dd9 100%)',
+                      color: 'white',
+                      fontSize: isMobile ? '18px' : '20px',
+                      flexShrink: 0,
+                      boxShadow: '0 2px 8px rgba(24,144,255,0.3)'
+                    }}>
+                      <UserOutlined />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'flex-start',
+                        marginBottom: '6px',
+                        flexWrap: 'wrap',
+                        gap: '4px'
+                      }}>
+                        <span style={{ 
+                          fontSize: isMobile ? '13px' : '14px', 
+                          fontWeight: 600,
+                          color: '#262626',
+                          lineHeight: '1.4'
+                        }}>
+                          {item.title}
+                        </span>
+                        {item.status === 'pending' && (
+                          <Tag 
+                            color="orange" 
+                            style={{ 
+                              margin: 0,
+                              borderRadius: '12px',
+                              fontSize: isMobile ? '10px' : '11px',
+                              padding: '2px 8px'
+                            }}
+                          >
+                            Bekliyor
+                          </Tag>
+                        )}
+                      </div>
+                      <div style={{ 
+                        fontSize: isMobile ? '12px' : '13px', 
+                        color: '#595959',
+                        marginBottom: '6px',
+                        lineHeight: '1.4',
+                        wordBreak: 'break-word'
+                      }}>
+                        {item.description}
+                      </div>
+                      <div style={{ 
+                        fontSize: isMobile ? '11px' : '12px', 
+                        color: '#8c8c8c',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        <ClockCircleOutlined style={{ fontSize: isMobile ? '10px' : '11px' }} />
+                        {formatNotificationDate(item.date)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Rezervasyon Bildirimleri */}
+          {bookingNotifications.length > 0 && (
+            <div>
+              {userNotifications.length > 0 && (
+                <Divider style={{ margin: 0, backgroundColor: '#f0f0f0' }} />
+              )}
+              <div style={{ 
+                padding: isMobile ? '10px 16px' : '12px 20px', 
+                backgroundColor: '#f8f9fa',
+                borderBottom: '1px solid #e9ecef',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <BookOutlined style={{ color: '#52c41a', fontSize: isMobile ? '14px' : '16px' }} />
+                <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: 600, color: '#495057' }}>
+                  Yeni Rezervasyonlar ({bookingNotifications.length})
+                </span>
+              </div>
+              {bookingNotifications.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => handleNotificationClick(item)}
+                  style={{
+                    padding: isMobile ? '12px 16px' : '16px 20px',
+                    borderBottom: '1px solid #f0f0f0',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    backgroundColor: '#fff'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                      e.currentTarget.style.paddingLeft = '24px';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isMobile) {
+                      e.currentTarget.style.backgroundColor = '#fff';
+                      e.currentTarget.style.paddingLeft = '20px';
+                    }
+                  }}
+                  onTouchStart={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f8f9fa';
+                  }}
+                  onTouchEnd={(e) => {
+                    setTimeout(() => {
+                      e.currentTarget.style.backgroundColor = '#fff';
+                    }, 200);
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: isMobile ? '10px' : '12px' }}>
+                    <div style={{
+                      width: isMobile ? 40 : 48,
+                      height: isMobile ? 40 : 48,
+                      borderRadius: isMobile ? '10px' : '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'linear-gradient(135deg, #52c41a 0%, #389e0d 100%)',
+                      color: 'white',
+                      fontSize: isMobile ? '18px' : '20px',
+                      flexShrink: 0,
+                      boxShadow: '0 2px 8px rgba(82,196,26,0.3)'
+                    }}>
+                      <BookOutlined />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'flex-start',
+                        marginBottom: '6px',
+                        flexWrap: 'wrap',
+                        gap: '4px'
+                      }}>
+                        <span style={{ 
+                          fontSize: isMobile ? '13px' : '14px', 
+                          fontWeight: 600,
+                          color: '#262626',
+                          lineHeight: '1.4'
+                        }}>
+                          {item.title}
+                        </span>
+                        {item.status === 'pending' && (
+                          <Tag 
+                            color="orange" 
+                            style={{ 
+                              margin: 0,
+                              borderRadius: '12px',
+                              fontSize: isMobile ? '10px' : '11px',
+                              padding: '2px 8px'
+                            }}
+                          >
+                            Bekliyor
+                          </Tag>
+                        )}
+                      </div>
+                      <div style={{ 
+                        fontSize: isMobile ? '12px' : '13px', 
+                        color: '#595959',
+                        marginBottom: '6px',
+                        lineHeight: '1.4',
+                        wordBreak: 'break-word'
+                      }}>
+                        {item.description}
+                      </div>
+                      <div style={{ 
+                        fontSize: isMobile ? '11px' : '12px', 
+                        color: '#8c8c8c',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        <ClockCircleOutlined style={{ fontSize: isMobile ? '10px' : '11px' }} />
+                        {formatNotificationDate(item.date)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      {notifications.length > 0 && (
+        <>
+          <Divider style={{ margin: 0, backgroundColor: '#f0f0f0' }} />
+          <div style={{ 
+            padding: isMobile ? '10px 16px' : '12px 20px', 
+            textAlign: 'center',
+            backgroundColor: '#fafafa'
+          }}>
+            <Button 
+              type="primary" 
+              size={isMobile ? 'small' : 'middle'}
+              onClick={() => {
+                navigate('/admin');
+                fetchNotifications();
+              }}
+              style={{
+                borderRadius: '6px',
+                fontWeight: 500,
+                width: isMobile ? '100%' : 'auto'
+              }}
+            >
+              Dashboard'a Git
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  );
 
   const menuItems = [
     {
@@ -76,6 +530,11 @@ const AdminLayout: React.FC = () => {
       key: '/admin/contact',
       icon: <PhoneFilled />,
       label: 'İletişim Yönetimi',
+    },
+    {
+      key: '/admin/blogs',
+      icon: <FileTextOutlined />,
+      label: 'Blog Yönetimi',
     },
   ];
 
@@ -223,21 +682,43 @@ const AdminLayout: React.FC = () => {
 
             {/* Right Side */}
             <div className={`admin-header-right ${isMobile ? 'mobile' : ''}`}>
-              {!isMobile && (
-                <>
-                  <Badge count={0} showZero={false}>
-                    <Button 
-                      type="text" 
-                      icon={<BellOutlined />} 
-                      className="admin-header-button"
-                    />
-                  </Badge>
+              <Dropdown 
+                overlay={notificationMenu} 
+                placement={isMobile ? "bottomRight" : "bottomRight"}
+                trigger={['click']}
+                overlayStyle={{ 
+                  padding: 0,
+                  position: isMobile ? 'fixed' : 'absolute',
+                  zIndex: 1050,
+                  ...(isMobile && {
+                    right: '16px',
+                    left: '16px',
+                    width: 'calc(100vw - 32px)',
+                    maxWidth: 'calc(100vw - 32px)',
+                    top: '70px'
+                  })
+                }}
+                getPopupContainer={isMobile ? () => document.body : (trigger) => trigger.parentElement || document.body}
+                overlayClassName={isMobile ? 'notification-dropdown-mobile' : ''}
+                destroyPopupOnHide={false}
+                align={isMobile ? { offset: [0, 8] } : undefined}
+              >
+                <Badge count={notificationCount} showZero={false} offset={isMobile ? [-3, 3] : [-5, 5]}>
                   <Button 
                     type="text" 
-                    icon={<SettingOutlined />} 
+                    icon={<BellOutlined />} 
                     className="admin-header-button"
+                    loading={loadingNotifications}
+                    size={isMobile ? 'small' : 'middle'}
                   />
-                </>
+                </Badge>
+              </Dropdown>
+              {!isMobile && (
+                <Button 
+                  type="text" 
+                  icon={<SettingOutlined />} 
+                  className="admin-header-button"
+                />
               )}
               <Dropdown overlay={userMenu} placement="bottomRight" trigger={['click']}>
                 <div className={`admin-user-dropdown ${isMobile ? 'mobile' : ''}`}>

@@ -259,3 +259,46 @@
   color: #fff;
 }
 
+/* Notification Dropdown Mobile Styles */
+@media (max-width: 768px) {
+  .notification-dropdown-mobile {
+    position: fixed !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    top: 70px !important;
+    z-index: 1050 !important;
+    transform: none !important;
+  }
+  
+  .notification-dropdown-mobile .ant-dropdown {
+    position: fixed !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+  
+  .notification-menu-mobile {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    margin: 0 !important;
+  }
+  
+  /* Bildirim içeriği mobilde responsive */
+  .notification-menu-mobile > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Ant Design dropdown override for mobile */
+  .ant-dropdown.ant-dropdown-placement-bottomRight {
+    right: 16px !important;
+    left: 16px !important;
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+

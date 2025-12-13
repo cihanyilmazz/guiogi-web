@@ -823,5 +823,127 @@
         }
       ]
     }
+  ],
+  "blogs": [
+    {
+      "id": "1",
+      "title": "222Kapadokya'da Balon Turu Deneyimi: Gün Doğumunun Büyüsü",
+      "slug": "222kapadokya-da-balon-turu-deneyimi-gun-dogumunun-buyusu",
+      "excerpt": "Kapadokya'nın eşsiz manzarasını balon turu ile keşfedin. Gün doğumu sırasında peri bacalarının üzerinde süzülmenin unutulmaz deneyimini yaşayın.",
+      "content": "<p>Kapadokya, Türkiye'nin en büyüleyici destinasyonlarından biri. Bu bölgede yapılacak en unutulmaz aktivitelerden biri ise şüphesiz sıcak hava balonu turları. Sabahın erken saatlerinde, güneşin ilk ışıklarıyla birlikte gökyüzüne yükselmek, peri bacalarının üzerinde süzülmek ve eşsiz manzarayı izlemek gerçekten büyülü bir deneyim.</p><p>Balon turları genellikle gün doğumunda yapılır çünkü bu saatlerde hava koşulları en uygun seviyededir. Tur süresi yaklaşık 1 saat sürer ve bu süre boyunca Kapadokya'nın muhteşem vadilerini, peri bacalarını ve tarihi yapılarını kuş bakışı izleme fırsatı bulursunuz.</p><p>Tur sonrasında geleneksel bir kahvaltı ve sertifika töreni ile deneyiminizi taçlandırabilirsiniz. Fotoğraf çekmeyi unutmayın, çünkü bu anlar gerçekten ömür boyu hatırlanacak kareler olacak.</p>",
+      "featuredImage": "https://images.unsplash.com/photo-1541414778236-3002b7bd0155?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "author": "Ahmet Yılmaz",
+      "authorAvatar": "https://i.pravatar.cc/150?img=12",
+      "category": "Seyahat İpuçları",
+      "tags": [
+        "Kapadokya",
+        "Balon Turu",
+        "Türkiye",
+        "Doğa"
+      ],
+      "publishedAt": "2025-12-01T10:00:00.000Z",
+      "updatedAt": "2025-12-13T20:58:59.019Z",
+      "views": 1250,
+      "readingTime": 1,
+      "isPublished": true,
+      "seoTitle": "Kapadokya Balon Turu Rehberi | GuiaOgi",
+      "seoDescription": "Kapadokya'da balon turu deneyimi hakkında detaylı bilgi. Gün doğumu manzarası, peri bacaları ve unutulmaz anılar."
+    },
+    {
+      "id": "2",
+      "title": "Yurtdışı Seyahati İçin Gerekli Belgeler ve Vize İşlemleri",
+      "slug": "yurtdisi-seyahati-icin-gerekli-belgeler-ve-vize-islemleri",
+      "excerpt": "Yurtdışı seyahatine çıkmadan önce bilmeniz gereken tüm belgeler, vize işlemleri ve önemli notlar. Detaylı rehber.",
+      "content": "<p>Yurtdışı seyahati planlarken en önemli konulardan biri gerekli belgeler ve vize işlemleridir. Bu rehberde, seyahatinizden önce hazırlamanız gereken tüm belgeleri ve vize süreçlerini detaylıca ele alacağız.</p><h2>Gerekli Belgeler</h2><p>Yurtdışı seyahati için mutlaka yanınızda bulundurmanız gereken belgeler:</p><ul><li>Geçerli pasaport (en az 6 ay geçerlilik süresi olmalı)</li><li>Vize (gerekli ülkeler için)</li><li>Uçak bileti</li><li>Konaklama rezervasyon belgeleri</li><li>Seyahat sigortası</li><li>Sağlık belgeleri (gerekli ülkeler için)</li></ul><h2>Vize İşlemleri</h2><p>Vize başvuruları genellikle seyahat tarihinden 2-3 ay önce yapılmalıdır. Her ülkenin kendine özgü vize gereksinimleri vardır. Schengen vizesi, ABD vizesi, İngiltere vizesi gibi farklı vize türleri için farklı süreçler izlenir.</p><p>Vize başvurusu sırasında genellikle şu belgeler istenir:</p><ul><li>Pasaport</li><li>Başvuru formu</li><li>Fotoğraf</li><li>Uçak ve otel rezervasyonları</li><li>Mali durum belgeleri</li><li>Seyahat sigortası</li></ul>",
+      "featuredImage": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "author": "Mehmet Demir",
+      "authorAvatar": "https://i.pravatar.cc/150?img=13",
+      "category": "Seyahat Rehberi",
+      "tags": [
+        "Vize",
+        "Pasaport",
+        "Yurtdışı",
+        "Rehber"
+      ],
+      "publishedAt": "2025-11-25T10:00:00.000Z",
+      "updatedAt": "2025-11-25T10:00:00.000Z",
+      "views": 2100,
+      "readingTime": 5,
+      "isPublished": true,
+      "seoTitle": "Yurtdışı Seyahat Belgeleri ve Vize Rehberi | GuiaOgi",
+      "seoDescription": "Yurtdışı seyahati için gerekli tüm belgeler, vize işlemleri ve önemli bilgiler. Detaylı seyahat rehberi."
+    },
+    {
+      "id": "3",
+      "title": "Bütçe Dostu Avrupa Seyahati: 10 Pratik İpucu",
+      "slug": "butce-dostu-avrupa-seyahati-10-pratik-ipucu",
+      "excerpt": "Avrupa'yı bütçenizi aşmadan gezmenin yolları. Ucuz konaklama, yemek ve ulaşım ipuçları ile ekonomik seyahat rehberi.",
+      "content": "<p>Avrupa seyahati pahalı olmak zorunda değil! Doğru planlama ve birkaç pratik ipucu ile bütçenizi aşmadan harika bir Avrupa turu yapabilirsiniz.</p><h2>1. Erken Rezervasyon Yapın</h2><p>Uçak biletleri ve konaklama için erken rezervasyon yapmak önemli tasarruf sağlar. Özellikle sezon dışı dönemlerde fiyatlar çok daha uygun olur.</p><h2>2. Alternatif Konaklama Seçenekleri</h2><p>Lüks oteller yerine hosteller, Airbnb veya apartman daireleri tercih edebilirsiniz. Bu seçenekler hem daha ekonomik hem de yerel kültürü daha yakından tanıma fırsatı sunar.</p><h2>3. Yerel Yemekler Tercih Edin</h2><p>Turist restoranları yerine yerel halkın gittiği mekanları tercih edin. Marketlerden alışveriş yaparak kendi yemeğinizi hazırlamak da büyük tasarruf sağlar.</p><h2>4. Ücretsiz Aktiviteler</h2><p>Avrupa'da birçok müze ve galeri belirli günlerde ücretsizdir. Ayrıca şehir parkları, plajlar ve yürüyüş yolları tamamen ücretsizdir.</p><h2>5. Toplu Taşıma Kartları</h2><p>Şehirlerde günlük veya haftalık toplu taşıma kartları almak tek tek bilet almaktan çok daha ekonomiktir.</p>",
+      "featuredImage": "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "author": "Ayşe Kaya",
+      "authorAvatar": "https://i.pravatar.cc/150?img=20",
+      "category": "Seyahat İpuçları",
+      "tags": [
+        "Avrupa",
+        "Bütçe",
+        "Seyahat İpuçları",
+        "Ekonomik"
+      ],
+      "publishedAt": "2025-11-20T10:00:00.000Z",
+      "updatedAt": "2025-11-20T10:00:00.000Z",
+      "views": 1850,
+      "readingTime": 4,
+      "isPublished": true,
+      "seoTitle": "Bütçe Dostu Avrupa Seyahati Rehberi | GuiaOgi",
+      "seoDescription": "Avrupa'yı ucuza gezmenin yolları. Pratik ipuçları ve tasarruf önerileri ile ekonomik seyahat rehberi."
+    },
+    {
+      "id": "4",
+      "title": "Seyahat Sigortası Neden Önemli?",
+      "slug": "seyahat-sigortasi-neden-onemli",
+      "excerpt": "Seyahat sigortasının önemi, kapsamı ve seyahat sırasında karşılaşabileceğiniz durumlar. Detaylı sigorta rehberi.",
+      "content": "<p>Seyahat sigortası, yurtdışı seyahatlerinde karşılaşabileceğiniz beklenmedik durumlara karşı sizi koruyan önemli bir güvencedir. Bu yazıda seyahat sigortasının neden önemli olduğunu ve ne tür durumları kapsadığını ele alacağız.</p><h2>Seyahat Sigortası Neden Gereklidir?</h2><p>Yurtdışında sağlık hizmetleri çok pahalı olabilir. Özellikle ABD gibi ülkelerde bir hastane ziyareti binlerce dolara mal olabilir. Seyahat sigortası bu tür masrafları karşılar.</p><h2>Sigorta Kapsamı</h2><p>İyi bir seyahat sigortası şunları kapsamalıdır:</p><ul><li>Tıbbi masraflar</li><li>Uçak bileti iptali</li><li>Bagaj kaybı veya hasarı</li><li>Uçuş gecikmeleri</li><li>Acil durum tahliyesi</li><li>Yasal yardım</li></ul><h2>Ne Zaman Alınmalı?</h2><p>Seyahat sigortası, seyahat planlarınızı yaptıktan hemen sonra alınmalıdır. Böylece rezervasyon iptali gibi durumlar da kapsama dahil olur.</p>",
+      "featuredImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "author": "Fatma Şahin",
+      "authorAvatar": "https://i.pravatar.cc/150?img=47",
+      "category": "Seyahat Rehberi",
+      "tags": [
+        "Sigorta",
+        "Güvenlik",
+        "Seyahat",
+        "Rehber"
+      ],
+      "publishedAt": "2025-11-15T10:00:00.000Z",
+      "updatedAt": "2025-11-15T10:00:00.000Z",
+      "views": 980,
+      "readingTime": 3,
+      "isPublished": true,
+      "seoTitle": "Seyahat Sigortası Rehberi | GuiaOgi",
+      "seoDescription": "Seyahat sigortasının önemi, kapsamı ve seyahat sırasında karşılaşabileceğiniz durumlar hakkında bilgi."
+    },
+    {
+      "id": "5",
+      "title": "İstanbul'da Görülmesi Gereken 10 Yer",
+      "slug": "istanbulda-gorulmesi-gereken-10-yer",
+      "excerpt": "İstanbul'un en önemli tarihi ve turistik yerleri. Ayasofya'dan Boğaz turuna kadar görülmesi gereken yerler listesi.",
+      "content": "<p>İstanbul, tarihi ve kültürel zenginliği ile dünyanın en özel şehirlerinden biridir. Bu yazıda İstanbul'da mutlaka görülmesi gereken 10 yeri sizlerle paylaşıyoruz.</p><h2>1. Ayasofya</h2><p>1500 yıllık tarihi ile Ayasofya, İstanbul'un en önemli yapılarından biridir. Hem cami hem müze olarak hizmet vermiş bu eşsiz yapı mutlaka ziyaret edilmelidir.</p><h2>2. Topkapı Sarayı</h2><p>Osmanlı İmparatorluğu'nun 400 yıl boyunca yönetim merkezi olan Topkapı Sarayı, muhteşem mimarisi ve koleksiyonları ile ziyaretçilerini büyüler.</p><h2>3. Sultanahmet Camii</h2><p>Mavi çinileri ile ünlü Sultanahmet Camii, İstanbul'un simgelerinden biridir. İç mekanındaki işlemeler gerçekten görülmeye değer.</p><h2>4. Kapalıçarşı</h2><p>Dünyanın en büyük kapalı çarşılarından biri olan Kapalıçarşı, alışveriş ve kültürel deneyim için ideal bir yerdir.</p><h2>5. Boğaz Turu</h2><p>İstanbul Boğazı'nı tekne ile gezmek, şehrin en güzel manzaralarını görmek için harika bir yoldur.</p>",
+      "featuredImage": "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "author": "Ali Öztürk",
+      "authorAvatar": "https://i.pravatar.cc/150?img=32",
+      "category": "Destinasyon Rehberi",
+      "tags": [
+        "İstanbul",
+        "Türkiye",
+        "Tarih",
+        "Kültür"
+      ],
+      "publishedAt": "2025-11-10T10:00:00.000Z",
+      "updatedAt": "2025-11-10T10:00:00.000Z",
+      "views": 3200,
+      "readingTime": 6,
+      "isPublished": true,
+      "seoTitle": "İstanbul'da Görülmesi Gereken Yerler | GuiaOgi",
+      "seoDescription": "İstanbul'un en önemli tarihi ve turistik yerleri. Ayasofya, Topkapı Sarayı ve daha fazlası."
+    }
   ]
 }
