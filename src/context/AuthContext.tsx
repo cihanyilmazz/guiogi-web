@@ -8,6 +8,8 @@ interface User {
   phone?: string;
   address?: string;
   preferences?: string;
+  role?: 'admin' | 'agent' | 'user';
+  isApproved?: boolean;
   createdAt?: string;
   updatedAt?: string;
   // Diğer kullanıcı özellikleri...
@@ -116,6 +118,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         throw new Error('E-posta veya şifre hatalı');
       }
 
+      // Kullanıcı onay kontrolü (admin ve agent hariç)
+      if (foundUser.role !== 'admin' && foundUser.role !== 'agent' && !foundUser.isApproved) {
+        throw new Error('Hesabınız henüz onaylanmamış. Lütfen admin onayı bekleyin.');
+      }
+
       // #region agent log
       fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:110',message:'Login successful - setting user state',data:{userId:foundUser.id,email:foundUser.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
@@ -127,7 +134,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         email: foundUser.email,
         phone: foundUser.phone || '',
         address: foundUser.address || '',
-        preferences: foundUser.preferences || ''
+        preferences: foundUser.preferences || '',
+        role: foundUser.role || 'user',
+        isApproved: foundUser.isApproved !== undefined ? foundUser.isApproved : true
       };
       
       setUser(userForState);
@@ -226,6 +235,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         password: userData.password, // Not: Production'da şifre hash'lenmeli
         address: '',
         preferences: '',
+        role: 'user', // Yeni kayıt olanlar varsayılan olarak 'user' rolüne sahip
+        isApproved: false, // Yeni kullanıcılar onay bekliyor
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -308,7 +319,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             email: savedUser.email,
             phone: savedUser.phone,
             address: savedUser.address,
-            preferences: savedUser.preferences
+            preferences: savedUser.preferences,
+            role: savedUser.role || 'user',
+            isApproved: savedUser.isApproved !== undefined ? savedUser.isApproved : false
           };
           
           setUser(userForState);
@@ -332,7 +345,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         email: savedUser.email,
         phone: savedUser.phone,
         address: savedUser.address,
-        preferences: savedUser.preferences
+        preferences: savedUser.preferences,
+        role: savedUser.role || 'user',
+        isApproved: savedUser.isApproved !== undefined ? savedUser.isApproved : false
       };
       
       setUser(userForState);

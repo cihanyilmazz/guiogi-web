@@ -365,7 +365,23 @@ const mockTours: Tour[] = [
 class TourService {
   async getAllTours(): Promise<Tour[]> {
     try {
-      // Önce API'den veri çekmeyi dene
+      // Önce json-server'dan direkt çek (en güncel veri için)
+      try {
+        const dbResponse = await fetch('http://localhost:3005/tours');
+        if (dbResponse.ok) {
+          const tours = await dbResponse.json();
+          if (tours && Array.isArray(tours) && tours.length > 0) {
+            console.log(`${tours.length} tur json-server'dan yüklendi`);
+            // localStorage'a cache olarak kaydet
+            localStorage.setItem('tours', JSON.stringify(tours));
+            return tours;
+          }
+        }
+      } catch (dbError) {
+        console.log('json-server\'dan veri çekilemedi, alternatif kaynaklar deneniyor...');
+      }
+
+      // API endpoint'ini dene
       try {
         const response = await fetch('http://localhost:3005/api/tours');
         if (response.ok) {
@@ -376,51 +392,57 @@ class TourService {
           }
         }
       } catch (apiError) {
-        console.log('API\'den veri çekilemedi, alternatif kaynaklar deneniyor...');
+        console.log('API\'den veri çekilemedi, localStorage kontrol ediliyor...');
       }
 
-      // API başarısız olursa localStorage'dan kontrol et
+      // Son çare olarak localStorage'dan kontrol et (cache)
       const localTours = localStorage.getItem('tours');
       if (localTours) {
         const parsedTours = JSON.parse(localTours);
-        // Eğer localStorage'da 18 tur varsa onu kullan
-        if (Array.isArray(parsedTours) && parsedTours.length >= 18) {
+        if (Array.isArray(parsedTours) && parsedTours.length > 0) {
+          console.log(`${parsedTours.length} tur localStorage'dan yüklendi (cache)`);
           return parsedTours;
         }
-        // Eğer 18'den az tur varsa, localStorage'ı temizle
-        console.log(`localStorage'da sadece ${parsedTours.length} tur var, temizleniyor...`);
-        localStorage.removeItem('tours');
       }
       
-      // db.json dosyasından veri çekmeyi dene (json-server üzerinden)
-      try {
-        const dbResponse = await fetch('http://localhost:3005/tours');
-        if (dbResponse.ok) {
-          const tours = await dbResponse.json();
-          if (tours && Array.isArray(tours) && tours.length > 0) {
-            console.log(`${tours.length} tur json-server'dan yüklendi`);
-            localStorage.setItem('tours', JSON.stringify(tours));
-            return tours;
-          }
-        }
-      } catch (dbError) {
-        console.log('json-server\'dan veri çekilemedi, mock veriler kullanılıyor...');
-      }
-      
-      // Son çare olarak mock verileri kullan ve localStorage'a kaydet
+      // En son çare olarak mock verileri kullan
+      console.log('Mock veriler kullanılıyor...');
       localStorage.setItem('tours', JSON.stringify(mockTours));
       return mockTours;
     } catch (error) {
       console.error('Turlar yüklenirken hata:', error);
-      // Hata durumunda da mock verileri döndür
+      // Hata durumunda localStorage'dan dene
+      try {
+        const localTours = localStorage.getItem('tours');
+        if (localTours) {
+          return JSON.parse(localTours);
+        }
+      } catch (e) {
+        console.error('localStorage\'dan yükleme hatası:', e);
+      }
+      // Son çare mock veriler
       return mockTours;
     }
   }
 
-  async getTourById(id: number): Promise<Tour> {
+  async getTourById(id: number | string): Promise<Tour> {
     try {
+      // Önce direkt API'den çekmeyi dene
+      try {
+        const response = await fetch(`http://localhost:3005/tours/${id}`);
+        if (response.ok) {
+          const tour = await response.json();
+          if (tour) {
+            return tour;
+          }
+        }
+      } catch (apiError) {
+        console.log('API\'den tur çekilemedi, tüm turlardan aranıyor...');
+      }
+
+      // API'den bulunamazsa tüm turlardan ara
       const tours = await this.getAllTours();
-      const tour = tours.find(t => t.id === id);
+      const tour = tours.find(t => String(t.id) === String(id));
       
       if (!tour) {
         throw new Error(`ID: ${id} olan tur bulunamadı`);
@@ -433,11 +455,11 @@ class TourService {
     }
   }
 
-  async getRelatedTours(category: string, excludeId: number): Promise<Tour[]> {
+  async getRelatedTours(category: string, excludeId: number | string): Promise<Tour[]> {
     try {
       const tours = await this.getAllTours();
       return tours
-        .filter(t => t.category === category && t.id !== excludeId)
+        .filter(t => t.category === category && String(t.id) !== String(excludeId))
         .slice(0, 4); // Maksimum 4 tur döndür (tek satırda 3-4 tane gösterilebilir)
     } catch (error) {
       console.error('İlgili turlar yüklenirken hata:', error);

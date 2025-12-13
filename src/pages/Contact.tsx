@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Layout, 
   Row, 
@@ -20,33 +20,35 @@ import {
   WhatsAppOutlined,
   SkypeOutlined
 } from '@ant-design/icons';
+import { contactService, ContactContent } from '../services/contactService';
 
 const { Content } = Layout;
 const { Option } = Select;
 const { TextArea } = Input;
 
-// Harita Bileşeni
-const MapComponent: React.FC = () => {
-  return (
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3009.674188611382!2d29.020215315718!3d41.04487432529929!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab7a24975fe5d%3A0x2d35cb6d8a30dd8f!2sLevent%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1234567890"
-      width="100%"
-      height="400"
-      style={{ border: 0, borderRadius: '8px' }}
-      allowFullScreen
-      loading="lazy"
-      referrerPolicy="no-referrer-when-downgrade"
-      title="GuiaOgi İstanbul Ofisi"
-    />
-  );
-};
 
 const ContactPage: React.FC = () => {
-  React.useEffect(() => {
-    document.title = "İletişim | GuiaOgi";
-  }, []);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState<ContactContent | null>(null);
+  const [contentLoading, setContentLoading] = useState(true);
+
+  useEffect(() => {
+    document.title = "İletişim | GuiaOgi";
+    loadContactContent();
+  }, []);
+
+  const loadContactContent = async () => {
+    try {
+      setContentLoading(true);
+      const contactContent = await contactService.getContactContent();
+      setContent(contactContent);
+    } catch (error) {
+      console.error('Contact içeriği yüklenirken hata:', error);
+    } finally {
+      setContentLoading(false);
+    }
+  };
 
   const onFinish = async (values: any) => {
     setLoading(true);
@@ -62,36 +64,29 @@ const ContactPage: React.FC = () => {
     }
   };
 
-  const contactInfo = [
-    {
-      icon: <PhoneFilled className="text-blue-500 text-2xl" />,
-      title: 'Telefon',
-      content: '+90 555 555 55 55',
-      subtitle: '7/24 Destek Hattı',
-      action: 'tel:+905555555555'
-    },
-    {
-      icon: <MailFilled className="text-green-500 text-2xl" />,
-      title: 'E-posta',
-      content: 'info@guiaogi.com.tr',
-      subtitle: '24 saat içinde yanıt',
-      action: 'mailto:info@guiaogi.com.tr'
-    },
-    {
-      icon: <EnvironmentFilled className="text-red-500 text-2xl" />,
-      title: 'Adres',
-      content: 'Levent, İstanbul',
-      subtitle: 'Merkez Ofis',
-      action: 'https://maps.google.com/?q=Levent,İstanbul'
-    },
-    {
-      icon: <ClockCircleFilled className="text-purple-500 text-2xl" />,
-      title: 'Çalışma Saatleri',
-      content: 'Pzt - Cuma: 09:00 - 18:00',
-      subtitle: 'Cumartesi: 10:00 - 16:00',
-      action: null
-    }
-  ];
+  // İkon mapping
+  const getContactIcon = (title: string) => {
+    const iconMap: { [key: string]: JSX.Element } = {
+      'Telefon': <PhoneFilled className="text-blue-500 text-2xl" />,
+      'E-posta': <MailFilled className="text-green-500 text-2xl" />,
+      'Adres': <EnvironmentFilled className="text-red-500 text-2xl" />,
+      'Çalışma Saatleri': <ClockCircleFilled className="text-purple-500 text-2xl" />,
+    };
+    return iconMap[title] || <PhoneFilled className="text-blue-500 text-2xl" />;
+  };
+
+  if (contentLoading || !content) {
+    return (
+      <Layout className="min-h-screen bg-gray-100">
+        <Content className="py-12 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Yükleniyor...</p>
+          </div>
+        </Content>
+      </Layout>
+    );
+  }
 
   return (
     <Layout className="min-h-screen bg-gray-100">
@@ -99,11 +94,10 @@ const ContactPage: React.FC = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            İletişim
+            {content.heroTitle}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Size nasıl yardımcı olabiliriz? Sorularınız, önerileriniz veya rezervasyon talepleriniz için 
-            bizimle iletişime geçmekten çekinmeyin.
+            {content.heroSubtitle}
           </p>
         </div>
 
@@ -116,10 +110,10 @@ const ContactPage: React.FC = () => {
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">İletişim Bilgileri</h2>
                   
                   <div className="space-y-6">
-                    {contactInfo.map((item, index) => (
+                    {content.contactInfo.map((item, index) => (
                       <div key={index} className="flex items-start space-x-4">
                         <div className="flex-shrink-0 mt-1">
-                          {item.icon}
+                          {getContactIcon(item.title)}
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-900">{item.title}</h3>
@@ -151,14 +145,14 @@ const ContactPage: React.FC = () => {
                         type="primary" 
                         icon={<WhatsAppOutlined />}
                         className="bg-green-500 hover:bg-green-600 border-green-500"
-                        href="https://wa.me/905555555555"
+                        href={content.whatsappLink}
                         target="_blank"
                       >
                         WhatsApp
                       </Button>
                       <Button 
                         icon={<SkypeOutlined />}
-                        href="skype:guiaogi?call"
+                        href={content.skypeLink}
                       >
                         Skype
                       </Button>
@@ -168,15 +162,15 @@ const ContactPage: React.FC = () => {
 
                 {/* Acil Durum */}
                 <Card className="shadow-lg border bg-blue-50 border-l-4 border-blue-500">
-                  <h3 className="font-bold text-blue-900 mb-2">🆘 Acil Durum</h3>
+                  <h3 className="font-bold text-blue-900 mb-2">{content.emergencyTitle}</h3>
                   <p className="text-blue-800 text-sm mb-3">
-                    Yurtdışında acil durumlarda 7/24 ulaşabileceğiniz destek hattı:
+                    {content.emergencyDescription}
                   </p>
                   <a 
-                    href="tel:+905555555556" 
+                    href={`tel:${content.emergencyPhone.replace(/\s/g, '')}`}
                     className="text-blue-600 hover:text-blue-800 font-semibold text-lg"
                   >
-                    +90 555 555 55 56
+                    {content.emergencyPhone}
                   </a>
                 </Card>
               </div>
@@ -185,9 +179,9 @@ const ContactPage: React.FC = () => {
             {/* İletişim Formu */}
             <Col xs={24} lg={16}>
               <Card className="shadow-lg border">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Bize Ulaşın</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{content.formTitle}</h2>
                 <p className="text-gray-600 mb-6">
-                  Aşağıdaki formu doldurarak bize ulaşabilirsiniz. En kısa sürede sizinle iletişime geçeceğiz.
+                  {content.formDescription}
                 </p>
 
                 <Form
@@ -289,7 +283,7 @@ const ContactPage: React.FC = () => {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-gray-900">Ofisimiz</h3>
                   <a 
-                    href="https://maps.google.com/?q=Levent,İstanbul" 
+                    href={content.contactInfo.find(ci => ci.title === 'Adres')?.action || 'https://maps.google.com'} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 flex items-center"
@@ -298,9 +292,18 @@ const ContactPage: React.FC = () => {
                     Haritada Görüntüle
                   </a>
                 </div>
-                <MapComponent />
+                <iframe
+                  src={content.mapEmbedUrl}
+                  width="100%"
+                  height="400"
+                  style={{ border: 0, borderRadius: '8px' }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="GuiaOgi İstanbul Ofisi"
+                />
                 <div className="mt-4 text-center text-gray-600">
-                  <p><strong>Adres:</strong> Levent Mahallesi, Büyükdere Caddesi, No:123, 34330 Levent/İstanbul</p>
+                  <p><strong>Adres:</strong> {content.officeAddress}</p>
                 </div>
               </Card>
             </Col>
@@ -309,45 +312,17 @@ const ContactPage: React.FC = () => {
           {/* Sık Sorulan Sorular */}
           <div className="mt-16">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
-              Sık Sorulan Sorular
+              {content.faqTitle}
             </h2>
             <Row gutter={[24, 24]}>
-              <Col xs={24} md={12}>
-                <Card className="shadow-md border-0 h-full">
-                  <h3 className="font-semibold text-lg mb-2">📞 Telefonla nasıl rezervasyon yapabilirim?</h3>
-                  <p className="text-gray-600">
-                    +90 555 555 55 55 numaralı hattımızdan 7/24 rezervasyon yapabilirsiniz. 
-                    Operatörlerimiz size yardımcı olacaktır.
-                  </p>
-                </Card>
-              </Col>
-              <Col xs={24} md={12}>
-                <Card className="shadow-md border-0 h-full">
-                  <h3 className="font-semibold text-lg mb-2">⏰ Çalışma saatleriniz nedir?</h3>
-                  <p className="text-gray-600">
-                    Hafta içi 09:00 - 18:00, Cumartesi 10:00 - 16:00 saatleri arasında hizmet vermekteyiz. 
-                    Acil durumlarda 7/24 ulaşılabilirsiniz.
-                  </p>
-                </Card>
-              </Col>
-              <Col xs={24} md={12}>
-                <Card className="shadow-md border-0 h-full">
-                  <h3 className="font-semibold text-lg mb-2">🌍 Yurtdışı turlarınız var mı?</h3>
-                  <p className="text-gray-600">
-                    Evet, 50'den fazla ülkede tur paketlerimiz bulunmaktadır. 
-                    Detaylı bilgi için iletişim formunu doldurabilirsiniz.
-                  </p>
-                </Card>
-              </Col>
-              <Col xs={24} md={12}>
-                <Card className="shadow-md border-0 h-full">
-                  <h3 className="font-semibold text-lg mb-2">💼 Kurumsal iş birlikleri için kiminle görüşebilirim?</h3>
-                  <p className="text-gray-600">
-                    Kurumsal iş birlikleri için corporate@guiaogi.com.tr adresine mail atabilir 
-                    veya 0212 555 55 55 numaralı hattımızdan kurumsal satış departmanımıza ulaşabilirsiniz.
-                  </p>
-                </Card>
-              </Col>
+              {content.faqs.map((faq, index) => (
+                <Col xs={24} md={12} key={index}>
+                  <Card className="shadow-md border-0 h-full">
+                    <h3 className="font-semibold text-lg mb-2">{faq.question}</h3>
+                    <p className="text-gray-600">{faq.answer}</p>
+                  </Card>
+                </Col>
+              ))}
             </Row>
           </div>
         </div>

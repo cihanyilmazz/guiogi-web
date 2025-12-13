@@ -502,9 +502,56 @@
       ],
       "price": 3500,
       "discount": 20
+    },
+    {
+      "id": "1765643667197",
+      "title": "11111",
+      "location": "istanbul",
+      "description": "adsflkaskldfm aslmadslfm msadf ladskmads f",
+      "coverImage": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "category": "Kültür",
+      "duration": "2 gece 3 gün",
+      "groupSize": "12",
+      "season": "Yaz",
+      "guide": "ahmet",
+      "price": 55,
+      "rating": 5,
+      "reviewCount": 10,
+      "included": [
+        "234"
+      ],
+      "highlights": [
+        "ewrerw"
+      ]
     }
   ],
   "users": [
+    {
+      "id": "admin1",
+      "name": "Admin Kullanıcı",
+      "email": "admin@guiaogi.com",
+      "phone": "+90 555 000 00 01",
+      "password": "admin123",
+      "address": "İstanbul, Türkiye",
+      "preferences": "",
+      "role": "admin",
+      "isApproved": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "agent1",
+      "name": "Acente Kullanıcı",
+      "email": "acente@guiaogi.com",
+      "phone": "+90 555 000 00 02",
+      "password": "acente123",
+      "address": "Ankara, Türkiye",
+      "preferences": "",
+      "role": "agent",
+      "isApproved": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-12-13T15:24:33.750Z"
+    },
     {
       "id": "872b",
       "name": "dsdfds",
@@ -513,8 +560,10 @@
       "password": "123456",
       "address": "",
       "preferences": "",
+      "role": "user",
+      "isApproved": true,
       "createdAt": "2025-12-13T11:12:27.816Z",
-      "updatedAt": "2025-12-13T11:12:27.816Z"
+      "updatedAt": "2025-12-13T16:00:07.122Z"
     },
     {
       "id": "9f68",
@@ -524,6 +573,8 @@
       "password": "123456",
       "address": "",
       "preferences": "",
+      "role": "user",
+      "isApproved": false,
       "createdAt": "2025-12-13T11:15:35.666Z",
       "updatedAt": "2025-12-13T11:15:35.666Z"
     },
@@ -535,8 +586,23 @@
       "password": "123456",
       "address": "",
       "preferences": "",
+      "role": "user",
+      "isApproved": true,
       "createdAt": "2025-12-13T11:17:19.784Z",
       "updatedAt": "2025-12-13T11:17:19.784Z"
+    },
+    {
+      "id": "2c46",
+      "name": "vida viajes",
+      "email": "vida@guiaogi.com",
+      "phone": "",
+      "password": "123456",
+      "address": "",
+      "preferences": "",
+      "role": "agent",
+      "isApproved": true,
+      "createdAt": "2025-12-13T15:51:10.737Z",
+      "updatedAt": "2025-12-13T16:16:18.614Z"
     }
   ],
   "bookings": [
@@ -588,6 +654,38 @@
       "specialRequests": "wqe",
       "bookingNumber": "BKG-1765630647271",
       "createdAt": "2025-12-13T12:57:27.271Z"
+    },
+    {
+      "id": 4,
+      "userId": "admin1",
+      "tourId": 4,
+      "tourTitle": "Karadeniz Yayla Turu",
+      "tourImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "bookingDate": "2025-12-13",
+      "travelDate": "2025-12-31",
+      "persons": 1,
+      "totalPrice": 2090,
+      "status": "pending",
+      "paymentStatus": "pending",
+      "specialRequests": "wqe",
+      "bookingNumber": "BKG-1765639076854",
+      "createdAt": "2025-12-13T15:17:56.854Z"
+    },
+    {
+      "id": 5,
+      "userId": "da75",
+      "tourId": "1765643667197",
+      "tourTitle": "11111",
+      "tourImage": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "bookingDate": "2025-12-13",
+      "travelDate": "2025-12-31",
+      "persons": 1,
+      "totalPrice": 55,
+      "status": "pending",
+      "paymentStatus": "pending",
+      "specialRequests": "",
+      "bookingNumber": "BKG-1765643781905",
+      "createdAt": "2025-12-13T16:36:21.905Z"
     }
   ],
   "cancelledBookings": [
@@ -607,6 +705,123 @@
       "bookingNumber": "BKG-1765629779880",
       "createdAt": "2025-12-13T12:42:59.880Z",
       "cancelledAt": "2025-12-13T13:04:57.414Z"
+    }
+  ],
+  "about": [
+    {
+      "heroTitle": "Guiogi",
+      "heroSubtitle": "Yolculuk çağınızı birlikte keşfedelim",
+      "stats": [
+        {
+          "number": "15.000+",
+          "text": "Mutlu Müşteri"
+        },
+        {
+          "number": "12",
+          "text": "Yıllık Deneyim"
+        },
+        {
+          "number": "65+",
+          "text": "Ülkede Hizmet"
+        },
+        {
+          "number": "98%",
+          "text": "Memnuniyet Oranı"
+        }
+      ],
+      "storyTitle": "Hikayemiz",
+      "storyParagraphs": [
+        "Guiogi olarak 2012'de küçük bir ofiste başlayan tutkumuz, bugün 65'ten fazla ülkede 15.000'den fazla mutlu müşteriye ulaştı.",
+        "Amacımız sadece tur satmak değil, unutulmaz anılar biriktirmenize aracı olmak. Her yolculuğun bir hikaye olduğuna inanıyor ve bu hikayenin en güzel şekilde yazılması için çalışıyoruz.",
+        "Yenilikçi yaklaşımımız ve müşteri odaklı hizmet anlayışımızla, seyahat endüstrisinde fark yaratmaya devam ediyoruz."
+      ],
+      "storyImage": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "featuresTitle": "Neden Bizi Seçmelisiniz?",
+      "featuresSubtitle": "Farkımızı yaratan özelliklerimizle tanışın",
+      "features": [
+        {
+          "title": "Hızlı Rezervasyon",
+          "description": "3 dakikada rezervasyon işleminizi tamamlayın"
+        },
+        {
+          "title": "Güvenli Ödeme",
+          "description": "256-bit SSL şifreleme ile güvenli ödeme"
+        },
+        {
+          "title": "VIP Hizmet",
+          "description": "Özel müşteri temsilcisi desteği"
+        },
+        {
+          "title": "7/24 Destek",
+          "description": "Seyahatiniz boyunca yanınızdayız"
+        }
+      ],
+      "visionTitle": "Vizyonumuz",
+      "visionText": "Dijital çağın öncü seyahat platformu olarak, sınırları kaldırıp dünyayı herkes için daha ulaşılabilir kılmak.",
+      "missionTitle": "Misyonumuz",
+      "missionText": "Teknoloji ve insan dokunuşunu birleştirerek, kişiye özel ve unutulmaz seyahat deneyimleri sunmak.",
+      "id": "1"
+    }
+  ],
+  "contact": [
+    {
+      "id": "1",
+      "heroTitle": "İletişim",
+      "heroSubtitle": "Size nasıl yardımcı olabiliriz? Sorularınız, önerileriniz veya rezervasyon talepleriniz için bizimle iletişime geçmekten çekinmeyin.",
+      "contactInfo": [
+        {
+          "title": "Telefon",
+          "content": "+90 555 555 55 55",
+          "subtitle": "7/24 Destek Hattı",
+          "action": "tel:+905555555555"
+        },
+        {
+          "title": "E-posta",
+          "content": "info@guiaogi.com.tr",
+          "subtitle": "24 saat içinde yanıt",
+          "action": "mailto:info@guiaogi.com.tr"
+        },
+        {
+          "title": "Adres",
+          "content": "Levent, İstanbul",
+          "subtitle": "Merkez Ofis",
+          "action": "https://maps.google.com/?q=Levent,İstanbul"
+        },
+        {
+          "title": "Çalışma Saatleri",
+          "content": "Pzt - Cuma: 09:00 - 18:00",
+          "subtitle": "Cumartesi: 10:00 - 16:00",
+          "action": null
+        }
+      ],
+      "whatsappLink": "https://wa.me/905555555555",
+      "skypeLink": "skype:guiaogi?call",
+      "emergencyTitle": "🆘 Acil Durum",
+      "emergencyDescription": "Yurtdışında acil durumlarda 7/24 ulaşabileceğiniz destek hattı:",
+      "emergencyPhone": "+90 555 555 55 56",
+      "formTitle": "Bize Ulaşın",
+      "formDescription": "Aşağıdaki formu doldurarak bize ulaşabilirsiniz. En kısa sürede sizinle iletişime geçeceğiz.",
+      "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3009.674188611382!2d29.020215315718!3d41.04487432529929!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab7a24975fe5d%3A0x2d35cb6d8a30dd8f!2sLevent%2C%20%C4%B0stanbul!5e0!3m2!1str!2str!4v1234567890",
+      "officeAddress": "Levent Mahallesi, Büyükdere Caddesi, No:123, 34330 Levent/İstanbul",
+      "faqTitle": "Sık Sorulan Sorular",
+      "faqs": [
+        {
+          "question": "📞 Telefonla nasıl rezervasyon yapabilirim?",
+          "answer": "+90 555 555 55 55 numaralı hattımızdan 7/24 rezervasyon yapabilirsiniz. Operatörlerimiz size yardımcı olacaktır."
+        },
+        {
+          "question": "⏰ Çalışma saatleriniz nedir?",
+          "answer": "Hafta içi 09:00 - 18:00, Cumartesi 10:00 - 16:00 saatleri arasında hizmet vermekteyiz. Acil durumlarda 7/24 ulaşılabilirsiniz."
+        },
+        {
+          "question": "🌍 Yurtdışı turlarınız var mı?",
+          "answer": "Evet, 50'den fazla ülkede tur paketlerimiz bulunmaktadır. Detaylı bilgi için iletişim formunu doldurabilirsiniz."
+        },
+        {
+          "question": "💼 Kurumsal iş birlikleri için kiminle görüşebilirim?",
+          "answer": "Kurumsal iş birlikleri için corporate@guiaogi.com.tr adresine mail atabilir veya 0212 555 55 55 numaralı hattımızdan kurumsal satış departmanımıza ulaşabilirsiniz."
+        }
+      ]
     }
   ]
 }

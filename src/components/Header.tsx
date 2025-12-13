@@ -13,6 +13,8 @@ import {
   InstagramFilled,
   TwitterCircleFilled,
   YoutubeFilled,
+  DashboardOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../context/AuthContext";
 import logoImage from "../assets/images/logo.png";
@@ -30,6 +32,37 @@ const Header: React.FC = () => {
 
   const userMenu = (
     <Menu>
+      {user?.role === 'admin' && (
+        <>
+          <Menu.Item
+            key="admin"
+            icon={<DashboardOutlined />}
+            onClick={() => navigate("/admin")}
+          >
+            Admin Paneli
+          </Menu.Item>
+          <Menu.Item
+            key="agent"
+            icon={<AppstoreOutlined />}
+            onClick={() => navigate("/agent/tours")}
+          >
+            Acente Paneli
+          </Menu.Item>
+          <Menu.Divider />
+        </>
+      )}
+      {user?.role === 'agent' && (
+        <>
+          <Menu.Item
+            key="agent"
+            icon={<AppstoreOutlined />}
+            onClick={() => navigate("/agent/tours")}
+          >
+            Acente Paneli
+          </Menu.Item>
+          <Menu.Divider />
+        </>
+      )}
       <Menu.Item
         key="profile"
         icon={<UserOutlined />}

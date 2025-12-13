@@ -63,14 +63,14 @@ const TourDetail: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        const tourId = parseInt(id);
-        const tourData = await tourService.getTourById(tourId);
+        // ID string veya number olabilir
+        const tourData = await tourService.getTourById(id);
         setTour(tourData);
 
         // İlgili turları getir
         const relatedTours = await tourService.getRelatedTours(
           tourData.category,
-          tourId,
+          typeof tourData.id === 'string' ? parseInt(tourData.id) || 0 : tourData.id,
         );
         setRelatedTours(relatedTours);
       } catch (err: any) {

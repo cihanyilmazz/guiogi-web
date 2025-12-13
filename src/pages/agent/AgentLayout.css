@@ -1,0 +1,261 @@
+/* AgentLayout.css */
+.agent-layout {
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+.agent-sidebar {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.agent-sidebar-header {
+  padding: 24px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.agent-sidebar-header.collapsed {
+  padding: 16px 8px;
+}
+
+.agent-sidebar-title {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  flex: 1;
+}
+
+.agent-sidebar-subtitle {
+  margin: 4px 0 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.agent-sidebar-icon {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.agent-menu {
+  background: transparent;
+  border: none;
+}
+
+.agent-sidebar-footer {
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.agent-sidebar-footer-mobile {
+  position: relative;
+  margin-top: 20px;
+  left: 16px;
+  right: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.agent-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agent-user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-user-name {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agent-user-role {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.agent-main-layout {
+  transition: all 0.2s;
+}
+
+.agent-main-layout.mobile {
+  margin-left: 0;
+}
+
+.agent-main-layout.collapsed {
+  margin-left: 80px;
+}
+
+.agent-main-layout.expanded {
+  margin-left: 260px;
+}
+
+.agent-header {
+  background: #fff;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  height: auto;
+  line-height: normal;
+}
+
+.agent-header-main {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 64px;
+}
+
+.agent-header-main.mobile {
+  padding: 14px 16px;
+}
+
+.agent-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-header-left.mobile {
+  gap: 12px;
+}
+
+.agent-header-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.2;
+}
+
+.agent-header-title.mobile {
+  font-size: 18px;
+}
+
+.agent-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.agent-header-right.mobile {
+  gap: 8px;
+}
+
+.agent-header-button {
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agent-user-dropdown {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.agent-user-dropdown:hover {
+  background: #f5f5f5;
+}
+
+.agent-user-dropdown.mobile {
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.agent-avatar {
+  background-color: #9E0102;
+  flex-shrink: 0;
+}
+
+.agent-user-name-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a2e;
+  white-space: nowrap;
+}
+
+.agent-header-sub {
+  padding: 10px 24px;
+  background: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f0f0f0;
+  min-height: 40px;
+}
+
+.agent-header-sub-text {
+  font-size: 13px;
+  color: #8c8c8c;
+  font-weight: 400;
+}
+
+.agent-content {
+  margin: 24px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  min-height: calc(100vh - 140px);
+}
+
+.agent-content.mobile {
+  margin: 16px;
+  padding: 16px;
+  min-height: calc(100vh - 80px);
+}
+
+.agent-drawer-body {
+  padding: 0;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.agent-sidebar-title-wrapper {
+  flex: 1;
+}
+
+.agent-close-button {
+  color: #fff;
+}
+

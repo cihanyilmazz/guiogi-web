@@ -39,7 +39,13 @@ useEffect(() => {
       
       // LocalStorage'dan turları çek
       const data = await tourService.getAllTours();
-      setTours(data);
+      // Yeni eklenen turlar üstte gösterilsin (ID'ye göre ters sıralama)
+      const sortedData = data.sort((a, b) => {
+        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+        return idB - idA; // Büyükten küçüğe (yeni turlar üstte)
+      });
+      setTours(sortedData);
       
     } catch (err: any) {
       console.error("Turlar yüklenirken hata:", err);
@@ -47,7 +53,13 @@ useEffect(() => {
       
       // Hata durumunda bile mock verileri göster
       const mockTours = await tourService.getAllTours();
-      setTours(mockTours);
+      // Yeni eklenen turlar üstte gösterilsin (ID'ye göre ters sıralama)
+      const sortedMockTours = mockTours.sort((a, b) => {
+        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+        return idB - idA; // Büyükten küçüğe (yeni turlar üstte)
+      });
+      setTours(sortedMockTours);
     } finally {
       setLoading(false);
     }

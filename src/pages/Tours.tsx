@@ -10,6 +10,14 @@ const ToursPage = () => {
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Debug: Component mount olduğunda log
+  useEffect(() => {
+    console.log('ToursPage component mounted');
+    return () => {
+      console.log('ToursPage component unmounted');
+    };
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
@@ -36,10 +44,32 @@ const ToursPage = () => {
 
   // API'den turları çek
   useEffect(() => {
+    let isMounted = true;
+    const timeoutId = setTimeout(() => {
+      if (isMounted) {
+        console.warn('Tur yükleme timeout - loading durumu kapatılıyor');
+        setLoading(false);
+      }
+    }, 10000); // 10 saniye timeout
+
     const fetchTours = async () => {
       try {
         setLoading(true);
         setError(null);
+        
+        // Önce tüm turları çek
+        const allTours = await tourService.getAllTours();
+        console.log('Yüklenen turlar:', allTours?.length || 0);
+        
+        if (!isMounted) return;
+        
+        if (!allTours || allTours.length === 0) {
+          console.warn('Hiç tur bulunamadı');
+          setTours([]);
+          setLoading(false);
+          clearTimeout(timeoutId);
+          return;
+        }
         
         let fetchedTours: Tour[] = [];
         
@@ -51,14 +81,15 @@ const ToursPage = () => {
             searchLocation || undefined
           );
         } else {
-          // Yoksa tüm turları çek
-          fetchedTours = await tourService.getAllTours();
+          // Yoksa tüm turları kullan
+          fetchedTours = allTours;
         }
+        
+        if (!isMounted) return;
         
         setTours(fetchedTours);
         
         // Fiyat aralığını dinamik olarak ayarla - tüm turlardan hesapla
-        const allTours = await tourService.getAllTours();
         if (allTours.length > 0) {
           const prices = allTours
             .map(tour => {
@@ -79,13 +110,25 @@ const ToursPage = () => {
         }
       } catch (err: any) {
         console.error('Turlar yüklenirken hata:', err);
-        setError('Turlar yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.');
+        if (isMounted) {
+          setError('Turlar yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.');
+          // Hata durumunda bile boş array set et
+          setTours([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+          clearTimeout(timeoutId);
+        }
       }
     };
 
     fetchTours();
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
   }, [searchQuery, searchLocation, selectedCategory]);
 
   // Kategorileri turlardan dinamik olarak çıkar
@@ -105,7 +148,7 @@ const ToursPage = () => {
 
   // Filtrelenmiş turlar
   const filteredTours = useMemo(() => {
-    return tours.filter(tour => {
+    const filtered = tours.filter(tour => {
       // Kategori filtresi
       if (selectedCategory !== 'all' && tour.category !== selectedCategory) {
         return false;
@@ -140,6 +183,13 @@ const ToursPage = () => {
       }
       
       return true;
+    });
+
+    // Yeni eklenen turlar üstte gösterilsin (ID'ye göre ters sıralama)
+    return filtered.sort((a, b) => {
+      const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+      const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+      return idB - idA; // Büyükten küçüğe (yeni turlar üstte)
     });
   }, [tours, selectedCategory, selectedMaxPrice, searchQuery, searchLocation]);
 
@@ -282,16 +332,27 @@ const ToursPage = () => {
           
           {filteredTours.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
-              <p className="text-gray-500 text-base sm:text-lg mb-4">Seçtiğiniz kriterlere uygun tur bulunamadı.</p>
-              <button
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedMaxPrice(maxPrice);
-                }}
-                className="px-4 sm:px-6 py-2 sm:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-              >
-                Filtreleri Temizle
-              </button>
+              {tours.length === 0 ? (
+                <>
+                  <p className="text-gray-500 text-base sm:text-lg mb-4">Henüz tur bulunmamaktadır.</p>
+                  <p className="text-gray-400 text-sm mb-4">Lütfen daha sonra tekrar kontrol edin.</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-500 text-base sm:text-lg mb-4">Seçtiğiniz kriterlere uygun tur bulunamadı.</p>
+                  <button
+                    onClick={() => {
+                      setSelectedCategory('all');
+                      setSelectedMaxPrice(maxPrice);
+                      setSearchQuery('');
+                      setSearchLocation('');
+                    }}
+                    className="px-4 sm:px-6 py-2 sm:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                  >
+                    Filtreleri Temizle
+                  </button>
+                </>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
@@ -324,9 +385,11 @@ const ToursPage = () => {
                             %{tour.discount} İndirim
                           </Tag>
                         )}
-                        <Tag color="blue" className="text-xs font-semibold px-1.5 sm:px-2 py-0.5">
-                          {tour.specialOffer}
-                        </Tag>
+                        {tour.specialOffer && (
+                          <Tag color="blue" className="text-xs font-semibold px-1.5 sm:px-2 py-0.5">
+                            {tour.specialOffer}
+                          </Tag>
+                        )}
                       </div>
                       <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-blue-600 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                         {finalPrice > 0 ? `${finalPrice.toLocaleString('tr-TR')}₺` : 'Fiyat yok'}
@@ -340,25 +403,25 @@ const ToursPage = () => {
                       <div className="flex items-center justify-between mb-3 sm:mb-4">
                         <div className="flex items-center text-yellow-500">
                           <StarFilled className="mr-1 text-sm sm:text-base" />
-                          <span className="font-semibold text-sm sm:text-base">{tour.rating}</span>
-                          <span className="text-gray-500 ml-1 text-xs sm:text-sm">({tour.reviewCount})</span>
+                          <span className="font-semibold text-sm sm:text-base">{tour.rating || 'N/A'}</span>
+                          <span className="text-gray-500 ml-1 text-xs sm:text-sm">({tour.reviewCount || 0})</span>
                         </div>
                         
                         <div className="flex items-center text-gray-500 text-xs sm:text-sm">
                           <UserOutlined className="mr-1" />
-                          <span className="hidden sm:inline">{tour.groupSize}</span>
-                          <span className="sm:hidden">{tour.groupSize.split(' ')[0]}</span>
+                          <span className="hidden sm:inline">{tour.groupSize || 'N/A'}</span>
+                          <span className="sm:hidden">{tour.groupSize ? tour.groupSize.split(' ')[0] : 'N/A'}</span>
                         </div>
                       </div>
                       
                       <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
                         <div className="flex items-center">
                           <ClockCircleOutlined className="mr-1 sm:mr-2" />
-                          <span className="truncate">{tour.duration}</span>
+                          <span className="truncate">{tour.duration || 'N/A'}</span>
                         </div>
                         <div className="flex items-center">
                           <EnvironmentOutlined className="mr-1 sm:mr-2" />
-                          <span className="truncate max-w-[100px] sm:max-w-[120px]">{tour.location}</span>
+                          <span className="truncate max-w-[100px] sm:max-w-[120px]">{tour.location || 'N/A'}</span>
                         </div>
                       </div>
                       
