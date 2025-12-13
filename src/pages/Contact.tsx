@@ -42,6 +42,9 @@ const MapComponent: React.FC = () => {
 };
 
 const ContactPage: React.FC = () => {
+  React.useEffect(() => {
+    document.title = "İletişim | GuiaOgi";
+  }, []);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 

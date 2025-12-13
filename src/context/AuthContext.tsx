@@ -8,6 +8,8 @@ interface User {
   phone?: string;
   address?: string;
   preferences?: string;
+  createdAt?: string;
+  updatedAt?: string;
   // Diğer kullanıcı özellikleri...
 }
 

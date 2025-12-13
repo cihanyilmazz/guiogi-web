@@ -25,6 +25,11 @@ const Home: React.FC = () => {
   // Anasayfada gösterilecek tur sayısı
   const TOURS_TO_DISPLAY = 12;
 
+  // Sayfa başlığını ayarla
+  useEffect(() => {
+    document.title = "Ana Sayfa | GuiaOgi";
+  }, []);
+
   // API'den turları çek
 useEffect(() => {
   const fetchTours = async () => {

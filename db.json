@@ -1,7 +1,7 @@
 {
   "tours": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Kapadokya Balon Turu",
       "description": "Eşsiz peri bacaları manzarası eşliğinde unutulmaz bir balon deneyimi. Gün doğumu manzarasında fotoğraf çekimi ve geleneksel kahvaltı dahil.",
       "coverImage": "https://images.unsplash.com/photo-1541414778236-3002b7bd0155?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -29,7 +29,7 @@
       "discount": 15
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Pamukkale Termal Tur",
       "description": "Antik havuzlar ve travertenlerde benzersiz bir termal deneyim. Kleopatra'nın yüzdüğü havuzda yüzme şansı.",
       "coverImage": "https://images.unsplash.com/photo-1593238739363-c8ab33238c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -57,7 +57,7 @@
       "discount": 10
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Ege Mavi Yolculuk",
       "description": "Mavi bayraklı koylarda lüks yat ile unutulmaz bir mavi yolculuk. Özel koylarda yüzme molaları ve deniz ürünleri.",
       "coverImage": "https://images.unsplash.com/photo-1593238640783-3e1e9d72f9a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -85,7 +85,7 @@
       "discount": 20
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Karadeniz Yayla Turu",
       "description": "Yeşilin her tonunu görebileceğiniz yaylalar ve şelaleler turu. Yöresel yemekler ve doğa yürüyüşleri.",
       "coverImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -113,7 +113,7 @@
       "discount": 5
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "İstanbul Kültür Turu",
       "description": "Tarihi yarımada ve boğaz turu ile İstanbul'u keşfedin. Topkapı Sarayı, Ayasofya ve Boğaz turu.",
       "coverImage": "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -140,7 +140,7 @@
       "price": 1500
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Antalya Dalış Turu",
       "description": "Akdeniz'in berrak sularında profesyonel rehberlikte dalış keyfi. Sualtı yaşamını keşfedin.",
       "coverImage": "https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -168,7 +168,7 @@
       "discount": 12
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "Doğu Anadolu Ekspresi",
       "description": "Doğu'nun gizemli şehirlerini ve doğal güzelliklerini keşfedin. Kültürlerin kesişme noktası.",
       "coverImage": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -196,7 +196,7 @@
       "discount": 8
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Marmaris Yat Turu",
       "description": "Lüks yatlarla mavi yolculuk ve özel koylarda yüzme molaları. Akdeniz'in incisinde tatil.",
       "coverImage": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -224,7 +224,7 @@
       "discount": 25
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "Bodrum Koylar Turu",
       "description": "Bodrum'un eşsiz koylarını keşfedin. Mavi bayraklı plajlar ve kristal berraklığında deniz.",
       "coverImage": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -252,7 +252,7 @@
       "discount": 10
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "Safranbolu Tarihi Evler Turu",
       "description": "Osmanlı mimarisinin en güzel örneklerini görebileceğiniz Safranbolu'da tarihi bir yolculuk.",
       "coverImage": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -280,7 +280,7 @@
       "discount": 8
     },
     {
-      "id": 11,
+      "id": "11",
       "title": "Uludağ Kayak Turu",
       "description": "Kış sporlarının merkezi Uludağ'da kayak keyfi. Profesyonel eğitmenler eşliğinde kayak öğrenin.",
       "coverImage": "https://images.unsplash.com/photo-1551524164-6cf77f7e7368?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -308,7 +308,7 @@
       "discount": 15
     },
     {
-      "id": 12,
+      "id": "12",
       "title": "Efes Antik Kent Turu",
       "description": "Antik dünyanın en görkemli şehirlerinden biri Efes'i keşfedin. Tarih ve arkeoloji tutkunları için.",
       "coverImage": "https://images.unsplash.com/photo-1604881991720-f91bf9e5e3a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -336,7 +336,7 @@
       "discount": 5
     },
     {
-      "id": 13,
+      "id": "13",
       "title": "Fethiye Ölüdeniz Yamaç Paraşütü",
       "description": "Dünyanın en güzel manzaralarından birinde yamaç paraşütü deneyimi. Ölüdeniz'in muhteşem manzarası.",
       "coverImage": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -346,7 +346,7 @@
       "category": "Spor",
       "season": "Yaz-İlkbahar",
       "guide": "Cem Özdemir",
-      "rating": 5.0,
+      "rating": 5,
       "reviewCount": 203,
       "specialOffer": "Adrenalin Paketi",
       "included": [
@@ -364,7 +364,7 @@
       "discount": 0
     },
     {
-      "id": 14,
+      "id": "14",
       "title": "Trabzon Sümela Manastırı Turu",
       "description": "Sarp kayalıklara oyulmuş tarihi Sümela Manastırı'nı ziyaret edin. Doğu Karadeniz'in mistik atmosferi.",
       "coverImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -392,7 +392,7 @@
       "discount": 12
     },
     {
-      "id": 15,
+      "id": "15",
       "title": "Çanakkale Gelibolu Tarihi Tur",
       "description": "Çanakkale Savaşı'nın izlerini takip edin. Tarihi anıtlar ve şehitlikler ziyareti.",
       "coverImage": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -420,7 +420,7 @@
       "discount": 10
     },
     {
-      "id": 16,
+      "id": "16",
       "title": "Kaş Sualtı Turu",
       "description": "Akdeniz'in en berrak sularında sualtı dünyasını keşfedin. Snorkeling ve dalış imkanı.",
       "coverImage": "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -448,7 +448,7 @@
       "discount": 18
     },
     {
-      "id": 17,
+      "id": "17",
       "title": "Nemrut Dağı Gün Doğumu Turu",
       "description": "Nemrut Dağı'nda gün doğumunu izleyin. Kommagene Krallığı'nın dev heykelleri arasında tarihi bir deneyim.",
       "coverImage": "https://images.unsplash.com/photo-1590736969955-71cc94901144?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -476,7 +476,7 @@
       "discount": 15
     },
     {
-      "id": 18,
+      "id": "18",
       "title": "Alaçatı Rüzgar Sörfü Turu",
       "description": "Rüzgar sörfü cenneti Alaçatı'da profesyonel eğitim. Ege'nin rüzgarlı koylarında sörf keyfi.",
       "coverImage": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
@@ -537,6 +537,76 @@
       "preferences": "",
       "createdAt": "2025-12-13T11:17:19.784Z",
       "updatedAt": "2025-12-13T11:17:19.784Z"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "1",
+      "userId": "da75",
+      "tourId": 3,
+      "tourTitle": "Ege Mavi Yolculuk",
+      "tourImage": "https://images.unsplash.com/photo-1593238640783-3e1e9d72f9a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "bookingDate": "2025-12-13",
+      "travelDate": "2025-12-17",
+      "persons": 1,
+      "totalPrice": 4000,
+      "status": "cancelled",
+      "paymentStatus": "refunded",
+      "specialRequests": "",
+      "bookingNumber": "BKG-1765629779880",
+      "createdAt": "2025-12-13T12:42:59.880Z",
+      "cancelledAt": "2025-12-13T13:04:57.404Z"
+    },
+    {
+      "id": "2",
+      "userId": "da75",
+      "tourId": 7,
+      "tourTitle": "Doğu Anadolu Ekspresi",
+      "tourImage": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "bookingDate": "2025-12-13",
+      "travelDate": "2025-12-31",
+      "persons": 1,
+      "totalPrice": 2576,
+      "status": "pending",
+      "paymentStatus": "pending",
+      "specialRequests": "ddddd",
+      "bookingNumber": "BKG-1765629812381",
+      "createdAt": "2025-12-13T12:43:32.381Z"
+    },
+    {
+      "id": "3",
+      "userId": "da75",
+      "tourId": 3,
+      "tourTitle": "Ege Mavi Yolculuk",
+      "tourImage": "https://images.unsplash.com/photo-1593238640783-3e1e9d72f9a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "bookingDate": "2025-12-13",
+      "travelDate": "2025-12-30",
+      "persons": 1,
+      "totalPrice": 4000,
+      "status": "pending",
+      "paymentStatus": "pending",
+      "specialRequests": "wqe",
+      "bookingNumber": "BKG-1765630647271",
+      "createdAt": "2025-12-13T12:57:27.271Z"
+    }
+  ],
+  "cancelledBookings": [
+    {
+      "id": "1",
+      "userId": "da75",
+      "tourId": 3,
+      "tourTitle": "Ege Mavi Yolculuk",
+      "tourImage": "https://images.unsplash.com/photo-1593238640783-3e1e9d72f9a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "bookingDate": "2025-12-13",
+      "travelDate": "2025-12-17",
+      "persons": 1,
+      "totalPrice": 4000,
+      "status": "cancelled",
+      "paymentStatus": "refunded",
+      "specialRequests": "",
+      "bookingNumber": "BKG-1765629779880",
+      "createdAt": "2025-12-13T12:42:59.880Z",
+      "cancelledAt": "2025-12-13T13:04:57.414Z"
     }
   ]
 }

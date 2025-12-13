@@ -1,7 +1,7 @@
 // services/bookingService.ts
 export interface Booking {
     id: number;
-    userId: number;
+    userId: string | number;
     tourId: number;
     tourTitle: string;
     tourImage: string;
@@ -14,12 +14,23 @@ export interface Booking {
     bookingNumber: string;
     specialRequests?: string;
     createdAt: string;
+    cancelledAt?: string;
   }
   
   class BookingService {
     async createBooking(bookingData: Omit<Booking, 'id' | 'bookingNumber' | 'createdAt'>): Promise<Booking> {
       try {
-        const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        // Önce API'den mevcut rezervasyonları çek
+        let bookings: Booking[] = [];
+        try {
+          const response = await fetch('http://localhost:3005/bookings');
+          if (response.ok) {
+            bookings = await response.json();
+          }
+        } catch (apiError) {
+          console.log('API\'den rezervasyonlar çekilemedi, localStorage kullanılıyor...');
+          bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        }
         
         const newBooking: Booking = {
           ...bookingData,
@@ -31,8 +42,29 @@ export interface Booking {
         };
         
         bookings.push(newBooking);
-        localStorage.setItem('bookings', JSON.stringify(bookings));
         
+        // API'ye kaydet
+        try {
+          const response = await fetch('http://localhost:3005/bookings', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newBooking),
+          });
+          
+          if (response.ok) {
+            const savedBooking = await response.json();
+            // localStorage'a da kaydet (backup)
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            return savedBooking;
+          }
+        } catch (apiError) {
+          console.log('API\'ye kaydedilemedi, localStorage kullanılıyor...');
+        }
+        
+        // API başarısız olursa localStorage'a kaydet
+        localStorage.setItem('bookings', JSON.stringify(bookings));
         return newBooking;
       } catch (error) {
         console.error('Rezervasyon oluşturma hatası:', error);
@@ -40,111 +72,236 @@ export interface Booking {
       }
     }
   
-    async getUserBookings(userId: number): Promise<Booking[]> {
+    async getUserBookings(userId: string | number): Promise<Booking[]> {
       try {
-        let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-        
-        // Demo kullanıcı için örnek rezervasyonlar
-        if (bookings.length === 0 && userId === 1) {
-          const demoBookings: Booking[] = [
-            {
-              id: 1,
-              userId: 1,
-              tourId: 1,
-              tourTitle: 'Kapadokya Balon Turu',
-              tourImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-              bookingDate: '2024-01-15',
-              travelDate: '2024-03-20',
-              persons: 2,
-              totalPrice: 4250,
-              status: 'confirmed',
-              paymentStatus: 'paid',
-              bookingNumber: 'BKG-2024-001',
-              specialRequests: 'Balon turu için ön sıra istiyorum',
-              createdAt: '2024-01-15T10:30:00.000Z'
-            },
-            {
-              id: 2,
-              userId: 1,
-              tourId: 2,
-              tourTitle: 'Pamukkale Günübirlik Tur',
-              tourImage: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-              bookingDate: '2024-01-10',
-              travelDate: '2024-02-25',
-              persons: 4,
-              totalPrice: 3600,
-              status: 'completed',
-              paymentStatus: 'paid',
-              bookingNumber: 'BKG-2024-002',
-              createdAt: '2024-01-10T14:20:00.000Z'
-            },
-            {
-              id: 3,
-              userId: 1,
-              tourId: 3,
-              tourTitle: 'Efes Antik Kenti Turu',
-              tourImage: 'https://images.unsplash.com/photo-1593693399021-8ddfc4db6e6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-              bookingDate: '2024-01-05',
-              travelDate: '2024-04-15',
-              persons: 3,
-              totalPrice: 3200,
-              status: 'pending',
-              paymentStatus: 'pending',
-              bookingNumber: 'BKG-2024-003',
-              createdAt: '2024-01-05T09:15:00.000Z'
-            },
-            {
-              id: 4,
-              userId: 1,
-              tourId: 4,
-              tourTitle: 'İstanbul Boğaz Turu',
-              tourImage: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-              bookingDate: '2023-12-20',
-              travelDate: '2024-01-10',
-              persons: 2,
-              totalPrice: 1200,
-              status: 'cancelled',
-              paymentStatus: 'refunded',
-              bookingNumber: 'BKG-2023-045',
-              createdAt: '2023-12-20T16:45:00.000Z'
-            }
-          ];
-          
-          localStorage.setItem('bookings', JSON.stringify(demoBookings));
-          return demoBookings.filter(booking => booking.userId === userId);
+        // Önce API'den çekmeyi dene
+        try {
+          const response = await fetch(`http://localhost:3005/bookings?userId=${userId}`);
+          if (response.ok) {
+            const bookings = await response.json();
+            return Array.isArray(bookings) ? bookings : [];
+          }
+        } catch (apiError) {
+          console.log('API\'den rezervasyonlar çekilemedi, localStorage kullanılıyor...');
         }
         
-        return bookings.filter((booking: Booking) => booking.userId === userId);
+        // API başarısız olursa localStorage'dan çek
+        const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        return bookings.filter((booking: Booking) => String(booking.userId) === String(userId));
       } catch (error) {
         console.error('Rezervasyonlar yüklenirken hata:', error);
         throw new Error('Rezervasyonlar yüklenemedi');
       }
     }
   
-    async cancelBooking(bookingId: number, userId: number): Promise<void> {
+    async cancelBooking(bookingId: number, userId: string | number): Promise<void> {
       try {
-        const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-        const bookingIndex = bookings.findIndex((b: Booking) => b.id === bookingId && b.userId === userId);
+        // Önce mevcut rezervasyonu bul
+        let booking: Booking | null = null;
+        let allBookings: Booking[] = [];
         
-        if (bookingIndex === -1) {
+        // API'den tüm rezervasyonları çek
+        try {
+          const getAllResponse = await fetch('http://localhost:3005/bookings');
+          if (getAllResponse.ok) {
+            allBookings = await getAllResponse.json();
+            booking = allBookings.find((b: Booking) => b.id === bookingId && String(b.userId) === String(userId));
+          }
+        } catch (apiError) {
+          console.log('API\'den rezervasyonlar çekilemedi, localStorage kullanılıyor...');
+        }
+        
+        // API'den bulunamazsa localStorage'dan bul
+        if (!booking) {
+          allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+          booking = allBookings.find((b: Booking) => b.id === bookingId && String(b.userId) === String(userId));
+        }
+        
+        if (!booking) {
           throw new Error('Rezervasyon bulunamadı');
         }
         
-        bookings[bookingIndex] = {
-          ...bookings[bookingIndex],
+        // İptal edilmiş rezervasyonu güncelle
+        const updatedBooking: Booking = {
+          ...booking,
           status: 'cancelled',
-          paymentStatus: 'refunded'
+          paymentStatus: 'refunded',
+          cancelledAt: new Date().toISOString()
         };
         
-        localStorage.setItem('bookings', JSON.stringify(bookings));
-      } catch (error) {
+        // Tüm rezervasyonları güncelle
+        const updatedBookings = allBookings.map((b: Booking) => 
+          b.id === bookingId ? updatedBooking : b
+        );
+        
+        // API'ye kaydet (PUT kullanarak tam güncelleme)
+        try {
+          const response = await fetch(`http://localhost:3005/bookings/${bookingId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedBooking),
+          });
+          
+          if (response.ok) {
+            const savedBooking = await response.json();
+            
+            // İptal edilen rezervasyonu cancelledBookings array'ine ekle
+            try {
+              const cancelledBookingWithDate = {
+                ...savedBooking,
+                cancelledAt: new Date().toISOString()
+              };
+              
+              // Önce mevcut cancelledBookings'i al
+              let cancelledBookings: Booking[] = [];
+              try {
+                const cancelledResponse = await fetch('http://localhost:3005/cancelledBookings');
+                if (cancelledResponse.ok) {
+                  cancelledBookings = await cancelledResponse.json();
+                } else if (cancelledResponse.status === 404) {
+                  // Eğer endpoint yoksa, boş array ile başla
+                  cancelledBookings = [];
+                }
+              } catch (fetchError) {
+                console.warn('cancelledBookings endpoint\'i bulunamadı, yeni oluşturuluyor...');
+                cancelledBookings = [];
+              }
+              
+              // İptal edilen rezervasyonu ekle (eğer zaten yoksa)
+              const alreadyExists = cancelledBookings.some((b: Booking) => b.id === bookingId);
+              if (!alreadyExists) {
+                const addCancelledResponse = await fetch('http://localhost:3005/cancelledBookings', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(cancelledBookingWithDate),
+                });
+                
+                if (addCancelledResponse.ok) {
+                  const addedBooking = await addCancelledResponse.json();
+                  console.log('İptal edilen rezervasyon cancelledBookings\'e eklendi:', addedBooking);
+                } else {
+                  const errorText = await addCancelledResponse.text();
+                  console.error('cancelledBookings\'e eklenirken hata:', addCancelledResponse.status, errorText);
+                  // Hata olsa bile localStorage'a kaydet
+                  const localCancelled = JSON.parse(localStorage.getItem('cancelledBookings') || '[]');
+                  if (!localCancelled.some((b: Booking) => b.id === bookingId)) {
+                    localCancelled.push(cancelledBookingWithDate);
+                    localStorage.setItem('cancelledBookings', JSON.stringify(localCancelled));
+                    console.log('İptal edilen rezervasyon localStorage\'a kaydedildi (cancelledBookings)');
+                  }
+                }
+              } else {
+                console.log('Rezervasyon zaten cancelledBookings\'de mevcut');
+              }
+            } catch (cancelledError: any) {
+              console.error('cancelledBookings\'e eklenirken hata:', cancelledError);
+              // Hata olsa bile localStorage'a kaydet
+              try {
+                const localCancelled = JSON.parse(localStorage.getItem('cancelledBookings') || '[]');
+                if (!localCancelled.some((b: Booking) => b.id === bookingId)) {
+                  localCancelled.push({
+                    ...savedBooking,
+                    cancelledAt: new Date().toISOString()
+                  });
+                  localStorage.setItem('cancelledBookings', JSON.stringify(localCancelled));
+                  console.log('İptal edilen rezervasyon localStorage\'a kaydedildi (cancelledBookings - hata durumu)');
+                }
+              } catch (localError) {
+                console.error('localStorage\'a kaydedilirken hata:', localError);
+              }
+            }
+            
+            // localStorage'ı da güncelle
+            const localBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const bookingIndex = localBookings.findIndex((b: Booking) => b.id === bookingId);
+            if (bookingIndex !== -1) {
+              localBookings[bookingIndex] = savedBooking;
+            } else {
+              localBookings.push(savedBooking);
+            }
+            localStorage.setItem('bookings', JSON.stringify(localBookings));
+            
+            // localStorage'a cancelledBookings'i de ekle
+            const localCancelled = JSON.parse(localStorage.getItem('cancelledBookings') || '[]');
+            const alreadyExistsLocal = localCancelled.some((b: Booking) => b.id === bookingId);
+            if (!alreadyExistsLocal) {
+              localCancelled.push({
+                ...savedBooking,
+                cancelledAt: new Date().toISOString()
+              });
+              localStorage.setItem('cancelledBookings', JSON.stringify(localCancelled));
+            }
+            
+            console.log('Rezervasyon başarıyla iptal edildi:', savedBooking);
+            return;
+          } else {
+            const errorText = await response.text();
+            console.error('API yanıt hatası:', response.status, errorText);
+            throw new Error(`API hatası: ${response.status}`);
+          }
+        } catch (apiError: any) {
+          console.error('API\'ye kaydedilemedi:', apiError);
+          // API başarısız olursa localStorage'a kaydet
+          const localBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+          const bookingIndex = localBookings.findIndex((b: Booking) => b.id === bookingId && String(b.userId) === String(userId));
+          
+          if (bookingIndex === -1) {
+            throw new Error('Rezervasyon bulunamadı');
+          }
+          
+          localBookings[bookingIndex] = updatedBooking;
+          localStorage.setItem('bookings', JSON.stringify(localBookings));
+          
+          // localStorage'a cancelledBookings'i de ekle
+          const localCancelled = JSON.parse(localStorage.getItem('cancelledBookings') || '[]');
+          const alreadyExistsLocal = localCancelled.some((b: Booking) => b.id === bookingId);
+          if (!alreadyExistsLocal) {
+            localCancelled.push(updatedBooking);
+            localStorage.setItem('cancelledBookings', JSON.stringify(localCancelled));
+          }
+          
+          console.log('Rezervasyon localStorage\'a kaydedildi:', updatedBooking);
+          // localStorage'a kaydedildi ama db.json'a kaydedilmedi, kullanıcıya bilgi ver
+          throw new Error('Rezervasyon iptal edildi ancak veritabanına kaydedilemedi. Lütfen sayfayı yenileyin.');
+        }
+      } catch (error: any) {
         console.error('Rezervasyon iptal hatası:', error);
-        throw new Error('Rezervasyon iptal edilemedi');
+        throw error;
       }
     }
   
     async updateBooking(bookingId: number, updates: Partial<Booking>): Promise<Booking> {
       try {
+        // API'den güncelle
+        try {
+          const response = await fetch(`http://localhost:3005/bookings/${bookingId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updates),
+          });
+          
+          if (response.ok) {
+            const updatedBooking = await response.json();
+            // localStorage'ı da güncelle
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const bookingIndex = bookings.findIndex((b: Booking) => b.id === bookingId);
+            if (bookingIndex !== -1) {
+              bookings[bookingIndex] = updatedBooking;
+              localStorage.setItem('bookings', JSON.stringify(bookings));
+            }
+            return updatedBooking;
+          }
+        } catch (apiError) {
+          console.log('API\'ye güncellenemedi, localStorage kullanılıyor...');
+        }
+        
+        // API başarısız olursa localStorage'dan güncelle
         const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
         const bookingIndex = bookings.findIndex((b: Booking) => b.id === bookingId);
         

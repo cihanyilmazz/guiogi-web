@@ -8,6 +8,7 @@ import TourDetail from "./pages/TourDetail";
 import Login from "./pages/Login"; // EKLEYİN
 import Register from "./pages/Register"; // EKLEYİN
 import Profile from "./pages/Profile";
+import Booking from "./pages/Booking";
 
 interface RouteType {
   path: string;
@@ -24,6 +25,7 @@ const routes: RouteType[] = [
   { path: "/giris", element: <Login /> }, // EKLEYİN
   { path: "/kayit", element: <Register /> }, // EKLEYİN
   { path: "/profil", element: <Profile /> }, // BU SATIRI EKLEYİN
+  { path: "/rezervasyon", element: <Booking /> },
 ];
 
 export default routes;

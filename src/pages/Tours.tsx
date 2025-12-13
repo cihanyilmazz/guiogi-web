@@ -16,6 +16,11 @@ const ToursPage = () => {
   const [maxPrice, setMaxPrice] = useState<number>(10000); // Tüm turların maksimum fiyatı
   const [selectedMaxPrice, setSelectedMaxPrice] = useState<number>(10000); // Seçilen maksimum fiyat
 
+  // Sayfa başlığını ayarla
+  useEffect(() => {
+    document.title = "Turlar | GuiaOgi";
+  }, []);
+
   // URL parametrelerinden arama kriterlerini al
   useEffect(() => {
     const query = searchParams.get('q') || '';

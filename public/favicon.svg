@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff5555;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="64" height="64" fill="#000000" rx="14"/>
+  
+  <!-- Red "G" letter with gradient (simplified for favicon) -->
+  <path d="M 18 20 C 18 16, 21 14, 26 14 C 29 14, 31 14.5, 33 15.5 L 33 22 C 31.5 21, 29.5 20.5, 27 20.5 C 24 20.5, 22 22, 22 25 C 22 28, 24 29.5, 27 29.5 C 29 29.5, 31 29, 33 28 L 33 35 C 31 36, 29 36.5, 27 36.5 C 22 36.5, 18 34, 18 30 L 18 20 Z" 
+        fill="url(#redGrad)"/>
+  
+  <!-- Cyan circular arc (from logo) -->
+  <path d="M 36 30 Q 40 22, 46 20 Q 50 20, 50 24" 
+        stroke="#00d4ff" 
+        stroke-width="3.5" 
+        fill="none" 
+        stroke-linecap="round"
+        stroke-dasharray="2.5,1.5"
+        opacity="0.95"/>
+  
+  <!-- Star at the end of arc (from logo) -->
+  <g transform="translate(50, 20)">
+    <path d="M 0 -5 L 2 2 L 5 0 L 2 2 L 0 5 L -2 2 L -5 0 L -2 2 Z" 
+          fill="#00d4ff"
+          opacity="0.95"/>
+  </g>
+</svg>

@@ -37,6 +37,7 @@ import {
 } from "@ant-design/icons";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { bookingService } from "../services/bookingService";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -89,73 +90,15 @@ const Profile: React.FC = () => {
     }
   }, [user, form]);
 
-  // Rezervasyonları yükle (mock data)
+  // Rezervasyonları yükle (API'den)
   useEffect(() => {
     const fetchBookings = async () => {
+      if (!user?.id) return;
+      
       setBookingsLoading(true);
       try {
-        // Burada API'den rezervasyonları çekeceksiniz
-        // Şimdilik mock data kullanıyoruz
-        const mockBookings: Booking[] = [
-          {
-            id: 1,
-            tourId: 101,
-            tourTitle: "Kapadokya Balon Turu",
-            tourImage:
-              "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
-            bookingDate: "2024-01-15",
-            travelDate: "2024-03-20",
-            persons: 2,
-            totalPrice: 2500,
-            status: "confirmed",
-            paymentStatus: "paid",
-            bookingNumber: "BKG-2024-001",
-          },
-          {
-            id: 2,
-            tourId: 102,
-            tourTitle: "Pamukkale Günübirlik Tur",
-            tourImage:
-              "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
-            bookingDate: "2024-01-10",
-            travelDate: "2024-02-25",
-            persons: 4,
-            totalPrice: 1800,
-            status: "completed",
-            paymentStatus: "paid",
-            bookingNumber: "BKG-2024-002",
-          },
-          {
-            id: 3,
-            tourId: 103,
-            tourTitle: "Efes Antik Kenti Turu",
-            tourImage:
-              "https://images.unsplash.com/photo-1593693399021-8ddfc4db6e6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
-            bookingDate: "2024-01-05",
-            travelDate: "2024-04-15",
-            persons: 3,
-            totalPrice: 3200,
-            status: "pending",
-            paymentStatus: "pending",
-            bookingNumber: "BKG-2024-003",
-          },
-          {
-            id: 4,
-            tourId: 104,
-            tourTitle: "İstanbul Boğaz Turu",
-            tourImage:
-              "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
-            bookingDate: "2023-12-20",
-            travelDate: "2024-01-10",
-            persons: 2,
-            totalPrice: 1200,
-            status: "cancelled",
-            paymentStatus: "refunded",
-            bookingNumber: "BKG-2023-045",
-          },
-        ];
-
-        setBookings(mockBookings);
+        const userBookings = await bookingService.getUserBookings(user.id);
+        setBookings(userBookings);
       } catch (error) {
         console.error("Rezervasyonlar yüklenirken hata:", error);
         message.error("Rezervasyonlar yüklenirken bir hata oluştu");
@@ -164,8 +107,10 @@ const Profile: React.FC = () => {
       }
     };
 
-    fetchBookings();
-  }, []);
+    if (isAuthenticated && user) {
+      fetchBookings();
+    }
+  }, [user, isAuthenticated]);
 
   // Profil bilgilerini kaydet
   const handleSave = async (values: any) => {
@@ -188,25 +133,50 @@ const Profile: React.FC = () => {
 
   // Rezervasyon iptal et
   const handleCancelBooking = async () => {
-    if (!selectedBooking) return;
+    if (!selectedBooking || !user?.id) {
+      message.error("Rezervasyon bilgisi bulunamadı");
+      return;
+    }
 
+    const bookingId = selectedBooking.id;
+    const bookingNumber = selectedBooking.bookingNumber;
+
+    setBookingsLoading(true);
     try {
-      // Burada API'ye iptal isteği gönderilecek
-      message.success(
-        `Rezervasyon #${selectedBooking.bookingNumber} iptal edildi`,
-      );
+      console.log('İptal ediliyor:', bookingId, user.id);
+      
+      // API çağrısını yap
+      await bookingService.cancelBooking(bookingId, user.id);
+      
+      // Rezervasyonları yeniden yükle (güncel veriyi almak için)
+      const userBookings = await bookingService.getUserBookings(user.id);
+      setBookings(userBookings);
+      
+      message.success({
+        content: `Rezervasyon #${bookingNumber} iptal edildi. İptal Edilen Rezervasyonlar bölümünde görüntüleyebilirsiniz.`,
+        duration: 4,
+      });
+      
       setCancelModalVisible(false);
-
-      // Rezervasyon durumunu güncelle
-      setBookings(
-        bookings.map((booking) =>
-          booking.id === selectedBooking.id
-            ? { ...booking, status: "cancelled", paymentStatus: "refunded" }
-            : booking,
-        ),
-      );
-    } catch (error) {
-      message.error("Rezervasyon iptal edilirken bir hata oluştu");
+      setSelectedBooking(null);
+    } catch (error: any) {
+      console.error('İptal hatası:', error);
+      
+      const errorMessage = error.message || "Rezervasyon iptal edilirken bir hata oluştu";
+      message.error(errorMessage);
+      
+      // Hata durumunda rezervasyonları yeniden yükle
+      try {
+        const userBookings = await bookingService.getUserBookings(user.id);
+        setBookings(userBookings);
+      } catch (reloadError) {
+        console.error('Rezervasyonlar yeniden yüklenirken hata:', reloadError);
+      }
+      
+      setCancelModalVisible(false);
+      setSelectedBooking(null);
+    } finally {
+      setBookingsLoading(false);
     }
   };
 
@@ -255,9 +225,9 @@ const Profile: React.FC = () => {
     (b) => b.status === "confirmed" || b.status === "pending",
   );
 
-  // Geçmiş rezervasyonları filtrele
+  // Geçmiş rezervasyonları filtrele (sadece tamamlananlar)
   const pastBookings = bookings.filter(
-    (b) => b.status === "completed" || b.status === "cancelled",
+    (b) => b.status === "completed",
   );
 
   if (!isAuthenticated) {
@@ -301,27 +271,41 @@ const Profile: React.FC = () => {
 
                 {/* Hızlı İstatistikler */}
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Toplam Rezervasyon</span>
-                    <span className="font-bold text-gray-800">
+                  <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                    <span className="text-gray-600 font-medium">Toplam Rezervasyon</span>
+                    <span className="font-bold text-gray-800 text-lg">
                       {bookings.length}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Aktif Rezervasyon</span>
-                    <span className="font-bold text-green-600">
-                      {bookings.filter((b) => b.status === "confirmed").length}
+                  <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                    <span className="text-gray-600 font-medium">Aktif Rezervasyon</span>
+                    <span className="font-bold text-green-600 text-lg">
+                      {bookings.filter((b) => b.status === "confirmed" || b.status === "pending").length}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Geçmiş Rezervasyon</span>
-                    <span className="font-bold text-blue-600">
+                  <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                    <span className="text-gray-600 font-medium">Tamamlanan</span>
+                    <span className="font-bold text-blue-600 text-lg">
                       {bookings.filter((b) => b.status === "completed").length}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Üyelik Tarihi</span>
-                    <span className="text-gray-800">01.01.2024</span>
+                  <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                    <span className="text-gray-600 font-medium">İptal Edilen</span>
+                    <span className="font-bold text-red-600 text-lg">
+                      {bookings.filter((b) => b.status === "cancelled").length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-gray-600 font-medium">Üyelik Tarihi</span>
+                    <span className="text-gray-800 font-semibold">
+                      {user?.createdAt 
+                        ? new Date(user.createdAt).toLocaleDateString('tr-TR', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric' 
+                          })
+                        : 'Bilinmiyor'}
+                    </span>
                   </div>
                 </div>
 
@@ -509,13 +493,15 @@ const Profile: React.FC = () => {
                                 <List.Item
                                   actions={[
                                     <Button
+                                      key="detail"
                                       type="link"
-                                      onClick={() => goToBookingDetail(booking)}
+                                      onClick={() => goToTourDetail(booking.tourId)}
                                     >
-                                      Detay
+                                      Tur Detayı
                                     </Button>,
-                                    booking.status === "confirmed" && (
+                                    (booking.status === "confirmed" || booking.status === "pending") && (
                                       <Button
+                                        key="cancel"
                                         danger
                                         type="link"
                                         onClick={() => {
@@ -526,6 +512,189 @@ const Profile: React.FC = () => {
                                         İptal Et
                                       </Button>
                                     ),
+                                  ].filter(Boolean)}
+                                >
+                                  <List.Item.Meta
+                                    avatar={
+                                      <img
+                                        src={booking.tourImage}
+                                        alt={booking.tourTitle}
+                                        className="w-24 h-16 object-cover rounded cursor-pointer"
+                                        onClick={() =>
+                                          goToTourDetail(booking.tourId)
+                                        }
+                                      />
+                                    }
+                                    title={
+                                      <div className="flex items-center">
+                                        <span
+                                          className="font-medium cursor-pointer hover:text-blue-600"
+                                          onClick={() =>
+                                            goToTourDetail(booking.tourId)
+                                          }
+                                        >
+                                          {booking.tourTitle}
+                                        </span>
+                                        <div className="ml-4">
+                                          {getStatusTag(booking.status)}
+                                          {getPaymentTag(booking.paymentStatus)}
+                                        </div>
+                                      </div>
+                                    }
+                                    description={
+                                      <div className="space-y-1">
+                                        <div className="flex items-center text-sm">
+                                          <CalendarOutlined className="mr-2 text-gray-400" />
+                                          <span className="text-gray-600">
+                                            Seyahat Tarihi: {booking.travelDate}
+                                          </span>
+                                        </div>
+                                        <div className="flex items-center text-sm">
+                                          <UserOutlined className="mr-2 text-gray-400" />
+                                          <span className="text-gray-600">
+                                            {booking.persons} Kişi
+                                          </span>
+                                        </div>
+                                        <div className="text-sm">
+                                          <span className="text-gray-600">
+                                            Rezervasyon No:{" "}
+                                          </span>
+                                          <span className="font-medium">
+                                            {booking.bookingNumber}
+                                          </span>
+                                        </div>
+                                        <div className="text-lg font-bold text-blue-600">
+                                          {booking.totalPrice} TL
+                                        </div>
+                                      </div>
+                                    }
+                                  />
+                                </List.Item>
+                              )}
+                            />
+                          </div>
+                        )}
+
+                        {/* İptal Edilen Rezervasyonlar */}
+                        <div className="mt-8">
+                          <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                            İptal Edilen Rezervasyonlar
+                          </h4>
+                          {bookings.filter(b => b.status === 'cancelled').length > 0 ? (
+                            <List
+                              dataSource={bookings.filter(b => b.status === 'cancelled')}
+                              renderItem={(booking) => (
+                                <List.Item
+                                  actions={[
+                                    <Button
+                                      key="detail"
+                                      type="link"
+                                      onClick={() => goToTourDetail(booking.tourId)}
+                                    >
+                                      Tur Detayı
+                                    </Button>,
+                                    <Button
+                                      key="booking-detail"
+                                      type="link"
+                                      onClick={() => goToBookingDetail(booking)}
+                                    >
+                                      Detayları Gör
+                                    </Button>,
+                                  ]}
+                                >
+                                  <List.Item.Meta
+                                    avatar={
+                                      <img
+                                        src={booking.tourImage}
+                                        alt={booking.tourTitle}
+                                        className="w-24 h-16 object-cover rounded cursor-pointer"
+                                        onClick={() =>
+                                          goToTourDetail(booking.tourId)
+                                        }
+                                      />
+                                    }
+                                    title={
+                                      <div className="flex items-center">
+                                        <span
+                                          className="font-medium cursor-pointer hover:text-blue-600"
+                                          onClick={() =>
+                                            goToTourDetail(booking.tourId)
+                                          }
+                                        >
+                                          {booking.tourTitle}
+                                        </span>
+                                        <div className="ml-4">
+                                          {getStatusTag(booking.status)}
+                                          {getPaymentTag(booking.paymentStatus)}
+                                        </div>
+                                      </div>
+                                    }
+                                    description={
+                                      <div className="space-y-1">
+                                        <div className="flex items-center text-sm">
+                                          <CalendarOutlined className="mr-2 text-gray-400" />
+                                          <span className="text-gray-600">
+                                            Seyahat Tarihi: {booking.travelDate}
+                                          </span>
+                                        </div>
+                                        <div className="flex items-center text-sm">
+                                          <UserOutlined className="mr-2 text-gray-400" />
+                                          <span className="text-gray-600">
+                                            {booking.persons} Kişi
+                                          </span>
+                                        </div>
+                                        <div className="text-sm">
+                                          <span className="text-gray-600">
+                                            Rezervasyon No:{" "}
+                                          </span>
+                                          <span className="font-medium">
+                                            {booking.bookingNumber}
+                                          </span>
+                                        </div>
+                                        <div className="text-lg font-bold text-blue-600">
+                                          {booking.totalPrice} TL
+                                        </div>
+                                      </div>
+                                    }
+                                  />
+                                </List.Item>
+                              )}
+                            />
+                          ) : (
+                            <div className="text-center py-8 bg-gray-50 rounded-lg">
+                              <CloseCircleOutlined className="text-3xl text-gray-300 mb-3" />
+                              <p className="text-gray-500">
+                                İptal edilen rezervasyonunuz bulunmuyor.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Geçmiş Rezervasyonlar (Tamamlanan) */}
+                        {bookings.filter(b => b.status === 'completed').length > 0 && (
+                          <div className="mt-8">
+                            <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                              Geçmiş Rezervasyonlar
+                            </h4>
+                            <List
+                              dataSource={bookings.filter(b => b.status === 'completed')}
+                              renderItem={(booking) => (
+                                <List.Item
+                                  actions={[
+                                    <Button
+                                      key="detail"
+                                      type="link"
+                                      onClick={() => goToTourDetail(booking.tourId)}
+                                    >
+                                      Tur Detayı
+                                    </Button>,
+                                    <Button
+                                      key="booking-detail"
+                                      type="link"
+                                      onClick={() => goToBookingDetail(booking)}
+                                    >
+                                      Detayları Gör
+                                    </Button>,
                                   ]}
                                 >
                                   <List.Item.Meta
@@ -589,75 +758,6 @@ const Profile: React.FC = () => {
                           </div>
                         )}
 
-                        {/* Geçmiş Rezervasyonlar */}
-                        {pastBookings.length > 0 && (
-                          <div>
-                            <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                              Geçmiş Rezervasyonlar
-                            </h4>
-                            <Timeline>
-                              {pastBookings.map((booking) => (
-                                <Timeline.Item
-                                  key={booking.id}
-                                  color={
-                                    booking.status === "completed"
-                                      ? "green"
-                                      : booking.status === "cancelled"
-                                      ? "red"
-                                      : "gray"
-                                  }
-                                  dot={
-                                    booking.status === "completed" ? (
-                                      <CheckCircleOutlined />
-                                    ) : booking.status === "cancelled" ? (
-                                      <CloseCircleOutlined />
-                                    ) : (
-                                      <ClockCircleOutlined />
-                                    )
-                                  }
-                                >
-                                  <Card size="small">
-                                    <Descriptions column={1} size="small">
-                                      <Descriptions.Item label="Tur">
-                                        <span
-                                          className="cursor-pointer text-blue-600 hover:underline"
-                                          onClick={() =>
-                                            goToTourDetail(booking.tourId)
-                                          }
-                                        >
-                                          {booking.tourTitle}
-                                        </span>
-                                      </Descriptions.Item>
-                                      <Descriptions.Item label="Rezervasyon No">
-                                        {booking.bookingNumber}
-                                      </Descriptions.Item>
-                                      <Descriptions.Item label="Seyahat Tarihi">
-                                        {booking.travelDate}
-                                      </Descriptions.Item>
-                                      <Descriptions.Item label="Durum">
-                                        {getStatusTag(booking.status)}
-                                      </Descriptions.Item>
-                                      <Descriptions.Item label="Tutar">
-                                        <span className="font-medium">
-                                          {booking.totalPrice} TL
-                                        </span>
-                                      </Descriptions.Item>
-                                    </Descriptions>
-                                    <Button
-                                      type="link"
-                                      size="small"
-                                      onClick={() => goToBookingDetail(booking)}
-                                      className="mt-2"
-                                    >
-                                      Detayları Gör
-                                    </Button>
-                                  </Card>
-                                </Timeline.Item>
-                              ))}
-                            </Timeline>
-                          </div>
-                        )}
-
                         {/* Rezervasyon yoksa */}
                         {bookings.length === 0 && (
                           <div className="text-center py-12">
@@ -691,16 +791,28 @@ const Profile: React.FC = () => {
       <Modal
         title="Rezervasyon İptali"
         open={cancelModalVisible}
-        onCancel={() => setCancelModalVisible(false)}
+        onCancel={() => {
+          setCancelModalVisible(false);
+          setSelectedBooking(null);
+        }}
         footer={[
-          <Button key="cancel" onClick={() => setCancelModalVisible(false)}>
+          <Button 
+            key="cancel" 
+            onClick={() => {
+              setCancelModalVisible(false);
+              setSelectedBooking(null);
+            }}
+          >
             Vazgeç
           </Button>,
           <Button
             key="submit"
             type="primary"
             danger
-            onClick={handleCancelBooking}
+            onClick={(e) => {
+              e.preventDefault();
+              handleCancelBooking();
+            }}
           >
             Evet, İptal Et
           </Button>,

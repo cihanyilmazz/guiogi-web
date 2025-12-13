@@ -93,9 +93,8 @@ const TourDetail: React.FC = () => {
       return;
     }
 
-    // Giriş yapmışsa rezervasyon işlemi
-    alert(`Sayın ${user?.name}, rezervasyon sayfasına yönlendiriliyorsunuz...`);
-    // navigate('/rezervasyon', { state: { tour } });
+    // Giriş yapmışsa rezervasyon sayfasına yönlendir
+    navigate('/rezervasyon', { state: { tourId: tour?.id } });
   };
 
   const handleLogin = async (values: { email: string; password: string }) => {
@@ -167,38 +166,40 @@ const TourDetail: React.FC = () => {
 
     // Giriş yapmışsa fiyatı göster
     return (
-      <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
-        <div className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div className="mb-4">
           {tour?.discount ? (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-              <div className="flex items-center">
-                <span className="line-through text-gray-400 text-xl sm:text-2xl mr-2">
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <span className="line-through text-gray-400 text-lg sm:text-xl">
                   {tour.price} TL
                 </span>
-                <span className="text-red-600">
+                <span className="text-2xl sm:text-3xl font-bold text-[#9E0102]">
                   {Math.round(tour.price! * (1 - tour.discount / 100))} TL
                 </span>
               </div>
-              <Tag color="red" className="text-xs sm:text-sm">
+              <Tag color="red" className="text-xs sm:text-sm font-semibold px-2 py-1">
                 %{tour.discount} İNDİRİM
               </Tag>
             </div>
           ) : (
-            `${tour?.price} TL`
+            <div className="text-2xl sm:text-3xl font-bold text-[#9E0102]">
+              {tour?.price} TL
+            </div>
           )}
         </div>
-        <div className="text-gray-500 text-sm sm:text-base mb-3 sm:mb-4">Kişi Başı</div>
+        <div className="text-gray-600 text-xs sm:text-sm mb-4 font-medium">Kişi Başı</div>
         <Button
           type="primary"
           size="large"
           block
-          className="bg-blue-600 hover:bg-blue-700 h-10 sm:h-12 text-base sm:text-lg font-semibold"
+          className="bg-[#9E0102] hover:bg-[#8B0000] h-11 sm:h-12 text-base sm:text-lg font-semibold shadow-md hover:shadow-lg transition-all"
           onClick={handleBookTour}
         >
           Şimdi Rezervasyon Yap
         </Button>
-        <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-500 text-center">
-          Hoş geldiniz, <span className="font-semibold">{user?.name}</span>!
+        <div className="mt-4 text-xs sm:text-sm text-gray-500 text-center">
+          Hoş geldiniz, <span className="font-semibold text-gray-700">{user?.name}</span>!
         </div>
       </div>
     );
