@@ -1,17 +1,33 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { StarFilled, ClockCircleOutlined, UserOutlined, EnvironmentOutlined, FilterOutlined } from '@ant-design/icons';
 import { Spin, Alert, Tag } from 'antd';
 import { tourService, Tour } from '../services/tourService';
 
 const ToursPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchLocation, setSearchLocation] = useState('');
   const [maxPrice, setMaxPrice] = useState<number>(10000); // Tüm turların maksimum fiyatı
   const [selectedMaxPrice, setSelectedMaxPrice] = useState<number>(10000); // Seçilen maksimum fiyat
+
+  // URL parametrelerinden arama kriterlerini al
+  useEffect(() => {
+    const query = searchParams.get('q') || '';
+    const category = searchParams.get('category') || '';
+    const location = searchParams.get('location') || '';
+    
+    setSearchQuery(query);
+    setSearchLocation(location);
+    if (category) {
+      setSelectedCategory(category);
+    }
+  }, [searchParams]);
 
   // API'den turları çek
   useEffect(() => {
@@ -19,12 +35,27 @@ const ToursPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await tourService.getAllTours();
-        setTours(data);
         
-        // Fiyat aralığını dinamik olarak ayarla
-        if (data.length > 0) {
-          const prices = data
+        let fetchedTours: Tour[] = [];
+        
+        // Eğer arama parametreleri varsa, arama yap
+        if (searchQuery || searchLocation || (selectedCategory && selectedCategory !== 'all')) {
+          fetchedTours = await tourService.searchTours(
+            searchQuery,
+            selectedCategory !== 'all' ? selectedCategory : undefined,
+            searchLocation || undefined
+          );
+        } else {
+          // Yoksa tüm turları çek
+          fetchedTours = await tourService.getAllTours();
+        }
+        
+        setTours(fetchedTours);
+        
+        // Fiyat aralığını dinamik olarak ayarla - tüm turlardan hesapla
+        const allTours = await tourService.getAllTours();
+        if (allTours.length > 0) {
+          const prices = allTours
             .map(tour => {
               const basePrice = tour.price || 0;
               // İndirimli fiyatları da hesaba kat
@@ -50,7 +81,7 @@ const ToursPage = () => {
     };
 
     fetchTours();
-  }, []);
+  }, [searchQuery, searchLocation, selectedCategory]);
 
   // Kategorileri turlardan dinamik olarak çıkar
   const categories = useMemo(() => {
@@ -75,6 +106,24 @@ const ToursPage = () => {
         return false;
       }
       
+      // Lokasyon filtresi (eğer arama yapıldıysa)
+      if (searchLocation && !tour.location.toLowerCase().includes(searchLocation.toLowerCase())) {
+        return false;
+      }
+      
+      // Metin araması (eğer arama yapıldıysa)
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesTitle = tour.title.toLowerCase().includes(query);
+        const matchesDescription = tour.description.toLowerCase().includes(query);
+        const matchesLocation = tour.location.toLowerCase().includes(query);
+        const matchesCategory = tour.category.toLowerCase().includes(query);
+        
+        if (!matchesTitle && !matchesDescription && !matchesLocation && !matchesCategory) {
+          return false;
+        }
+      }
+      
       // Fiyat filtresi
       const tourPrice = tour.price || 0;
       const finalPrice = tour.discount 
@@ -87,7 +136,7 @@ const ToursPage = () => {
       
       return true;
     });
-  }, [tours, selectedCategory, selectedMaxPrice]);
+  }, [tours, selectedCategory, selectedMaxPrice, searchQuery, searchLocation]);
 
   if (loading) {
     return (

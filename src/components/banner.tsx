@@ -1,16 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SearchOutlined, CalendarOutlined, GlobalOutlined } from '@ant-design/icons';
+import { DatePicker, Select } from 'antd';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { tourService } from '../services/tourService';
 
 const Banner = () => {
-  const [selectedDate, setSelectedDate] = useState('');
+  const navigate = useNavigate();
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedTour, setSelectedTour] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const tourOptions = [
-    { value: 'tur1', label: 'Kültür Turları' },
-    { value: 'tur2', label: 'Doğa Turları' },
-    { value: 'tur3', label: 'Yurt Dışı Turları' },
-    { value: 'tur4', label: 'Hafta Sonu Kaçamakları' },
-  ];
+  // API'den kategorileri çek
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const cats = await tourService.getAllCategories();
+        setCategories(cats);
+      } catch (error) {
+        console.error('Kategoriler yüklenirken hata:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Arama işlemi
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      // Arama sonuçlarını URL parametreleri ile turlar sayfasına yönlendir
+      const params = new URLSearchParams();
+      if (selectedTour) params.set('category', selectedTour);
+      if (selectedDate) {
+        params.set('date', selectedDate.format('YYYY-MM-DD'));
+      }
+      
+      navigate(`/turlar?${params.toString()}`);
+    } catch (error) {
+      console.error('Arama yapılırken hata:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="relative bg-gradient-to-r from-[#414040bf] to-[#414040bf] text-white">
@@ -36,7 +71,7 @@ const Banner = () => {
           </div>
 
           {/* Arama Formu */}
-          <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+          <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               {/* Tarih Seçimi */}
               <div className="relative">
@@ -44,11 +79,19 @@ const Banner = () => {
                   <CalendarOutlined className="mr-2" />
                   Tarih Seçiniz
                 </label>
-                <input
-                  type="date"
+                <DatePicker
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                  onChange={(date) => setSelectedDate(date)}
+                  format="DD/MM/YYYY"
+                  placeholder="Tarih seçiniz"
+                  className="w-full [&_.ant-picker-input>input::placeholder]:!text-gray-500 [&_.ant-picker-input>input]:text-gray-700 [&_.ant-picker-input>input]:text-base"
+                  size="large"
+                  style={{ width: '100%' }}
+                  allowClear
+                  disabledDate={(current) => {
+                    // Geçmiş tarihleri devre dışı bırak
+                    return current && current < dayjs().startOf('day');
+                  }}
                 />
               </div>
 
@@ -58,25 +101,33 @@ const Banner = () => {
                   <GlobalOutlined className="mr-2" />
                   Tur Seçiniz
                 </label>
-                <select
-                  value={selectedTour}
-                  onChange={(e) => setSelectedTour(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 appearance-none bg-white"
-                >
-                  <option value="">Tur tipi seçiniz</option>
-                  {tourOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  value={selectedTour || undefined}
+                  onChange={(value) => setSelectedTour(value)}
+                  placeholder="Tur tipi seçiniz"
+                  className="w-full [&_.ant-select-selection-placeholder]:!text-gray-500"
+                  size="large"
+                  allowClear
+                  showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  options={categories.map((category) => ({
+                    value: category,
+                    label: category,
+                  }))}
+                />
               </div>
 
               {/* Arama Butonu */}
               <div className="flex items-end">
-                <button className="w-full bg-[#9E0102]  text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#9E0102] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <SearchOutlined className="mr-2" />
-                  ARA
+                  {loading ? 'Aranıyor...' : 'ARA'}
                 </button>
               </div>
             </div>
@@ -84,21 +135,37 @@ const Banner = () => {
             {/* Ekstra Filtreler (Masaüstünde Görünür) */}
             <div className="hidden md:flex justify-between items-center pt-4 border-t border-gray-200">
               <div className="flex space-x-4">
-                <button className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                <button 
+                  type="button"
+                  onClick={() => navigate('/turlar?special=popular')}
+                  className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                >
                   Popüler Turlar
                 </button>
-                <button className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                <button 
+                  type="button"
+                  onClick={() => navigate('/turlar?special=lastminute')}
+                  className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                >
                   Son Dakika
                 </button>
-                <button className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                <button 
+                  type="button"
+                  onClick={() => navigate('/turlar?special=family')}
+                  className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                >
                   Aile Turları
                 </button>
               </div>
-              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+              <button 
+                type="button"
+                onClick={() => navigate('/turlar')}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
                 Detaylı Arama ›
               </button>
             </div>
-          </div>
+          </form>
 
           {/* İstatistikler */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 text-center">

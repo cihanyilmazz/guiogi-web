@@ -444,6 +444,67 @@ class TourService {
       return [];
     }
   }
+
+  async searchTours(query: string, category?: string, location?: string): Promise<Tour[]> {
+    try {
+      const tours = await this.getAllTours();
+      let filtered = tours;
+
+      // Metin araması
+      if (query && query.trim()) {
+        const searchQuery = query.toLowerCase().trim();
+        filtered = filtered.filter(tour => 
+          tour.title.toLowerCase().includes(searchQuery) ||
+          tour.description.toLowerCase().includes(searchQuery) ||
+          tour.location.toLowerCase().includes(searchQuery) ||
+          tour.category.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Kategori filtresi
+      if (category && category.trim()) {
+        filtered = filtered.filter(tour => tour.category === category);
+      }
+
+      // Lokasyon filtresi
+      if (location && location.trim()) {
+        filtered = filtered.filter(tour => 
+          tour.location.toLowerCase().includes(location.toLowerCase())
+        );
+      }
+
+      return filtered;
+    } catch (error) {
+      console.error('Tur araması yapılırken hata:', error);
+      return [];
+    }
+  }
+
+  async getAllCategories(): Promise<string[]> {
+    try {
+      const tours = await this.getAllTours();
+      const categories = Array.from(new Set(tours.map(tour => tour.category)))
+        .filter(cat => cat && cat.trim() !== '')
+        .sort();
+      return categories;
+    } catch (error) {
+      console.error('Kategoriler yüklenirken hata:', error);
+      return [];
+    }
+  }
+
+  async getAllLocations(): Promise<string[]> {
+    try {
+      const tours = await this.getAllTours();
+      const locations = Array.from(new Set(tours.map(tour => tour.location)))
+        .filter(loc => loc && loc.trim() !== '')
+        .sort();
+      return locations;
+    } catch (error) {
+      console.error('Lokasyonlar yüklenirken hata:', error);
+      return [];
+    }
+  }
 }
 
 export const tourService = new TourService();
