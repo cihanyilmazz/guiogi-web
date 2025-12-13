@@ -43,16 +43,29 @@ const AboutPage1 = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Hero Section */}
-      <section className="relative bg-[#414040bf] text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white opacity-10 rounded-full"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white opacity-10 rounded-full"></div>
+      <section 
+        className="relative text-white py-16 sm:py-20 overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 30%, #14b8a6 60%, #10b981 100%)'
+        }}
+      >
+        {/* Dekoratif dalga efekti */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 opacity-20">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full">
+            <path d="M0,60 C300,100 600,20 900,60 C1050,80 1150,40 1200,60 L1200,120 L0,120 Z" fill="white"></path>
+          </svg>
+        </div>
+        
+        {/* Dekoratif daireler */}
+        <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
 
-        <div className="relative container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-white">
+        <div className="relative container mx-auto px-4 text-center z-10">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 drop-shadow-lg">
             Guiogi
           </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-95">
+          <p className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto opacity-95 drop-shadow-md">
             Yolculuk çağınızı birlikte keşfedelim
           </p>
         </div>

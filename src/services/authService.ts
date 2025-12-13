@@ -19,6 +19,7 @@ export interface User {
     name: string;
     email: string;
     password: string;
+    phone?: string;
   }
   
   export interface AuthResponse {
@@ -26,7 +27,7 @@ export interface User {
     token: string;
   }
   
-  const API_URL = 'http://localhost:3001/api';
+  const API_URL = 'http://localhost:3005/api';
   
   class AuthService {
     private getHeaders(): HeadersInit {
@@ -71,10 +72,22 @@ export interface User {
     }
   
     async register(data: RegisterData): Promise<AuthResponse> {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      // json-server kullanıyoruz, direkt /users endpoint'ine POST yapıyoruz
+      const userData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone || '',
+        password: data.password, // Not: Production'da şifre hash'lenmeli
+        address: '',
+        preferences: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      const response = await fetch(`${API_URL}/users`, {
         method: 'POST',
         headers: this.getHeaders(),
-        body: JSON.stringify(data),
+        body: JSON.stringify(userData),
       });
   
       if (!response.ok) {
@@ -82,7 +95,23 @@ export interface User {
         throw new Error(error.message || 'Kayıt başarısız');
       }
   
-      return await response.json();
+      const savedUser = await response.json();
+      
+      // AuthResponse formatına dönüştür
+      const token = 'jwt-token-' + Date.now();
+      return {
+        user: {
+          id: savedUser.id,
+          name: savedUser.name,
+          email: savedUser.email,
+          phone: savedUser.phone,
+          address: savedUser.address,
+          preferences: savedUser.preferences,
+          createdAt: savedUser.createdAt,
+          updatedAt: savedUser.updatedAt
+        },
+        token
+      };
     }
   
     async getCurrentUser(): Promise<User> {

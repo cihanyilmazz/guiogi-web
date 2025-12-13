@@ -14,8 +14,17 @@
       "rating": 4.8,
       "reviewCount": 124,
       "specialOffer": "Erken Rezervasyon Fırsatı",
-      "included": ["Balon uçuşu", "Geleneksel kahvaltı", "Profesyonel fotoğraf", "Sigorta"],
-      "highlights": ["Gün doğumu manzarası", "Peri bacaları", "Açık hava müzesi"],
+      "included": [
+        "Balon uçuşu",
+        "Geleneksel kahvaltı",
+        "Profesyonel fotoğraf",
+        "Sigorta"
+      ],
+      "highlights": [
+        "Gün doğumu manzarası",
+        "Peri bacaları",
+        "Açık hava müzesi"
+      ],
       "price": 2500,
       "discount": 15
     },
@@ -33,8 +42,17 @@
       "rating": 4.6,
       "reviewCount": 89,
       "specialOffer": "Aile Paketi",
-      "included": ["Termal havuz girişi", "Konaklama", "Rehberlik", "Transfer"],
-      "highlights": ["Travertenler", "Antik havuz", "Hierapolis antik kenti"],
+      "included": [
+        "Termal havuz girişi",
+        "Konaklama",
+        "Rehberlik",
+        "Transfer"
+      ],
+      "highlights": [
+        "Travertenler",
+        "Antik havuz",
+        "Hierapolis antik kenti"
+      ],
       "price": 1800,
       "discount": 10
     },
@@ -52,8 +70,17 @@
       "rating": 4.9,
       "reviewCount": 156,
       "specialOffer": "Haftalık Kiralama",
-      "included": ["Yat konaklama", "Tam pansiyon", "Tekne turu", "Sualtı ekipmanı"],
-      "highlights": ["Özel koylar", "Güneş batımı", "Deniz sporları"],
+      "included": [
+        "Yat konaklama",
+        "Tam pansiyon",
+        "Tekne turu",
+        "Sualtı ekipmanı"
+      ],
+      "highlights": [
+        "Özel koylar",
+        "Güneş batımı",
+        "Deniz sporları"
+      ],
       "price": 5000,
       "discount": 20
     },
@@ -71,8 +98,17 @@
       "rating": 4.7,
       "reviewCount": 67,
       "specialOffer": "Fotoğrafçılık Turu",
-      "included": ["Doğa yürüyüşü", "Yöresel konaklama", "Rehber", "Fotoğraf rehberi"],
-      "highlights": ["Yaylalar", "Şelaleler", "Yöresel mutfak"],
+      "included": [
+        "Doğa yürüyüşü",
+        "Yöresel konaklama",
+        "Rehber",
+        "Fotoğraf rehberi"
+      ],
+      "highlights": [
+        "Yaylalar",
+        "Şelaleler",
+        "Yöresel mutfak"
+      ],
       "price": 2200,
       "discount": 5
     },
@@ -90,8 +126,17 @@
       "rating": 4.5,
       "reviewCount": 203,
       "specialOffer": "Öğrenci İndirimi",
-      "included": ["Müze girişleri", "Boğaz turu", "Ulaşım", "Profesyonel rehber"],
-      "highlights": ["Tarihi yarımada", "Boğaz turu", "Müzeler"],
+      "included": [
+        "Müze girişleri",
+        "Boğaz turu",
+        "Ulaşım",
+        "Profesyonel rehber"
+      ],
+      "highlights": [
+        "Tarihi yarımada",
+        "Boğaz turu",
+        "Müzeler"
+      ],
       "price": 1500
     },
     {
@@ -108,8 +153,17 @@
       "rating": 4.8,
       "reviewCount": 78,
       "specialOffer": "İlk Dalış Paketi",
-      "included": ["Dalış ekipmanı", "Eğitmen", "Tekne turu", "Sertifika"],
-      "highlights": ["Sualtı yaşamı", "Batık keşfi", "Dalış eğitimi"],
+      "included": [
+        "Dalış ekipmanı",
+        "Eğitmen",
+        "Tekne turu",
+        "Sertifika"
+      ],
+      "highlights": [
+        "Sualtı yaşamı",
+        "Batık keşfi",
+        "Dalış eğitimi"
+      ],
       "price": 3200,
       "discount": 12
     },
@@ -127,8 +181,17 @@
       "rating": 4.4,
       "reviewCount": 45,
       "specialOffer": "Kültür Pasaportu",
-      "included": ["Tarihi mekanlar", "Yöresel konaklama", "Kültür rehberi", "El sanatı atölyesi"],
-      "highlights": ["Tarihi kervansaraylar", "Dağ manzaraları", "Kültürel etkileşim"],
+      "included": [
+        "Tarihi mekanlar",
+        "Yöresel konaklama",
+        "Kültür rehberi",
+        "El sanatı atölyesi"
+      ],
+      "highlights": [
+        "Tarihi kervansaraylar",
+        "Dağ manzaraları",
+        "Kültürel etkileşim"
+      ],
       "price": 2800,
       "discount": 8
     },
@@ -146,10 +209,334 @@
       "rating": 4.9,
       "reviewCount": 112,
       "specialOffer": "Honeymoon Paketi",
-      "included": ["Lüks yat", "Gurme yemekler", "Spa hizmetleri", "Özel koy turu"],
-      "highlights": ["Lüks konfor", "Özel koylar", "Gurme deneyim"],
+      "included": [
+        "Lüks yat",
+        "Gurme yemekler",
+        "Spa hizmetleri",
+        "Özel koy turu"
+      ],
+      "highlights": [
+        "Lüks konfor",
+        "Özel koylar",
+        "Gurme deneyim"
+      ],
       "price": 6500,
       "discount": 25
+    },
+    {
+      "id": 9,
+      "title": "Bodrum Koylar Turu",
+      "description": "Bodrum'un eşsiz koylarını keşfedin. Mavi bayraklı plajlar ve kristal berraklığında deniz.",
+      "coverImage": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Muğla, Türkiye",
+      "duration": "2 Gece 3 Gün",
+      "groupSize": "16 Kişi",
+      "category": "Deniz",
+      "season": "Yaz",
+      "guide": "Deniz Arslan",
+      "rating": 4.7,
+      "reviewCount": 98,
+      "specialOffer": "Aile İndirimi",
+      "included": [
+        "Tekne turu",
+        "Plaj girişleri",
+        "Öğle yemeği",
+        "Rehber"
+      ],
+      "highlights": [
+        "Mavi bayraklı plajlar",
+        "Koylar",
+        "Güneşlenme"
+      ],
+      "price": 1900,
+      "discount": 10
+    },
+    {
+      "id": 10,
+      "title": "Safranbolu Tarihi Evler Turu",
+      "description": "Osmanlı mimarisinin en güzel örneklerini görebileceğiniz Safranbolu'da tarihi bir yolculuk.",
+      "coverImage": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Karabük, Türkiye",
+      "duration": "1 Gece 2 Gün",
+      "groupSize": "18 Kişi",
+      "category": "Kültür",
+      "season": "Tüm Yıl",
+      "guide": "Emre Çelik",
+      "rating": 4.6,
+      "reviewCount": 134,
+      "specialOffer": "Kültür Gezisi",
+      "included": [
+        "Tarihi ev ziyareti",
+        "Müze girişi",
+        "Yöresel yemek",
+        "Rehber"
+      ],
+      "highlights": [
+        "Osmanlı mimarisi",
+        "Tarihi sokaklar",
+        "El sanatları"
+      ],
+      "price": 1200,
+      "discount": 8
+    },
+    {
+      "id": 11,
+      "title": "Uludağ Kayak Turu",
+      "description": "Kış sporlarının merkezi Uludağ'da kayak keyfi. Profesyonel eğitmenler eşliğinde kayak öğrenin.",
+      "coverImage": "https://images.unsplash.com/photo-1551524164-6cf77f7e7368?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Bursa, Türkiye",
+      "duration": "2 Gece 3 Gün",
+      "groupSize": "10 Kişi",
+      "category": "Spor",
+      "season": "Kış",
+      "guide": "Murat Kaya",
+      "rating": 4.8,
+      "reviewCount": 156,
+      "specialOffer": "Kayak Paketi",
+      "included": [
+        "Kayak ekipmanı",
+        "Eğitmen",
+        "Lift kartı",
+        "Konaklama"
+      ],
+      "highlights": [
+        "Kayak pistleri",
+        "Kar manzarası",
+        "Kış sporları"
+      ],
+      "price": 2800,
+      "discount": 15
+    },
+    {
+      "id": 12,
+      "title": "Efes Antik Kent Turu",
+      "description": "Antik dünyanın en görkemli şehirlerinden biri Efes'i keşfedin. Tarih ve arkeoloji tutkunları için.",
+      "coverImage": "https://images.unsplash.com/photo-1604881991720-f91bf9e5e3a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "İzmir, Türkiye",
+      "duration": "1 Gece 2 Gün",
+      "groupSize": "25 Kişi",
+      "category": "Kültür",
+      "season": "Tüm Yıl",
+      "guide": "Selma Yıldırım",
+      "rating": 4.9,
+      "reviewCount": 287,
+      "specialOffer": "Arkeoloji Turu",
+      "included": [
+        "Antik kent girişi",
+        "Müze ziyareti",
+        "Profesyonel rehber",
+        "Ulaşım"
+      ],
+      "highlights": [
+        "Efes antik kenti",
+        "Celsus Kütüphanesi",
+        "Artemis Tapınağı"
+      ],
+      "price": 1400,
+      "discount": 5
+    },
+    {
+      "id": 13,
+      "title": "Fethiye Ölüdeniz Yamaç Paraşütü",
+      "description": "Dünyanın en güzel manzaralarından birinde yamaç paraşütü deneyimi. Ölüdeniz'in muhteşem manzarası.",
+      "coverImage": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Muğla, Türkiye",
+      "duration": "1 Gün",
+      "groupSize": "4 Kişi",
+      "category": "Spor",
+      "season": "Yaz-İlkbahar",
+      "guide": "Cem Özdemir",
+      "rating": 5.0,
+      "reviewCount": 203,
+      "specialOffer": "Adrenalin Paketi",
+      "included": [
+        "Yamaç paraşütü",
+        "Eğitmen",
+        "Video çekimi",
+        "Sigorta"
+      ],
+      "highlights": [
+        "Ölüdeniz manzarası",
+        "Adrenalin",
+        "Havadan görüntü"
+      ],
+      "price": 1500,
+      "discount": 0
+    },
+    {
+      "id": 14,
+      "title": "Trabzon Sümela Manastırı Turu",
+      "description": "Sarp kayalıklara oyulmuş tarihi Sümela Manastırı'nı ziyaret edin. Doğu Karadeniz'in mistik atmosferi.",
+      "coverImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Trabzon, Türkiye",
+      "duration": "2 Gece 3 Gün",
+      "groupSize": "15 Kişi",
+      "category": "Kültür",
+      "season": "Tüm Yıl",
+      "guide": "Gülay Şen",
+      "rating": 4.5,
+      "reviewCount": 112,
+      "specialOffer": "Tarihi Yolculuk",
+      "included": [
+        "Manastır ziyareti",
+        "Uzungöl turu",
+        "Yöresel konaklama",
+        "Rehber"
+      ],
+      "highlights": [
+        "Sümela Manastırı",
+        "Uzungöl",
+        "Doğa manzarası"
+      ],
+      "price": 2100,
+      "discount": 12
+    },
+    {
+      "id": 15,
+      "title": "Çanakkale Gelibolu Tarihi Tur",
+      "description": "Çanakkale Savaşı'nın izlerini takip edin. Tarihi anıtlar ve şehitlikler ziyareti.",
+      "coverImage": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Çanakkale, Türkiye",
+      "duration": "2 Gece 3 Gün",
+      "groupSize": "20 Kişi",
+      "category": "Kültür",
+      "season": "Tüm Yıl",
+      "guide": "Mehmet Aktaş",
+      "rating": 4.7,
+      "reviewCount": 178,
+      "specialOffer": "Tarih Turu",
+      "included": [
+        "Anıt ziyaretleri",
+        "Müze girişi",
+        "Rehber",
+        "Ulaşım"
+      ],
+      "highlights": [
+        "Gelibolu Yarımadası",
+        "Tarihi anıtlar",
+        "Şehitlikler"
+      ],
+      "price": 1600,
+      "discount": 10
+    },
+    {
+      "id": 16,
+      "title": "Kaş Sualtı Turu",
+      "description": "Akdeniz'in en berrak sularında sualtı dünyasını keşfedin. Snorkeling ve dalış imkanı.",
+      "coverImage": "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Antalya, Türkiye",
+      "duration": "2 Gece 3 Gün",
+      "groupSize": "8 Kişi",
+      "category": "Deniz",
+      "season": "Yaz",
+      "guide": "Serkan Yılmaz",
+      "rating": 4.8,
+      "reviewCount": 145,
+      "specialOffer": "Sualtı Macerası",
+      "included": [
+        "Snorkeling ekipmanı",
+        "Tekne turu",
+        "Rehber",
+        "Öğle yemeği"
+      ],
+      "highlights": [
+        "Berrak sular",
+        "Sualtı yaşamı",
+        "Koylar"
+      ],
+      "price": 2400,
+      "discount": 18
+    },
+    {
+      "id": 17,
+      "title": "Nemrut Dağı Gün Doğumu Turu",
+      "description": "Nemrut Dağı'nda gün doğumunu izleyin. Kommagene Krallığı'nın dev heykelleri arasında tarihi bir deneyim.",
+      "coverImage": "https://images.unsplash.com/photo-1590736969955-71cc94901144?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "Adıyaman, Türkiye",
+      "duration": "2 Gece 3 Gün",
+      "groupSize": "12 Kişi",
+      "category": "Kültür",
+      "season": "Yaz-İlkbahar",
+      "guide": "Hakan Doğan",
+      "rating": 4.6,
+      "reviewCount": 89,
+      "specialOffer": "Gün Doğumu Özel",
+      "included": [
+        "Nemrut ziyareti",
+        "Gün doğumu turu",
+        "Konaklama",
+        "Rehber"
+      ],
+      "highlights": [
+        "Gün doğumu",
+        "Dev heykeller",
+        "Tarihi atmosfer"
+      ],
+      "price": 2300,
+      "discount": 15
+    },
+    {
+      "id": 18,
+      "title": "Alaçatı Rüzgar Sörfü Turu",
+      "description": "Rüzgar sörfü cenneti Alaçatı'da profesyonel eğitim. Ege'nin rüzgarlı koylarında sörf keyfi.",
+      "coverImage": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80",
+      "location": "İzmir, Türkiye",
+      "duration": "3 Gece 4 Gün",
+      "groupSize": "6 Kişi",
+      "category": "Spor",
+      "season": "Yaz",
+      "guide": "Ece Deniz",
+      "rating": 4.9,
+      "reviewCount": 167,
+      "specialOffer": "Sörf Kampı",
+      "included": [
+        "Sörf ekipmanı",
+        "Eğitmen",
+        "Konaklama",
+        "Kahvaltı"
+      ],
+      "highlights": [
+        "Rüzgar sörfü",
+        "Alaçatı koyları",
+        "Eğitim"
+      ],
+      "price": 3500,
+      "discount": 20
+    }
+  ],
+  "users": [
+    {
+      "id": "872b",
+      "name": "dsdfds",
+      "email": "demo@cihan.com",
+      "phone": "",
+      "password": "123456",
+      "address": "",
+      "preferences": "",
+      "createdAt": "2025-12-13T11:12:27.816Z",
+      "updatedAt": "2025-12-13T11:12:27.816Z"
+    },
+    {
+      "id": "9f68",
+      "name": "ccc",
+      "email": "demo@cihan.com",
+      "phone": "",
+      "password": "123456",
+      "address": "",
+      "preferences": "",
+      "createdAt": "2025-12-13T11:15:35.666Z",
+      "updatedAt": "2025-12-13T11:15:35.666Z"
+    },
+    {
+      "id": "da75",
+      "name": "ccccc",
+      "email": "cihan@cihan.com",
+      "phone": "",
+      "password": "123456",
+      "address": "",
+      "preferences": "",
+      "createdAt": "2025-12-13T11:17:19.784Z",
+      "updatedAt": "2025-12-13T11:17:19.784Z"
     }
   ]
 }

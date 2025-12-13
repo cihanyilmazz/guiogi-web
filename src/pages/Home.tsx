@@ -21,6 +21,9 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  
+  // Anasayfada gösterilecek tur sayısı
+  const TOURS_TO_DISPLAY = 12;
 
   // API'den turları çek
 useEffect(() => {
@@ -187,7 +190,7 @@ useEffect(() => {
             </div>
 
             <Row gutter={[16, 16]}>
-              {tours.map((tour) => (
+              {tours.slice(0, TOURS_TO_DISPLAY).map((tour) => (
                 <Col xs={24} sm={12} md={12} lg={8} xl={6} key={tour.id}>
                   <Card
                     className="tour-card w-full hover:shadow-lg transition-all duration-300 border border-gray-200 rounded-lg bg-white"
@@ -292,9 +295,10 @@ useEffect(() => {
               ))}
             </Row>
             
-            {/* Toplam tur sayısı */}
+            {/* Gösterilen tur sayısı */}
             <div className="mt-8 text-center text-gray-500 text-sm">
-              {tours.length} tur listeleniyor
+              {Math.min(tours.length, TOURS_TO_DISPLAY)} tur gösteriliyor
+              {tours.length > TOURS_TO_DISPLAY && ` (toplam ${tours.length} tur)`}
             </div>
           </div>
         </div>
