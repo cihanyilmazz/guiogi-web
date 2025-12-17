@@ -45,13 +45,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Rol kontrolü
   if (requiredRole) {
-    if (requiredRole === 'admin' && user.role !== 'admin') {
+    const userRole = user.role;
+    
+    if (requiredRole === 'admin' && userRole !== 'admin') {
       return <Navigate to="/" replace />;
     }
-    if (requiredRole === 'agent' && user.role !== 'agent' && user.role !== 'admin') {
+    if (requiredRole === 'agent' && userRole !== 'agent' && userRole !== 'admin') {
       return <Navigate to="/" replace />;
     }
-    if (requiredRole === 'user' && user.role !== 'user' && user.role !== 'admin' && user.role !== 'agent') {
+    if (requiredRole === 'user' && userRole !== 'user' && userRole !== 'agent' && userRole !== 'admin') {
       return <Navigate to="/" replace />;
     }
   }

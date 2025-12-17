@@ -4,11 +4,13 @@ import { Table, Button, Space, Popconfirm, message, Modal, Form, Input, Select, 
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { blogService, BlogPost } from '../../services/blogService';
+import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 const BlogManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -179,7 +181,13 @@ const BlogManagement: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div style={{ 
+      padding: isMobile ? '16px' : '24px',
+      background: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+      minHeight: '100%'
+    }}>
       <div style={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
@@ -250,9 +258,9 @@ const BlogManagement: React.FC = () => {
               <Form.Item
                 name="category"
                 label="Kategori"
-                rules={[{ required: true, message: 'Kategori gerekli' }]}
+                rules={[{ required: true, message: t("admin.categoryRequired") }]}
               >
-                <Select placeholder="Kategori seçin">
+                <Select placeholder={t("admin.selectCategory")}>
                   {categories.map(cat => (
                     <Option key={cat} value={cat}>{cat}</Option>
                   ))}
@@ -264,22 +272,22 @@ const BlogManagement: React.FC = () => {
           <Form.Item
             name="excerpt"
             label="Özet"
-            rules={[{ required: true, message: 'Özet gerekli' }]}
+                rules={[{ required: true, message: t("admin.summaryRequired") }]}
           >
             <TextArea
               rows={3}
-              placeholder="Blog yazısının kısa özeti (liste sayfasında görünecek)"
+              placeholder={t("admin.blogExcerptPlaceholder")}
             />
           </Form.Item>
 
           <Form.Item
             name="content"
             label="İçerik"
-            rules={[{ required: true, message: 'İçerik gerekli' }]}
+                rules={[{ required: true, message: t("admin.contentRequired") }]}
           >
             <TextArea
               rows={10}
-              placeholder="Blog yazısının tam içeriği (HTML formatında yazabilirsiniz)"
+              placeholder={t("admin.blogContentPlaceholder")}
             />
           </Form.Item>
 
@@ -288,7 +296,7 @@ const BlogManagement: React.FC = () => {
               <Form.Item
                 name="featuredImage"
                 label="Öne Çıkan Görsel URL"
-                rules={[{ required: true, message: 'Görsel URL gerekli' }]}
+                rules={[{ required: true, message: t("admin.imageUrlRequired") }]}
               >
                 <Input placeholder="https://..." />
               </Form.Item>
@@ -297,9 +305,9 @@ const BlogManagement: React.FC = () => {
               <Form.Item
                 name="author"
                 label="Yazar"
-                rules={[{ required: true, message: 'Yazar gerekli' }]}
+                rules={[{ required: true, message: t("admin.authorRequired") }]}
               >
-                <Input placeholder="Yazar adı" />
+                <Input placeholder={t("admin.authorName")} />
               </Form.Item>
             </Col>
           </Row>

@@ -30,16 +30,18 @@ import {
   EyeTwoTone,
 } from "@ant-design/icons";
 import { tourService, Tour } from "../services/tourService";
-import { useAuth } from "../context/AuthContext"; // BU SATIRI EKLEYİN
+import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 const { Item } = Form;
 
 const TourDetail: React.FC = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, login, user } = useAuth(); // useAuth hook'unu kullan
+  const { isAuthenticated, login, user } = useAuth();
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +56,7 @@ const TourDetail: React.FC = () => {
   useEffect(() => {
     const fetchTourData = async () => {
       if (!id) {
-        setError("Tur ID bulunamadı");
+        setError(t("tourDetail.tourNotFound"));
         setLoading(false);
         return;
       }
@@ -75,7 +77,7 @@ const TourDetail: React.FC = () => {
         setRelatedTours(relatedTours);
       } catch (err: any) {
         console.error("Hata:", err);
-        setError(err.message || "Tur detayları yüklenirken bir hata oluştu");
+        setError(err.message || t("tourDetail.loading"));
       } finally {
         setLoading(false);
       }
@@ -86,9 +88,7 @@ const TourDetail: React.FC = () => {
 
   const handleBookTour = () => {
     if (!isAuthenticated) {
-      message.warning(
-        "Fiyatları görmek ve rezervasyon yapmak için giriş yapmalısınız.",
-      );
+      message.warning(t("tourDetail.mustLoginToBook"));
       setLoginModalVisible(true);
       return;
     }
@@ -101,11 +101,11 @@ const TourDetail: React.FC = () => {
     try {
       setLoginLoading(true);
       await login(values.email, values.password);
-      message.success("Giriş başarılı!");
+      message.success(t("tourDetail.loginSuccess"));
       setLoginModalVisible(false);
       loginForm.resetFields();
     } catch (err) {
-      message.error("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+      message.error(t("tourDetail.loginError"));
     } finally {
       setLoginLoading(false);
     }
@@ -120,12 +120,12 @@ const TourDetail: React.FC = () => {
       setRegisterLoading(true);
       // Burada register fonksiyonunu çağır
       // Örnek: await register(values.name, values.email, values.password);
-      message.success("Kayıt başarılı! Giriş yapabilirsiniz.");
+      message.success(t("tourDetail.registerSuccess"));
       setRegisterModalVisible(false);
       registerForm.resetFields();
       setLoginModalVisible(true);
     } catch (err) {
-      message.error("Kayıt başarısız. Lütfen tekrar deneyin.");
+      message.error(t("tourDetail.registerError"));
     } finally {
       setRegisterLoading(false);
     }
@@ -138,11 +138,10 @@ const TourDetail: React.FC = () => {
           <div className="text-center">
             <LockOutlined className="text-yellow-500 text-2xl sm:text-3xl mb-2 sm:mb-3" />
             <h3 className="text-base sm:text-lg font-semibold text-yellow-800 mb-2">
-              Fiyatı Görmek İçin Giriş Yapın
+              {t("tourDetail.loginToSeePrice")}
             </h3>
             <p className="text-yellow-600 text-sm sm:text-base mb-3 sm:mb-4">
-              Tur fiyatlarını görmek ve rezervasyon yapmak için giriş
-              yapmalısınız.
+              {t("tourDetail.loginToSeePriceDesc")}
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
               <Button
@@ -150,13 +149,13 @@ const TourDetail: React.FC = () => {
                 className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
                 onClick={() => setLoginModalVisible(true)}
               >
-                Giriş Yap
+                {t("tourDetail.login")}
               </Button>
               <Button
                 className="border-blue-600 text-blue-600 hover:border-blue-700 hover:text-blue-700 w-full sm:w-auto"
                 onClick={() => setRegisterModalVisible(true)}
               >
-                Kayıt Ol
+                {t("tourDetail.register")}
               </Button>
             </div>
           </div>
@@ -179,7 +178,7 @@ const TourDetail: React.FC = () => {
                 </span>
               </div>
               <Tag color="red" className="text-xs sm:text-sm font-semibold px-2 py-1">
-                %{tour.discount} İNDİRİM
+                %{tour.discount} {t("tourDetail.discount")}
               </Tag>
             </div>
           ) : (
@@ -188,7 +187,7 @@ const TourDetail: React.FC = () => {
             </div>
           )}
         </div>
-        <div className="text-gray-600 text-xs sm:text-sm mb-4 font-medium">Kişi Başı</div>
+        <div className="text-gray-600 text-xs sm:text-sm mb-4 font-medium">{t("tourDetail.perPerson")}</div>
         <Button
           type="primary"
           size="large"
@@ -196,10 +195,10 @@ const TourDetail: React.FC = () => {
           className="bg-[#9E0102] hover:bg-[#8B0000] h-11 sm:h-12 text-base sm:text-lg font-semibold shadow-md hover:shadow-lg transition-all"
           onClick={handleBookTour}
         >
-          Şimdi Rezervasyon Yap
+          {t("tourDetail.bookNow")}
         </Button>
         <div className="mt-4 text-xs sm:text-sm text-gray-500 text-center">
-          Hoş geldiniz, <span className="font-semibold text-gray-700">{user?.name}</span>!
+          {t("tourDetail.welcome")} <span className="font-semibold text-gray-700">{user?.name}</span>!
         </div>
       </div>
     );
@@ -208,7 +207,7 @@ const TourDetail: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" tip="Tur detayları yükleniyor..." />
+        <Spin size="large" tip={t("tourDetail.loading")} />
       </div>
     );
   }
@@ -217,13 +216,13 @@ const TourDetail: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <Alert
-          message="Hata"
-          description={error || "Tur bulunamadı"}
+          message={t("tourDetail.error")}
+          description={error || t("tourDetail.tourNotFound")}
           type="error"
           showIcon
           action={
             <Button size="small" onClick={() => navigate("/")}>
-              Ana Sayfaya Dön
+              {t("tourDetail.backToHome")}
             </Button>
           }
         />
@@ -245,7 +244,7 @@ const TourDetail: React.FC = () => {
               className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border-gray-300 text-gray-700 hover:text-gray-900 shadow-sm hover:shadow-md transition-all duration-200 px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base font-medium rounded-lg"
               size="middle"
             >
-              Geri Dön
+              {t("tourDetail.goBack")}
             </Button>
           </div>
           {/* Ana Bilgiler */}
@@ -276,13 +275,13 @@ const TourDetail: React.FC = () => {
                     {tour.specialOffer}
                   </Tag>
                   <Tag color="orange" className="text-xs sm:text-sm md:text-base py-1 px-2 sm:px-3">
-                    {tour.season} Mevsimi
+                    {tour.season} {t("tourDetail.season")}
                   </Tag>
                   <div className="flex items-center w-full sm:w-auto sm:ml-auto mt-2 sm:mt-0">
                     <StarFilled className="text-yellow-500 text-base sm:text-lg md:text-xl mr-1" />
                     <span className="text-sm sm:text-base md:text-lg font-bold">{tour.rating}</span>
                     <span className="text-gray-500 text-xs sm:text-sm md:text-base ml-1">
-                      ({tour.reviewCount} yorum)
+                      ({tour.reviewCount} {t("tourDetail.reviews")})
                     </span>
                   </div>
                 </div>
@@ -298,7 +297,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-start">
                     <EnvironmentOutlined className="text-blue-500 text-base sm:text-lg md:text-xl mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-xs sm:text-sm md:text-base">Lokasyon</div>
+                      <div className="font-medium text-xs sm:text-sm md:text-base">{t("tourDetail.location")}</div>
                       <div className="text-gray-600 text-xs sm:text-sm md:text-base break-words">{tour.location}</div>
                     </div>
                   </div>
@@ -306,7 +305,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-start">
                     <CalendarOutlined className="text-green-500 text-base sm:text-lg md:text-xl mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-xs sm:text-sm md:text-base">Süre</div>
+                      <div className="font-medium text-xs sm:text-sm md:text-base">{t("tourDetail.duration")}</div>
                       <div className="text-gray-600 text-xs sm:text-sm md:text-base break-words">{tour.duration}</div>
                     </div>
                   </div>
@@ -314,7 +313,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-start">
                     <UserOutlined className="text-purple-500 text-base sm:text-lg md:text-xl mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-xs sm:text-sm md:text-base">Grup Büyüklüğü</div>
+                      <div className="font-medium text-xs sm:text-sm md:text-base">{t("tourDetail.groupSize")}</div>
                       <div className="text-gray-600 text-xs sm:text-sm md:text-base break-words">{tour.groupSize}</div>
                     </div>
                   </div>
@@ -322,7 +321,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-start">
                     <UserOutlined className="text-orange-500 text-base sm:text-lg md:text-xl mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-xs sm:text-sm md:text-base">Rehber</div>
+                      <div className="font-medium text-xs sm:text-sm md:text-base">{t("tourDetail.guide")}</div>
                       <div className="text-gray-600 text-xs sm:text-sm md:text-base break-words">{tour.guide}</div>
                     </div>
                   </div>
@@ -341,37 +340,33 @@ const TourDetail: React.FC = () => {
             tabBarStyle={{ marginBottom: '16px' }}
             size="small"
           >
-            <TabPane tab="Tur Açıklaması" key="1">
+            <TabPane tab={t("tourDetail.tourDescription")} key="1">
               <div className="prose max-w-none">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Tur Hakkında</h3>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">{t("tourDetail.aboutTour")}</h3>
                 <div className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed space-y-3 sm:space-y-4">
                   <p>{tour.description}</p>
                   <p>
-                    Bu tur, deneyimli rehberlerimiz eşliğinde gerçekleştirilmektedir. 
-                    Tüm güvenlik önlemleri alınmış olup, sigorta kapsamındadır. 
-                    Grup halinde yapılan bu turda, diğer katılımcılarla birlikte unutulmaz anılar biriktireceksiniz.
+                    {t("tourDetail.tourDescriptionText1")}
                   </p>
                   <p>
-                    Tur süresince konforlu ulaşım araçları kullanılmakta, tüm giriş ücretleri 
-                    ve rehberlik hizmetleri paket fiyata dahildir. Özel diyet gereksinimleriniz varsa 
-                    lütfen rezervasyon sırasında belirtiniz.
+                    {t("tourDetail.tourDescriptionText2")}
                   </p>
                   <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">Önemli Notlar:</h4>
+                    <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">{t("tourDetail.importantNotes")}</h4>
                     <ul className="list-disc list-inside space-y-1.5 sm:space-y-2 text-blue-800 text-xs sm:text-sm md:text-base">
-                      <li>Tur başlangıç saatinden 15 dakika önce buluşma noktasında olmanız gerekmektedir.</li>
-                      <li>Rahat yürüyüş ayakkabıları ve mevsim koşullarına uygun kıyafetler getirmenizi öneririz.</li>
-                      <li>Fotoğraf çekimi için kamera veya telefon getirebilirsiniz.</li>
-                      <li>Tur süresince rehberimizin talimatlarına uymanız güvenliğiniz için önemlidir.</li>
+                      <li>{t("tourDetail.note1")}</li>
+                      <li>{t("tourDetail.note2")}</li>
+                      <li>{t("tourDetail.note3")}</li>
+                      <li>{t("tourDetail.note4")}</li>
                     </ul>
                   </div>
                 </div>
               </div>
             </TabPane>
 
-            <TabPane tab="Tur Programı" key="2">
+            <TabPane tab={t("tourDetail.tourProgram")} key="2">
               <div className="space-y-3 sm:space-y-4">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Tur Programı</h3>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">{t("tourDetail.tourProgram")}</h3>
                 <List
                   dataSource={tour.highlights}
                   renderItem={(item, index) => {
@@ -450,7 +445,7 @@ const TourDetail: React.FC = () => {
                       }
                       
                       // Varsayılan açıklama
-                      return `${item} aktivitesi ile ilgili detaylı bilgi ve rehber eşliğinde keşif. Bu özel deneyim ile bölgenin en önemli özelliklerinden birini yakından tanıma fırsatı bulacaksınız.`;
+                      return t("tourDetail.defaultHighlightDesc", { item });
                     };
                     
                     return (
@@ -473,10 +468,10 @@ const TourDetail: React.FC = () => {
               </div>
             </TabPane>
 
-            <TabPane tab="Dahil Olanlar" key="3">
+            <TabPane tab={t("tourDetail.included")} key="3">
               <div className="space-y-3 sm:space-y-4">
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">
-                  Pakete Dahil Olanlar
+                  {t("tourDetail.included")}
                 </h3>
                 {(tour.included?.length ?? 0) > 0 ? (
                   <Row gutter={[12, 12]} className="sm:gutter-[16px]">
@@ -491,7 +486,7 @@ const TourDetail: React.FC = () => {
                   </Row>
                 ) : (
                   <div className="text-center p-6 sm:p-8 text-gray-500 text-sm sm:text-base">
-                    Bu tur için dahil olanlar listesi bulunmamaktadır.
+                    {t("tourDetail.noIncludedItems")}
                   </div>
                 )}
               </div>
@@ -505,10 +500,10 @@ const TourDetail: React.FC = () => {
             <div className="container mx-auto px-3 sm:px-4 md:px-6">
               <div className="mb-4 sm:mb-6 md:mb-8 text-center">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                  Benzer Turlar
+                  {t("tourDetail.similarTours")}
                 </h2>
                 <p className="text-gray-600 text-sm sm:text-base">
-                  Aynı kategorideki diğer turları keşfedin
+                  {t("tourDetail.discoverOtherTours")}
                 </p>
               </div>
 
@@ -539,7 +534,7 @@ const TourDetail: React.FC = () => {
                           {relatedTour.discount && (
                             <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
                               <Tag color="red" className="text-xs sm:text-sm font-bold">
-                                %{relatedTour.discount} İndirim
+                                %{relatedTour.discount} {t("tours.discount")}
                               </Tag>
                             </div>
                           )}
@@ -600,11 +595,11 @@ const TourDetail: React.FC = () => {
                                   <span className="text-blue-600 font-bold text-base sm:text-lg">
                                     {relatedTour.price
                                       ? `${relatedTour.price} TL`
-                                      : "Fiyat bilgisi yok"}
+                                      : t("tours.noPrice")}
                                   </span>
                                 )}
                                 <div className="text-xs text-gray-500 mt-1">
-                                  Kişi başı
+                                  {t("tourDetail.perPerson")}
                                 </div>
                               </div>
                               <Button
@@ -616,13 +611,13 @@ const TourDetail: React.FC = () => {
                                   navigate(`/tour/${relatedTour.id}`);
                                 }}
                               >
-                                Detaylar
+                                {t("tourDetail.details")}
                               </Button>
                             </div>
                           ) : (
                             <div className="text-center">
                               <p className="text-gray-500 text-xs sm:text-sm mb-2">
-                                Fiyatı görmek için giriş yapın
+                                {t("tourDetail.loginToSeePriceShort")}
                               </p>
                               <Button
                                 type="default"
@@ -633,7 +628,7 @@ const TourDetail: React.FC = () => {
                                   setLoginModalVisible(true);
                                 }}
                               >
-                                Giriş Yap
+                                {t("tourDetail.login")}
                               </Button>
                             </div>
                           )}
@@ -650,7 +645,7 @@ const TourDetail: React.FC = () => {
 
       {/* Giriş Modalı */}
       <Modal
-        title="Giriş Yap"
+        title={t("tourDetail.loginTitle")}
         open={loginModalVisible}
         onCancel={() => setLoginModalVisible(false)}
         footer={null}
@@ -662,22 +657,22 @@ const TourDetail: React.FC = () => {
         <Form form={loginForm} layout="vertical" onFinish={handleLogin}>
           <Item
             name="email"
-            label="E-posta"
+            label={t("tourDetail.email")}
             rules={[
-              { required: true, message: "Lütfen e-posta adresinizi girin" },
-              { type: "email", message: "Geçerli bir e-posta adresi girin" },
+              { required: true, message: t("tourDetail.emailRequired") },
+              { type: "email", message: t("tourDetail.emailInvalid") },
             ]}
           >
-            <Input placeholder="ornek@email.com" />
+            <Input placeholder={t("tourDetail.emailPlaceholder")} />
           </Item>
 
           <Item
             name="password"
-            label="Şifre"
-            rules={[{ required: true, message: "Lütfen şifrenizi girin" }]}
+            label={t("tourDetail.password")}
+            rules={[{ required: true, message: t("tourDetail.passwordRequired") }]}
           >
             <Input.Password
-              placeholder="Şifreniz"
+              placeholder={t("tourDetail.passwordPlaceholder")}
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
@@ -691,7 +686,7 @@ const TourDetail: React.FC = () => {
               loading={loginLoading}
               block
             >
-              Giriş Yap
+              {t("tourDetail.loginButton")}
             </Button>
           </Item>
 
@@ -703,7 +698,7 @@ const TourDetail: React.FC = () => {
                 setRegisterModalVisible(true);
               }}
             >
-              Hesabınız yok mu? Kayıt Olun
+              {t("tourDetail.noAccount")}
             </Button>
           </div>
         </Form>
@@ -711,7 +706,7 @@ const TourDetail: React.FC = () => {
 
       {/* Kayıt Modalı */}
       <Modal
-        title="Kayıt Ol"
+        title={t("tourDetail.registerTitle")}
         open={registerModalVisible}
         onCancel={() => setRegisterModalVisible(false)}
         footer={null}
@@ -723,35 +718,35 @@ const TourDetail: React.FC = () => {
         <Form form={registerForm} layout="vertical" onFinish={handleRegister}>
           <Item
             name="name"
-            label="Ad Soyad"
+            label={t("tourDetail.name")}
             rules={[
-              { required: true, message: "Lütfen adınızı ve soyadınızı girin" },
+              { required: true, message: t("tourDetail.nameRequired") },
             ]}
           >
-            <Input placeholder="Adınız Soyadınız" />
+            <Input placeholder={t("tourDetail.namePlaceholder")} />
           </Item>
 
           <Item
             name="email"
-            label="E-posta"
+            label={t("tourDetail.email")}
             rules={[
-              { required: true, message: "Lütfen e-posta adresinizi girin" },
-              { type: "email", message: "Geçerli bir e-posta adresi girin" },
+              { required: true, message: t("tourDetail.emailRequired") },
+              { type: "email", message: t("tourDetail.emailInvalid") },
             ]}
           >
-            <Input placeholder="ornek@email.com" />
+            <Input placeholder={t("tourDetail.emailPlaceholder")} />
           </Item>
 
           <Item
             name="password"
-            label="Şifre"
+            label={t("tourDetail.password")}
             rules={[
-              { required: true, message: "Lütfen şifrenizi girin" },
-              { min: 6, message: "Şifre en az 6 karakter olmalı" },
+              { required: true, message: t("tourDetail.passwordRequired") },
+              { min: 6, message: t("auth.passwordMinLength") },
             ]}
           >
             <Input.Password
-              placeholder="Şifreniz"
+              placeholder={t("tourDetail.passwordPlaceholder")}
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
@@ -765,7 +760,7 @@ const TourDetail: React.FC = () => {
               loading={registerLoading}
               block
             >
-              Kayıt Ol
+              {t("tourDetail.registerButton")}
             </Button>
           </Item>
 
@@ -777,7 +772,7 @@ const TourDetail: React.FC = () => {
                 setLoginModalVisible(true);
               }}
             >
-              Zaten hesabınız var mı? Giriş Yapın
+              {t("tourDetail.haveAccount")}
             </Button>
           </div>
         </Form>

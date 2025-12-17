@@ -102,7 +102,13 @@ const ContactManagement: React.FC = () => {
   }
 
   return (
-    <div>
+    <div style={{ 
+      padding: isMobile ? '16px' : '24px',
+      background: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+      minHeight: '100%'
+    }}>
       <div style={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',

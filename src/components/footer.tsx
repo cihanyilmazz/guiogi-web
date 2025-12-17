@@ -1,5 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
+import { useTranslation } from "react-i18next";
 import {
   FacebookFilled,
   InstagramFilled,
@@ -10,6 +11,7 @@ import {
 const { Footer } = Layout;
 
 const AppFooter: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Footer className="bg-[#1E1E1E] text-white py-8 md:py-12 mt-auto">
       <div className="container mx-auto px-4">
@@ -22,7 +24,7 @@ const AppFooter: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-8">
           {/* Turlar Kolonu */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-white">Turlar</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">{t("footer.tours")}</h3>
             <ul className="space-y-2">
               <li>
                 <a
@@ -62,7 +64,7 @@ const AppFooter: React.FC = () => {
           {/* Kurumsal Kolonu */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">
-              Kurumsal
+              {t("footer.corporate")}
             </h3>
             <ul className="space-y-2">
               <li>
@@ -70,7 +72,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  İletişim
+                  {t("footer.contact")}
                 </a>
               </li>
               <li>
@@ -78,7 +80,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Hakkımızda
+                  {t("footer.about")}
                 </a>
               </li>
               <li>
@@ -86,7 +88,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  KVKK
+                  {t("footer.kvkk")}
                 </a>
               </li>
               <li>
@@ -94,7 +96,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Kullanım Sözleşmesi
+                  {t("footer.termsOfService")}
                 </a>
               </li>
             </ul>
@@ -103,7 +105,7 @@ const AppFooter: React.FC = () => {
           {/* Kampanyalar Kolonu */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">
-              Kampanyalar
+              {t("footer.campaigns")}
             </h3>
             <ul className="space-y-2">
               <li>
@@ -111,7 +113,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Dubai Kampanyaları
+                  {t("footer.dubaiCampaigns")}
                 </a>
               </li>
               <li>
@@ -119,7 +121,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Meksika Kampanyaları
+                  {t("footer.mexicoCampaigns")}
                 </a>
               </li>
               <li>
@@ -127,7 +129,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Misir Kampanyaları
+                  {t("footer.egyptCampaigns")}
                 </a>
               </li>
               <li>
@@ -135,7 +137,7 @@ const AppFooter: React.FC = () => {
                   href="#"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
-                  Tüm Kampanyalar
+                  {t("footer.allCampaigns")}
                 </a>
               </li>
             </ul>
@@ -144,7 +146,7 @@ const AppFooter: React.FC = () => {
           {/* Sosyal Medya Kolonu */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">
-              Sosyal Medya
+              {t("footer.socialMedia")}
             </h3>
             <div className="flex space-x-4">
               <a
@@ -179,7 +181,7 @@ const AppFooter: React.FC = () => {
         <div className="border-t border-gray-700 pt-6">
           <div className="text-center text-gray-400">
             <p className="text-sm md:text-base">
-              GuiaOgi - Tüm hakları saklıdır
+              {t("footer.allRightsReserved")}
             </p>
           </div>
         </div>

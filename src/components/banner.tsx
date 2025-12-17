@@ -5,8 +5,10 @@ import { DatePicker, Select } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { tourService } from '../services/tourService';
+import { useTranslation } from 'react-i18next';
 
 const Banner = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedTour, setSelectedTour] = useState('');
@@ -62,11 +64,10 @@ const Banner = () => {
           {/* Başlık */}
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-5xl font-bold mb-4">
-              TUR ARA
+              {t("banner.searchTour")}
             </h1>
             <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-              Lorem Ipsum has been the industry's standard dummy text ever since the
+              {t("banner.bannerDesc")}
             </p>
           </div>
 
@@ -77,13 +78,13 @@ const Banner = () => {
               <div className="relative">
                 <label className="block text-gray-700 text-sm font-medium mb-2">
                   <CalendarOutlined className="mr-2" />
-                  Tarih Seçiniz
+                  {t("banner.selectDate")}
                 </label>
                 <DatePicker
                   value={selectedDate}
                   onChange={(date) => setSelectedDate(date)}
                   format="DD/MM/YYYY"
-                  placeholder="Tarih seçiniz"
+                  placeholder={t("banner.datePlaceholder")}
                   className="w-full [&_.ant-picker-input>input::placeholder]:!text-gray-500 [&_.ant-picker-input>input]:text-gray-700 [&_.ant-picker-input>input]:text-base"
                   size="large"
                   style={{ width: '100%' }}
@@ -99,12 +100,12 @@ const Banner = () => {
               <div className="relative">
                 <label className="block text-gray-700 text-sm font-medium mb-2">
                   <GlobalOutlined className="mr-2" />
-                  Tur Seçiniz
+                  {t("banner.selectTour")}
                 </label>
                 <Select
                   value={selectedTour || undefined}
                   onChange={(value) => setSelectedTour(value)}
-                  placeholder="Tur tipi seçiniz"
+                  placeholder={t("banner.tourTypePlaceholder")}
                   className="w-full [&_.ant-select-selection-placeholder]:!text-gray-500"
                   size="large"
                   allowClear
@@ -127,7 +128,7 @@ const Banner = () => {
                   className="w-full bg-[#9E0102] text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <SearchOutlined className="mr-2" />
-                  {loading ? 'Aranıyor...' : 'ARA'}
+                  {loading ? t("banner.searching") : t("banner.search")}
                 </button>
               </div>
             </div>
@@ -140,21 +141,21 @@ const Banner = () => {
                   onClick={() => navigate('/turlar?special=popular')}
                   className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
-                  Popüler Turlar
+                  {t("banner.popularTours")}
                 </button>
                 <button 
                   type="button"
                   onClick={() => navigate('/turlar?special=lastminute')}
                   className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
-                  Son Dakika
+                  {t("banner.lastMinute")}
                 </button>
                 <button 
                   type="button"
                   onClick={() => navigate('/turlar?special=family')}
                   className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
-                  Aile Turları
+                  {t("banner.familyTours")}
                 </button>
               </div>
               <button 
@@ -162,7 +163,7 @@ const Banner = () => {
                 onClick={() => navigate('/turlar')}
                 className="text-sm text-blue-600 hover:text-blue-700 font-medium"
               >
-                Detaylı Arama ›
+                {t("banner.detailedSearch")}
               </button>
             </div>
           </form>
@@ -171,19 +172,19 @@ const Banner = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 text-center">
             <div>
               <div className="text-2xl md:text-3xl font-bold">500+</div>
-              <div className="text-sm opacity-80">Etkin Tur</div>
+              <div className="text-sm opacity-80">{t("banner.activeTours")}</div>
             </div>
             <div>
               <div className="text-2xl md:text-3xl font-bold">10K+</div>
-              <div className="text-sm opacity-80">Mutlu Müşteri</div>
+              <div className="text-sm opacity-80">{t("banner.happyCustomers")}</div>
             </div>
             <div>
               <div className="text-2xl md:text-3xl font-bold">50+</div>
-              <div className="text-sm opacity-80">Ülke Seçeneği</div>
+              <div className="text-sm opacity-80">{t("banner.countryOptions")}</div>
             </div>
             <div>
               <div className="text-2xl md:text-3xl font-bold">24/7</div>
-              <div className="text-sm opacity-80">Destek</div>
+              <div className="text-sm opacity-80">{t("banner.support")}</div>
             </div>
           </div>
         </div>

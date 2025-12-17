@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout, Row, Col, Input, Button } from 'antd';
+import { useTranslation } from 'react-i18next';
 import {
   MailOutlined,
   PhoneOutlined,
@@ -11,21 +12,22 @@ const { Footer } = Layout;
 const { TextArea } = Input;
 
 const CorporateFooter: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Footer className="bg-gray-800 text-white py-12">
       <div className="container mx-auto px-4">
         <Row gutter={[48, 48]}>
           <Col xs={24} lg={12}>
-            <h3 className="text-2xl font-bold mb-6">İş Ortağınız Olalım</h3>
+            <h3 className="text-2xl font-bold mb-6">{t("footer.beOurPartner")}</h3>
             <p className="text-gray-300 mb-6">
-              Kurumsal seyahat çözümleri ve özel grup turları için bizimle iletişime geçin.
+              {t("footer.corporateTravelSolutions")}
             </p>
             
             <div className="space-y-4">
               <div className="flex items-center text-gray-300">
                 <PhoneOutlined className="mr-4 text-blue-400" />
                 <div>
-                  <div className="font-semibold">Kurumsal Satış</div>
+                  <div className="font-semibold">{t("footer.corporateSales")}</div>
                   <div>+90 212 555 55 55</div>
                 </div>
               </div>
@@ -33,7 +35,7 @@ const CorporateFooter: React.FC = () => {
               <div className="flex items-center text-gray-300">
                 <MailOutlined className="mr-4 text-blue-400" />
                 <div>
-                  <div className="font-semibold">E-posta</div>
+                  <div className="font-semibold">{t("footer.email")}</div>
                   <div>corporate@guiaogi.com</div>
                 </div>
               </div>
@@ -41,26 +43,26 @@ const CorporateFooter: React.FC = () => {
               <div className="flex items-center text-gray-300">
                 <ClockCircleOutlined className="mr-4 text-blue-400" />
                 <div>
-                  <div className="font-semibold">Çalışma Saatleri</div>
-                  <div>Pazartesi - Cuma: 09:00 - 18:00</div>
+                  <div className="font-semibold">{t("footer.workingHours")}</div>
+                  <div>{t("footer.workingHoursValue")}</div>
                 </div>
               </div>
             </div>
           </Col>
 
           <Col xs={24} lg={12}>
-            <h4 className="font-semibold mb-4">Hızlı Teklif Alın</h4>
+            <h4 className="font-semibold mb-4">{t("footer.quickQuote")}</h4>
             <div className="space-y-3">
-              <Input placeholder="Firma Adı" size="large" />
-              <Input placeholder="İletişim Kişisi" size="large" />
-              <Input placeholder="Telefon" size="large" />
+              <Input placeholder={t("footer.companyName")} size="large" />
+              <Input placeholder={t("footer.contactPerson")} size="large" />
+              <Input placeholder={t("footer.phone")} size="large" />
               <TextArea 
-                placeholder="İhtiyaçlarınızı belirtin..." 
+                placeholder={t("footer.specifyNeeds")} 
                 rows={3}
                 size="large"
               />
               <Button type="primary" size="large" block>
-                Teklif İste
+                {t("footer.requestQuote")}
               </Button>
             </div>
           </Col>
@@ -71,7 +73,7 @@ const CorporateFooter: React.FC = () => {
             <Col xs={24} md={8}>
               <div className="flex items-center">
                 <EnvironmentOutlined className="text-blue-400 mr-3" />
-                <span className="text-gray-300">İstanbul, Türkiye Merkez Ofis</span>
+                <span className="text-gray-300">{t("footer.centralOffice")}</span>
               </div>
             </Col>
             <Col xs={24} md={8} className="text-center">

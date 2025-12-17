@@ -1,14 +1,38 @@
 // App.tsx - GÜNCELLENMİŞ
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Spin } from 'antd';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import routes from './routes';
+import i18n, { loadLanguage, addLanguage } from './i18n/config';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  
+  // Uygulama başlangıcında localStorage'dan çevirileri yükle
+  useEffect(() => {
+    const loadSavedTranslations = async () => {
+      // Tüm localStorage'daki çevirileri yükle
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('translations_')) {
+          const langCode = key.replace('translations_', '');
+          try {
+            const translations = JSON.parse(localStorage.getItem(key) || '{}');
+            if (Object.keys(translations).length > 0) {
+              await addLanguage(langCode, translations);
+            }
+          } catch (error) {
+            console.error(`Error loading translations for ${langCode}:`, error);
+          }
+        }
+      }
+    };
+    
+    loadSavedTranslations();
+  }, []);
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isAgentRoute = location.pathname.startsWith('/agent');
 

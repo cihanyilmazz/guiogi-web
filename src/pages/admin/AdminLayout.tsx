@@ -1,5 +1,5 @@
 // pages/admin/AdminLayout.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, Button, Drawer, List, Empty, Divider, Tag, Spin } from 'antd';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
@@ -18,8 +18,11 @@ import {
   PhoneFilled,
   FileTextOutlined,
   ClockCircleOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n/config';
 import './AdminLayout.css';
 
 const { Header, Sider, Content } = Layout;
@@ -38,6 +41,7 @@ const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -99,8 +103,8 @@ const AdminLayout: React.FC = () => {
         .map((u: any) => ({
           id: `user-${u.id}`,
           type: 'user' as const,
-          title: 'Yeni Kullanıcı Kaydı',
-          description: `${u.name} (${u.email}) onay bekliyor`,
+          title: t('admin.newUserRegistration'),
+          description: `${u.name} (${u.email}) ${t('admin.pendingApproval')}`,
           date: u.createdAt,
           status: 'pending',
           link: '/admin/users',
@@ -119,7 +123,7 @@ const AdminLayout: React.FC = () => {
         .map((b: any) => ({
           id: `booking-${b.id}`,
           type: 'booking' as const,
-          title: 'Yeni Rezervasyon',
+          title: t('admin.newBooking'),
           description: `${b.tourTitle} - ${b.persons} kişi`,
           date: b.createdAt,
           status: 'pending',
@@ -154,11 +158,11 @@ const AdminLayout: React.FC = () => {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'Az önce';
-    if (diffMins < 60) return `${diffMins} dakika önce`;
-    if (diffHours < 24) return `${diffHours} saat önce`;
-    if (diffDays < 7) return `${diffDays} gün önce`;
-    return date.toLocaleDateString('tr-TR');
+    if (diffMins < 1) return t('admin.justNow');
+    if (diffMins < 60) return `${diffMins} ${t('admin.minutesAgo')}`;
+    if (diffHours < 24) return `${diffHours} ${t('admin.hoursAgo')}`;
+    if (diffDays < 7) return `${diffDays} ${t('admin.daysAgo')}`;
+    return date.toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'tr-TR');
   };
 
   const userNotifications = notifications.filter(n => n.type === 'user');
@@ -194,7 +198,7 @@ const AdminLayout: React.FC = () => {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BellOutlined style={{ fontSize: isMobile ? '16px' : '18px' }} />
-          <span style={{ fontSize: isMobile ? '14px' : '16px', fontWeight: 600 }}>Bildirimler</span>
+          <span style={{ fontSize: isMobile ? '14px' : '16px', fontWeight: 600 }}>{t('admin.notifications')}</span>
         </div>
         {notificationCount > 0 && (
           <Badge 
@@ -219,7 +223,7 @@ const AdminLayout: React.FC = () => {
             marginBottom: '16px',
             opacity: 0.3
           }}>🔔</div>
-          <div style={{ color: '#999', fontSize: isMobile ? '13px' : '14px' }}>Yeni bildirim yok</div>
+          <div style={{ color: '#999', fontSize: isMobile ? '13px' : '14px' }}>{t('admin.noNotifications')}</div>
         </div>
       ) : (
         <div>
@@ -236,7 +240,7 @@ const AdminLayout: React.FC = () => {
               }}>
                 <UserOutlined style={{ color: '#1890ff', fontSize: isMobile ? '14px' : '16px' }} />
                 <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: 600, color: '#495057' }}>
-                  Yeni Kullanıcılar ({userNotifications.length})
+                  {t('admin.newUsers')} ({userNotifications.length})
                 </span>
               </div>
               {userNotifications.map((item) => (
@@ -314,7 +318,7 @@ const AdminLayout: React.FC = () => {
                               padding: '2px 8px'
                             }}
                           >
-                            Bekliyor
+                            {t('admin.pending')}
                           </Tag>
                         )}
                       </div>
@@ -360,7 +364,7 @@ const AdminLayout: React.FC = () => {
               }}>
                 <BookOutlined style={{ color: '#52c41a', fontSize: isMobile ? '14px' : '16px' }} />
                 <span style={{ fontSize: isMobile ? '12px' : '13px', fontWeight: 600, color: '#495057' }}>
-                  Yeni Rezervasyonlar ({bookingNotifications.length})
+                  {t('admin.newBookings')} ({bookingNotifications.length})
                 </span>
               </div>
               {bookingNotifications.map((item) => (
@@ -438,7 +442,7 @@ const AdminLayout: React.FC = () => {
                               padding: '2px 8px'
                             }}
                           >
-                            Bekliyor
+                            {t('admin.pending')}
                           </Tag>
                         )}
                       </div>
@@ -492,7 +496,7 @@ const AdminLayout: React.FC = () => {
                 width: isMobile ? '100%' : 'auto'
               }}
             >
-              Dashboard'a Git
+              {t('admin.goToDashboard')}
             </Button>
           </div>
         </>
@@ -500,43 +504,48 @@ const AdminLayout: React.FC = () => {
     </div>
   );
 
-  const menuItems = [
+  const menuItems = useMemo(() => [
     {
       key: '/admin',
       icon: <DashboardOutlined />,
-      label: 'Dashboard',
+      label: t('admin.dashboard'),
     },
     {
       key: '/admin/users',
       icon: <UserOutlined />,
-      label: 'Kullanıcı Yönetimi',
+      label: t('admin.userManagement'),
     },
     {
       key: '/admin/tours',
       icon: <AppstoreOutlined />,
-      label: 'Tur Yönetimi',
+      label: t('admin.tourManagement'),
     },
     {
       key: '/admin/bookings',
       icon: <BookOutlined />,
-      label: 'Rezervasyon Yönetimi',
+      label: t('admin.bookingManagement'),
     },
     {
       key: '/admin/about',
       icon: <InfoCircleOutlined />,
-      label: 'Hakkımızda Yönetimi',
+      label: t('admin.aboutManagement'),
     },
     {
       key: '/admin/contact',
       icon: <PhoneFilled />,
-      label: 'İletişim Yönetimi',
+      label: t('admin.contactManagement'),
     },
     {
       key: '/admin/blogs',
       icon: <FileTextOutlined />,
-      label: 'Blog Yönetimi',
+      label: t('admin.blogManagement'),
     },
-  ];
+    {
+      key: '/admin/languages',
+      icon: <GlobalOutlined />,
+      label: t('admin.languageManagement'),
+    },
+  ], [t]);
 
   const handleMenuClick = ({ key }: { key: string }) => {
     navigate(key);
@@ -554,24 +563,30 @@ const AdminLayout: React.FC = () => {
     navigate('/');
   };
 
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => navigate('/')}>
-        Ana Sayfaya Dön
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        Çıkış Yap
-      </Menu.Item>
-    </Menu>
-  );
+  const userMenuItems = useMemo(() => [
+    {
+      key: 'home',
+      icon: <HomeOutlined />,
+      label: t('common.home'),
+      onClick: () => navigate('/')
+    },
+    {
+      type: 'divider' as const
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: t('common.logout'),
+      onClick: handleLogout
+    }
+  ], [t, navigate]);
 
   const sidebarContent = (
     <>
       <div className={`admin-sidebar-header ${collapsed && !isMobile ? 'collapsed' : ''}`}>
         {!collapsed || isMobile ? (
           <div className="admin-sidebar-title-wrapper">
-            <h2 className="admin-sidebar-title">Admin Panel</h2>
+            <h2 className="admin-sidebar-title">{t('admin.adminPanel')}</h2>
             <p className="admin-sidebar-subtitle">GuiaOgi Turizm</p>
           </div>
         ) : (
@@ -676,7 +691,7 @@ const AdminLayout: React.FC = () => {
                 />
               )}
               <h3 className={`admin-header-title ${isMobile ? 'mobile' : ''}`}>
-                Admin Panel
+                {t('admin.adminPanel')}
               </h3>
             </div>
 
@@ -700,7 +715,7 @@ const AdminLayout: React.FC = () => {
                 }}
                 getPopupContainer={isMobile ? () => document.body : (trigger) => trigger.parentElement || document.body}
                 overlayClassName={isMobile ? 'notification-dropdown-mobile' : ''}
-                destroyPopupOnHide={false}
+                destroyOnHidden={false}
                 align={isMobile ? { offset: [0, 8] } : undefined}
               >
                 <Badge count={notificationCount} showZero={false} offset={isMobile ? [-3, 3] : [-5, 5]}>
@@ -720,7 +735,7 @@ const AdminLayout: React.FC = () => {
                   className="admin-header-button"
                 />
               )}
-              <Dropdown overlay={userMenu} placement="bottomRight" trigger={['click']}>
+              <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" trigger={['click']}>
                 <div className={`admin-user-dropdown ${isMobile ? 'mobile' : ''}`}>
                   <Avatar 
                     icon={<UserOutlined />} 
@@ -741,7 +756,7 @@ const AdminLayout: React.FC = () => {
           {!isMobile && (
             <div className="admin-header-sub">
               <span className="admin-header-sub-text">
-                Sistem Yönetimi
+                {t('admin.systemManagement')}
               </span>
               <span className="admin-header-sub-text">
                 {user?.email || 'admin@guiaogi.com'}

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Tag, message, Select } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { useTranslation } from 'react-i18next';
 
 interface Booking {
   id: string | number;
@@ -18,6 +19,7 @@ interface Booking {
 }
 
 const AgentBookings: React.FC = () => {
+  const { t } = useTranslation();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -60,10 +62,10 @@ const AgentBookings: React.FC = () => {
 
   const getStatusTag = (status: string) => {
     const statusConfig: Record<string, { color: string; label: string }> = {
-      confirmed: { color: 'green', label: 'Onaylandı' },
-      pending: { color: 'orange', label: 'Beklemede' },
-      cancelled: { color: 'red', label: 'İptal Edildi' },
-      completed: { color: 'blue', label: 'Tamamlandı' },
+      confirmed: { color: 'green', label: t('agent.confirmed') },
+      pending: { color: 'orange', label: t('agent.pending') },
+      cancelled: { color: 'red', label: t('agent.cancelled') },
+      completed: { color: 'blue', label: t('agent.completed') },
     };
     const config = statusConfig[status] || { color: 'default', label: status };
     return <Tag color={config.color}>{config.label}</Tag>;
@@ -71,9 +73,9 @@ const AgentBookings: React.FC = () => {
 
   const getPaymentTag = (status: string) => {
     const paymentConfig: Record<string, { color: string; label: string }> = {
-      paid: { color: 'green', label: 'Ödendi' },
-      pending: { color: 'orange', label: 'Ödeme Bekleniyor' },
-      refunded: { color: 'default', label: 'İade Edildi' },
+      paid: { color: 'green', label: t('agent.paid') },
+      pending: { color: 'orange', label: t('agent.paymentPending') },
+      refunded: { color: 'default', label: t('agent.refunded') },
     };
     const config = paymentConfig[status] || { color: 'default', label: status };
     return <Tag color={config.color}>{config.label}</Tag>;
@@ -125,39 +127,39 @@ const AgentBookings: React.FC = () => {
 
   const columns: ColumnsType<Booking> = [
     {
-      title: 'Rezervasyon No',
+      title: t('agent.bookingNumber'),
       dataIndex: 'bookingNumber',
       key: 'bookingNumber',
     },
     {
-      title: 'Tur',
+      title: t('agent.tour'),
       dataIndex: 'tourTitle',
       key: 'tourTitle',
     },
     {
-      title: 'Kullanıcı ID',
+      title: t('agent.userId'),
       dataIndex: 'userId',
       key: 'userId',
     },
     {
-      title: 'Seyahat Tarihi',
+      title: t('agent.travelDate'),
       dataIndex: 'travelDate',
       key: 'travelDate',
       render: (date) => new Date(date).toLocaleDateString('tr-TR'),
     },
     {
-      title: 'Kişi Sayısı',
+      title: t('agent.persons'),
       dataIndex: 'persons',
       key: 'persons',
     },
     {
-      title: 'Toplam Fiyat',
+      title: t('agent.totalPrice'),
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       render: (price) => `${price} TL`,
     },
     {
-      title: 'Durum',
+      title: t('agent.status'),
       dataIndex: 'status',
       key: 'status',
       render: (status, record) => (
@@ -167,15 +169,15 @@ const AgentBookings: React.FC = () => {
           style={{ width: 140 }}
           size="small"
         >
-          <Select.Option value="pending">Beklemede</Select.Option>
-          <Select.Option value="confirmed">Onaylandı</Select.Option>
-          <Select.Option value="cancelled">İptal Edildi</Select.Option>
-          <Select.Option value="completed">Tamamlandı</Select.Option>
+          <Select.Option value="pending">{t('agent.pending')}</Select.Option>
+          <Select.Option value="confirmed">{t('agent.confirmed')}</Select.Option>
+          <Select.Option value="cancelled">{t('agent.cancelled')}</Select.Option>
+          <Select.Option value="completed">{t('agent.completed')}</Select.Option>
         </Select>
       ),
     },
     {
-      title: 'Ödeme Durumu',
+      title: t('agent.paymentStatus'),
       dataIndex: 'paymentStatus',
       key: 'paymentStatus',
       render: (paymentStatus, record) => (
@@ -185,14 +187,14 @@ const AgentBookings: React.FC = () => {
           style={{ width: 140 }}
           size="small"
         >
-          <Select.Option value="pending">Ödeme Bekleniyor</Select.Option>
-          <Select.Option value="paid">Ödendi</Select.Option>
-          <Select.Option value="refunded">İade Edildi</Select.Option>
+          <Select.Option value="pending">{t('agent.paymentPending')}</Select.Option>
+          <Select.Option value="paid">{t('agent.paid')}</Select.Option>
+          <Select.Option value="refunded">{t('agent.refunded')}</Select.Option>
         </Select>
       ),
     },
     {
-      title: 'Rezervasyon Tarihi',
+      title: t('agent.bookingDate'),
       dataIndex: 'bookingDate',
       key: 'bookingDate',
       render: (date) => new Date(date).toLocaleDateString('tr-TR'),
@@ -200,8 +202,14 @@ const AgentBookings: React.FC = () => {
   ];
 
   return (
-    <div>
-      <h1 style={{ marginBottom: '24px', fontSize: 'clamp(20px, 4vw, 24px)' }}>Rezervasyonlar</h1>
+    <div style={{ 
+      padding: isMobile ? '16px' : '24px',
+      background: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+      minHeight: '100%'
+    }}>
+      <h1 style={{ marginBottom: '24px', fontSize: 'clamp(20px, 4vw, 24px)' }}>{t('agent.bookings')}</h1>
       
       <div style={{ overflowX: 'auto' }}>
         <Table

@@ -24,10 +24,12 @@ import dayjs from 'dayjs';
 import { tourService, Tour } from '../services/tourService';
 import { bookingService, Booking } from '../services/bookingService';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
 
 const BookingPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
@@ -41,7 +43,7 @@ const BookingPage: React.FC = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      message.warning('Rezervasyon yapmak için giriş yapmalısınız.');
+      message.warning(t('booking.mustLogin'));
       navigate('/giris');
       return;
     }
@@ -52,7 +54,7 @@ const BookingPage: React.FC = () => {
         const tourId = location.state?.tourId || new URLSearchParams(location.search).get('tourId');
         
         if (!tourId) {
-          setError('Tur bilgisi bulunamadı');
+          setError(t('booking.tourNotFound'));
           setLoading(false);
           return;
         }
@@ -66,7 +68,7 @@ const BookingPage: React.FC = () => {
         });
       } catch (err: any) {
         console.error('Tur yüklenirken hata:', err);
-        setError(err.message || 'Tur bilgileri yüklenirken bir hata oluştu');
+        setError(err.message || t('booking.loading'));
       } finally {
         setLoading(false);
       }
@@ -109,7 +111,7 @@ const BookingPage: React.FC = () => {
 
       const newBooking = await bookingService.createBooking(bookingData);
       
-      message.success('Rezervasyonunuz başarıyla oluşturuldu!');
+      message.success(t('booking.bookingSuccess'));
       navigate('/profil', { 
         state: { 
           bookingNumber: newBooking.bookingNumber,
@@ -118,7 +120,7 @@ const BookingPage: React.FC = () => {
       });
     } catch (err: any) {
       console.error('Rezervasyon hatası:', err);
-      message.error(err.message || 'Rezervasyon oluşturulurken bir hata oluştu');
+      message.error(err.message || t('booking.bookingError'));
     } finally {
       setSubmitting(false);
     }
@@ -127,7 +129,7 @@ const BookingPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Spin size="large" tip="Tur bilgileri yükleniyor..." />
+        <Spin size="large" tip={t('booking.loading')} />
       </div>
     );
   }
@@ -136,13 +138,13 @@ const BookingPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <Alert
-          message="Hata"
-          description={error || 'Tur bulunamadı'}
+          message={t('booking.error')}
+          description={error || t('booking.tourNotFound')}
           type="error"
           showIcon
           action={
             <Button size="small" onClick={() => navigate('/turlar')}>
-              Turlara Dön
+              {t('booking.backToTours')}
             </Button>
           }
         />
@@ -167,7 +169,7 @@ const BookingPage: React.FC = () => {
           onClick={() => navigate(-1)}
           className="mb-6"
         >
-          Geri Dön
+          {t('booking.goBack')}
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -175,7 +177,7 @@ const BookingPage: React.FC = () => {
           <div className="lg:col-span-2">
             <Card className="shadow-lg rounded-xl border-0">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
-                Rezervasyon Formu
+                {t('booking.bookingForm')}
               </h2>
 
               <Form
@@ -203,11 +205,11 @@ const BookingPage: React.FC = () => {
 
                 {/* Kişi Sayısı */}
                 <Form.Item
-                  label="Kişi Sayısı"
+                  label={t('booking.personCount')}
                   name="persons"
                   rules={[
-                    { required: true, message: 'Lütfen kişi sayısını girin' },
-                    { type: 'number', min: 1, max: 20, message: 'Kişi sayısı 1-20 arasında olmalıdır' }
+                    { required: true, message: t('booking.personCountRequired') },
+                    { type: 'number', min: 1, max: 20, message: t('booking.personCountRange') }
                   ]}
                 >
                   <InputNumber
@@ -221,10 +223,10 @@ const BookingPage: React.FC = () => {
 
                 {/* Seyahat Tarihi */}
                 <Form.Item
-                  label="Seyahat Tarihi"
+                  label={t('booking.travelDate')}
                   name="travelDate"
                   rules={[
-                    { required: true, message: 'Lütfen seyahat tarihini seçin' }
+                    { required: true, message: t('booking.travelDateRequired') }
                   ]}
                 >
                   <DatePicker
@@ -240,27 +242,27 @@ const BookingPage: React.FC = () => {
 
                 {/* Özel İstekler */}
                 <Form.Item
-                  label="Özel İstekler (Opsiyonel)"
+                  label={t('booking.specialRequests')}
                   name="specialRequests"
                 >
                   <TextArea
                     rows={4}
-                    placeholder="Özel isteklerinizi buraya yazabilirsiniz..."
+                    placeholder={t('booking.specialRequestsPlaceholder')}
                     className="resize-none"
                   />
                 </Form.Item>
 
                 {/* İletişim Bilgileri */}
                 <Divider orientation="left" className="mt-8">
-                  <span className="text-gray-700 font-semibold">İletişim Bilgileri</span>
+                  <span className="text-gray-700 font-semibold">{t('booking.contactInfo')}</span>
                 </Divider>
 
                 <div className="bg-blue-50 p-4 rounded-lg mb-6">
                   <p className="text-sm text-gray-700">
-                    <strong>Ad Soyad:</strong> {user?.name}
+                    <strong>{t('booking.fullName')}</strong> {user?.name}
                   </p>
                   <p className="text-sm text-gray-700 mt-1">
-                    <strong>E-posta:</strong> {user?.email}
+                    <strong>{t('booking.email')}</strong> {user?.email}
                   </p>
                 </div>
 
@@ -274,7 +276,7 @@ const BookingPage: React.FC = () => {
                     loading={submitting}
                     className="bg-[#9E0102] hover:bg-[#8B0000] h-12 text-lg font-semibold"
                   >
-                    {submitting ? 'Rezervasyon Yapılıyor...' : 'Rezervasyonu Tamamla'}
+                    {submitting ? t('booking.submitting') : t('booking.completeBooking')}
                   </Button>
                 </Form.Item>
               </Form>
@@ -286,13 +288,13 @@ const BookingPage: React.FC = () => {
             <Card className="shadow-lg rounded-xl border-0 sticky top-6">
               <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
                 <DollarOutlined className="mr-2 text-[#9E0102]" />
-                Fiyat Özeti
+                {t('booking.priceSummary')}
               </h3>
 
               <div className="space-y-4">
                 {/* Birim Fiyat */}
                 <div className="flex justify-between items-center pb-3 border-b">
-                  <span className="text-gray-600">Birim Fiyat</span>
+                  <span className="text-gray-600">{t('booking.unitPrice')}</span>
                   <div className="text-right">
                     {discount > 0 ? (
                       <div>
@@ -313,21 +315,21 @@ const BookingPage: React.FC = () => {
 
                 {/* Kişi Sayısı */}
                 <div className="flex justify-between items-center pb-3 border-b">
-                  <span className="text-gray-600">Kişi Sayısı</span>
+                  <span className="text-gray-600">{t('booking.personCount')}</span>
                   <span className="font-semibold text-gray-800">{persons}</span>
                 </div>
 
                 {/* İndirim */}
                 {discount > 0 && (
                   <div className="flex justify-between items-center pb-3 border-b">
-                    <span className="text-gray-600">İndirim</span>
+                    <span className="text-gray-600">{t('booking.discount')}</span>
                     <span className="text-green-600 font-semibold">%{discount}</span>
                   </div>
                 )}
 
                 {/* Toplam */}
                 <div className="flex justify-between items-center pt-3 border-t-2 border-gray-300">
-                  <span className="text-lg font-bold text-gray-900">Toplam</span>
+                  <span className="text-lg font-bold text-gray-900">{t('booking.total')}</span>
                   <span className="text-2xl font-bold text-[#9E0102]">
                     {totalPrice.toLocaleString('tr-TR')} TL
                   </span>
@@ -337,9 +339,9 @@ const BookingPage: React.FC = () => {
                   <div className="flex items-start">
                     <CheckCircleOutlined className="text-green-600 text-lg mr-2 mt-0.5" />
                     <div className="text-sm text-green-800">
-                      <p className="font-semibold mb-1">Güvenli Rezervasyon</p>
+                      <p className="font-semibold mb-1">{t('booking.secureBooking')}</p>
                       <p className="text-xs">
-                        Rezervasyonunuz onaylandıktan sonra ödeme bilgileri e-posta adresinize gönderilecektir.
+                        {t('booking.secureBookingDesc')}
                       </p>
                     </div>
                   </div>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Space, Popconfirm, message, Modal, Form, Input, InputNumber, Select, Row, Col } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { useTranslation } from 'react-i18next';
 
 interface Tour {
   id: string | number;
@@ -25,6 +26,7 @@ interface Tour {
 }
 
 const TourManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -208,7 +210,7 @@ const TourManagement: React.FC = () => {
             Düzenle
           </Button>
           <Popconfirm
-            title="Turu silmek istediğinize emin misiniz?"
+            title={t('admin.deleteTour')}
             onConfirm={() => handleDelete(record.id)}
             okText="Evet"
             cancelText="Hayır"
@@ -227,7 +229,13 @@ const TourManagement: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div style={{ 
+      padding: isMobile ? '16px' : '24px',
+      background: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+      minHeight: '100%'
+    }}>
       <div style={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
@@ -236,14 +244,14 @@ const TourManagement: React.FC = () => {
         marginBottom: '24px',
         gap: isMobile ? '16px' : '0'
       }}>
-        <h1 style={{ margin: 0, fontSize: 'clamp(20px, 4vw, 24px)' }}>Tur Yönetimi</h1>
+        <h1 style={{ margin: 0, fontSize: 'clamp(20px, 4vw, 24px)' }}>{t('admin.tourManagement')}</h1>
         <Button 
           type="primary" 
           icon={<PlusOutlined />} 
           onClick={handleAdd}
           block={isMobile}
         >
-          Yeni Tur Ekle
+          {t('admin.newTour')}
         </Button>
       </div>
 
@@ -264,7 +272,7 @@ const TourManagement: React.FC = () => {
       </div>
 
       <Modal
-        title={editingTour ? 'Tur Düzenle' : 'Yeni Tur Ekle'}
+        title={editingTour ? t('admin.editTour') : t('admin.newTour')}
         open={modalVisible}
         onCancel={() => {
           setModalVisible(false);
@@ -330,9 +338,9 @@ const TourManagement: React.FC = () => {
               <Form.Item
                 name="category"
                 label="Kategori"
-                rules={[{ required: true, message: 'Kategori gerekli' }]}
+                rules={[{ required: true, message: t("admin.categoryRequired") }]}
               >
-                <Select placeholder="Kategori seçin">
+                <Select placeholder={t("admin.selectCategory")}>
                   <Select.Option value="Doğa">Doğa</Select.Option>
                   <Select.Option value="Kültür">Kültür</Select.Option>
                   <Select.Option value="Deniz">Deniz</Select.Option>
@@ -367,7 +375,7 @@ const TourManagement: React.FC = () => {
                 name="season"
                 label="Mevsim"
               >
-                <Select placeholder="Mevsim seçin">
+                <Select placeholder={t("admin.selectSeason")}>
                   <Select.Option value="Tüm Yıl">Tüm Yıl</Select.Option>
                   <Select.Option value="Yaz">Yaz</Select.Option>
                   <Select.Option value="Kış">Kış</Select.Option>
@@ -383,7 +391,7 @@ const TourManagement: React.FC = () => {
                 name="guide"
                 label="Rehber"
               >
-                <Input placeholder="Rehber adı" />
+                <Input placeholder={t("admin.guideName")} />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>

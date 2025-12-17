@@ -3,8 +3,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { StarFilled, ClockCircleOutlined, UserOutlined, EnvironmentOutlined, FilterOutlined } from '@ant-design/icons';
 import { Spin, Alert, Tag } from 'antd';
 import { tourService, Tour } from '../services/tourService';
+import { useTranslation } from 'react-i18next';
 
 const ToursPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [tours, setTours] = useState<Tour[]>([]);
@@ -111,7 +113,7 @@ const ToursPage = () => {
       } catch (err: any) {
         console.error('Turlar yüklenirken hata:', err);
         if (isMounted) {
-          setError('Turlar yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.');
+          setError(t('tours.errorLoading'));
           // Hata durumunda bile boş array set et
           setTours([]);
         }
@@ -138,7 +140,7 @@ const ToursPage = () => {
       .sort();
     
     return [
-      { id: 'all', name: 'Tüm Turlar' },
+      { id: 'all', name: t('tours.allTours') },
       ...uniqueCategories.map(cat => ({
         id: cat,
         name: cat
@@ -196,7 +198,7 @@ const ToursPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Spin size="large" tip="Turlar yükleniyor..." />
+        <Spin size="large" tip={t('tours.loading')} />
       </div>
     );
   }
@@ -205,7 +207,7 @@ const ToursPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Alert
-          message="Hata"
+          message={t('home.error')}
           description={error}
           type="error"
           showIcon
@@ -214,7 +216,7 @@ const ToursPage = () => {
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              Sayfayı Yenile
+              {t('tours.refreshPage')}
             </button>
           }
         />
@@ -243,9 +245,9 @@ const ToursPage = () => {
         <div className="absolute bottom-20 left-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-3 sm:px-4 relative z-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 drop-shadow-lg">Turlarımız</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 drop-shadow-lg">{t('tours.ourTours')}</h1>
           <p className="text-base sm:text-lg lg:text-xl max-w-2xl opacity-95 drop-shadow-md">
-            Hayalinizdeki tatili keşfedin. {tours.length}+ tur ile unutulmaz deneyimler sizi bekliyor.
+            {t("tours.discoverVacation")} {tours.length}+ {t("tours.toursWaiting")}
           </p>
         </div>
       </section>
@@ -256,7 +258,7 @@ const ToursPage = () => {
           {/* Başlık - Mobilde gizli, desktop'ta görünür */}
           <div className="hidden md:flex items-center gap-2 mb-2">
             <FilterOutlined className="text-lg text-gray-600" />
-            <h3 className="text-base font-semibold text-gray-800">Filtrele</h3>
+            <h3 className="text-base font-semibold text-gray-800">{t('tours.filter')}</h3>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
@@ -264,10 +266,10 @@ const ToursPage = () => {
             <div className="flex-1 w-full md:min-w-0">
               <div className="flex items-center gap-2 mb-2 md:hidden">
                 <FilterOutlined className="text-base text-gray-600" />
-                <h3 className="text-sm font-semibold text-gray-800">Kategoriler</h3>
+                <h3 className="text-sm font-semibold text-gray-800">{t('tours.categories')}</h3>
               </div>
               <div className="hidden md:block mb-1.5">
-                <h4 className="text-xs font-medium text-gray-700">Kategoriler</h4>
+                <h4 className="text-xs font-medium text-gray-700">{t('tours.categories')}</h4>
               </div>
               <div className="overflow-x-auto pb-1 -mx-4 sm:-mx-6 md:mx-0 md:overflow-visible">
                 <div className="flex gap-1.5 px-4 sm:px-6 md:px-0 min-w-max md:min-w-0 md:flex-wrap">
@@ -292,14 +294,14 @@ const ToursPage = () => {
             <div className="w-full md:w-auto md:min-w-[240px] lg:min-w-[280px] border-t md:border-t-0 md:border-l md:pl-4 lg:pl-6 pt-3 md:pt-0">
               <div className="flex items-center gap-2 mb-2 md:hidden">
                 <FilterOutlined className="text-base text-gray-600" />
-                <h3 className="text-sm font-semibold text-gray-800">Fiyat Aralığı</h3>
+                <h3 className="text-sm font-semibold text-gray-800">{t('tours.priceRange')}</h3>
               </div>
               <div className="hidden md:block mb-1.5">
-                <h4 className="text-xs font-medium text-gray-700">Fiyat Aralığı</h4>
+                <h4 className="text-xs font-medium text-gray-700">{t('tours.priceRange')}</h4>
               </div>
               <div className="space-y-1.5">
                 <label className="block text-xs sm:text-sm font-medium text-gray-700">
-                  Maksimum Fiyat: <span className="text-blue-600 font-bold text-base">{selectedMaxPrice.toLocaleString('tr-TR')}₺</span>
+                  {t('tours.maxPrice')}: <span className="text-blue-600 font-bold text-base">{selectedMaxPrice.toLocaleString('tr-TR')}₺</span>
                 </label>
                 <input
                   type="range"
@@ -327,19 +329,19 @@ const ToursPage = () => {
       <section className="py-6 sm:py-8 lg:py-12">
         <div className="container mx-auto px-3 sm:px-4">
           <div className="mb-4 sm:mb-6 text-sm sm:text-base text-gray-600">
-            <span className="font-semibold">{filteredTours.length}</span> tur bulundu
+            <span className="font-semibold">{filteredTours.length}</span> {t("tours.toursFound")}
           </div>
           
           {filteredTours.length === 0 ? (
             <div className="text-center py-8 sm:py-12">
               {tours.length === 0 ? (
                 <>
-                  <p className="text-gray-500 text-base sm:text-lg mb-4">Henüz tur bulunmamaktadır.</p>
-                  <p className="text-gray-400 text-sm mb-4">Lütfen daha sonra tekrar kontrol edin.</p>
+                  <p className="text-gray-500 text-base sm:text-lg mb-4">{t("tours.noToursYet")}</p>
+                  <p className="text-gray-400 text-sm mb-4">{t("tours.pleaseCheckLater")}</p>
                 </>
               ) : (
                 <>
-                  <p className="text-gray-500 text-base sm:text-lg mb-4">Seçtiğiniz kriterlere uygun tur bulunamadı.</p>
+                  <p className="text-gray-500 text-base sm:text-lg mb-4">{t('tours.noToursFound')}</p>
                   <button
                     onClick={() => {
                       setSelectedCategory('all');
@@ -349,7 +351,7 @@ const ToursPage = () => {
                     }}
                     className="px-4 sm:px-6 py-2 sm:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                   >
-                    Filtreleri Temizle
+                    {t('tours.clearFilters')}
                   </button>
                 </>
               )}
@@ -382,7 +384,7 @@ const ToursPage = () => {
                       <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-col gap-1 sm:gap-2">
                         {tour.discount && (
                           <Tag color="red" className="text-xs font-semibold px-1.5 sm:px-2 py-0.5">
-                            %{tour.discount} İndirim
+                            %{tour.discount} {t("tours.discount")}
                           </Tag>
                         )}
                         {tour.specialOffer && (
@@ -392,7 +394,7 @@ const ToursPage = () => {
                         )}
                       </div>
                       <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-blue-600 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
-                        {finalPrice > 0 ? `${finalPrice.toLocaleString('tr-TR')}₺` : 'Fiyat yok'}
+                        {finalPrice > 0 ? `${finalPrice.toLocaleString('tr-TR')}₺` : t('tours.noPrice')}
                       </div>
                     </div>
                     
@@ -432,7 +434,7 @@ const ToursPage = () => {
                           navigate(`/tour/${tour.id}`);
                         }}
                       >
-                        Tur Detayları
+                        {t("tours.tourDetails")}
                       </button>
                     </div>
                   </div>

@@ -9,8 +9,10 @@ import {
 } from "@ant-design/icons";
 import { IconUsers, IconStar, IconWorld, IconMoodSmile } from '@tabler/icons-react';
 import { aboutService, AboutContent } from "../services/aboutService";
+import { useTranslation } from 'react-i18next';
 
 const AboutPage1 = () => {
+  const { t } = useTranslation();
   const [content, setContent] = useState<AboutContent | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +26,7 @@ const AboutPage1 = () => {
       const aboutContent = await aboutService.getAboutContent();
       setContent(aboutContent);
     } catch (error) {
-      console.error('About içeriği yüklenirken hata:', error);
+      console.error(t('about.loadingError'), error);
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,7 @@ const AboutPage1 = () => {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Yükleniyor...</p>
+          <p className="text-gray-600">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -85,10 +87,10 @@ const AboutPage1 = () => {
 
         <div className="relative container mx-auto px-4 text-center z-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 drop-shadow-lg">
-            {content.heroTitle}
+            {t("about.heroTitle")}
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto opacity-95 drop-shadow-md">
-            {content.heroSubtitle}
+            {t("about.heroSubtitle")}
           </p>
         </div>
       </section>
@@ -97,7 +99,12 @@ const AboutPage1 = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            {content.stats.map((stat, index) => (
+            {[
+              { number: "15.000+", key: "happyCustomers" },
+              { number: "12", key: "yearsExperience" },
+              { number: "65+", key: "countriesService" },
+              { number: "98%", key: "satisfactionRate" }
+            ].map((stat, index) => (
               <div
                 key={index}
                 className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-cyan-100"
@@ -106,7 +113,7 @@ const AboutPage1 = () => {
                 <div className="text-3xl font-bold text-cyan-700 mb-2">
                   {stat.number}
                 </div>
-                <div className="text-gray-600 font-medium">{stat.text}</div>
+                <div className="text-gray-600 font-medium">{t(`about.stats.${stat.key}`)}</div>
               </div>
             ))}
           </div>
@@ -118,23 +125,23 @@ const AboutPage1 = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12">
-              {content.storyTitle}
+              {t("about.storyTitle")}
             </h2>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="space-y-6 text-lg text-gray-700">
-                {content.storyParagraphs.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+                <p>{t("about.storyParagraph1")}</p>
+                <p>{t("about.storyParagraph2")}</p>
+                <p>{t("about.storyParagraph3")}</p>
               </div>
               <div className="relative">
                 <img
-                  src={content.storyImage}
-                  alt="Seyahat Ekibimiz"
+                  src={content?.storyImage || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
+                  alt={t("about.travelTeam")}
                   className="rounded-2xl shadow-2xl"
                 />
                 <div className="absolute -bottom-6 -right-6 bg-cyan-600 text-white p-6 rounded-2xl shadow-lg">
                   <div className="text-2xl font-bold">12+</div>
-                  <div className="text-sm">Yıllık Deneyim</div>
+                  <div className="text-sm">{t("home.yearsExperience")}</div>
                 </div>
               </div>
             </div>
@@ -147,14 +154,19 @@ const AboutPage1 = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {content.featuresTitle}
+              {t("about.featuresTitle")}
             </h2>
             <p className="text-xl opacity-90 max-w-2xl mx-auto">
-              {content.featuresSubtitle}
+              {t("about.featuresSubtitle")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {content.features.map((feature, index) => (
+            {[
+              "quickBooking",
+              "securePayment",
+              "vipService",
+              "support24"
+            ].map((featureKey, index) => (
               <div
                 key={index}
                 className="text-center p-6 bg-white bg-opacity-10 rounded-2xl backdrop-blur-sm hover:bg-opacity-20 transition-all"
@@ -162,8 +174,8 @@ const AboutPage1 = () => {
                 <div className="text-3xl mb-4 text-cyan-300">
                   {getFeatureIcon(index)}
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p>{feature.description}</p>
+                <h3 className="text-xl font-semibold mb-3">{t(`about.features.${featureKey}.title`)}</h3>
+                <p>{t(`about.features.${featureKey}.description`)}</p>
               </div>
             ))}
           </div>
@@ -177,19 +189,19 @@ const AboutPage1 = () => {
             <div className="text-center p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
               <TrophyOutlined className="text-4xl text-cyan-600 mb-4" />
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                {content.visionTitle}
+                {t("about.visionTitle")}
               </h3>
               <p className="text-gray-700">
-                {content.visionText}
+                {t("about.visionText")}
               </p>
             </div>
             <div className="text-center p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
               <TeamOutlined className="text-4xl text-cyan-600 mb-4" />
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                {content.missionTitle}
+                {t("about.missionTitle")}
               </h3>
               <p className="text-gray-700">
-                {content.missionText}
+                {t("about.missionText")}
               </p>
             </div>
           </div>

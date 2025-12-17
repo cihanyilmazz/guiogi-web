@@ -1,5 +1,5 @@
 // pages/agent/AgentLayout.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, Button, Drawer } from 'antd';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
@@ -15,6 +15,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import './AgentLayout.css';
 
 const { Header, Sider, Content } = Layout;
@@ -23,6 +24,7 @@ const AgentLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -43,18 +45,18 @@ const AgentLayout: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const menuItems = [
+  const menuItems = useMemo(() => [
     {
       key: '/agent/tours',
       icon: <AppstoreOutlined />,
-      label: 'Tur Yönetimi',
+      label: t('agent.tourManagement'),
     },
     {
       key: '/agent/bookings',
       icon: <BookOutlined />,
-      label: 'Rezervasyonlar',
+      label: t('agent.bookings'),
     },
-  ];
+  ], [t]);
 
   const handleMenuClick = ({ key }: { key: string }) => {
     navigate(key);
@@ -72,24 +74,30 @@ const AgentLayout: React.FC = () => {
     navigate('/');
   };
 
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => navigate('/')}>
-        Ana Sayfaya Dön
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        Çıkış Yap
-      </Menu.Item>
-    </Menu>
-  );
+  const userMenuItems = useMemo(() => [
+    {
+      key: 'home',
+      icon: <HomeOutlined />,
+      label: t('common.home'),
+      onClick: () => navigate('/')
+    },
+    {
+      type: 'divider' as const
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: t('common.logout'),
+      onClick: handleLogout
+    }
+  ], [t, navigate]);
 
   const sidebarContent = (
     <>
       <div className={`agent-sidebar-header ${collapsed && !isMobile ? 'collapsed' : ''}`}>
         {!collapsed || isMobile ? (
           <div className="agent-sidebar-title-wrapper">
-            <h2 className="agent-sidebar-title">Acente Paneli</h2>
+            <h2 className="agent-sidebar-title">{t('agent.agentPanel')}</h2>
             <p className="agent-sidebar-subtitle">GuiaOgi Turizm</p>
           </div>
         ) : (
@@ -194,7 +202,7 @@ const AgentLayout: React.FC = () => {
                 />
               )}
               <h3 className={`agent-header-title ${isMobile ? 'mobile' : ''}`}>
-                Acente Paneli
+                {t('agent.agentPanel')}
               </h3>
             </div>
 
@@ -216,7 +224,7 @@ const AgentLayout: React.FC = () => {
                   />
                 </>
               )}
-              <Dropdown overlay={userMenu} placement="bottomRight" trigger={['click']}>
+              <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" trigger={['click']}>
                 <div className={`agent-user-dropdown ${isMobile ? 'mobile' : ''}`}>
                   <Avatar 
                     icon={<UserOutlined />} 

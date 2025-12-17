@@ -21,6 +21,7 @@ import {
   SkypeOutlined
 } from '@ant-design/icons';
 import { contactService, ContactContent } from '../services/contactService';
+import { useTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -28,6 +29,7 @@ const { TextArea } = Input;
 
 
 const ContactPage: React.FC = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<ContactContent | null>(null);
@@ -55,10 +57,10 @@ const ContactPage: React.FC = () => {
     try {
       console.log('Form values:', values);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      message.success('Mesajınız başarıyla gönderildi! En kısa sürede dönüş yapacağız.');
+      message.success(t('contact.messageSent'));
       form.resetFields();
     } catch (error) {
-      message.error('Bir hata oluştu. Lütfen tekrar deneyin.');
+      message.error(t('contact.errorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -81,7 +83,7 @@ const ContactPage: React.FC = () => {
         <Content className="py-12 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Yükleniyor...</p>
+            <p className="text-gray-600">{t("common.loading")}</p>
           </div>
         </Content>
       </Layout>
@@ -107,7 +109,7 @@ const ContactPage: React.FC = () => {
             <Col xs={24} lg={8}>
               <div className="space-y-6">
                 <Card className="shadow-lg border">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">İletişim Bilgileri</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('contact.contactInfo')}</h2>
                   
                   <div className="space-y-6">
                     {content.contactInfo.map((item, index) => (
@@ -139,7 +141,7 @@ const ContactPage: React.FC = () => {
 
                   {/* Sosyal Medya */}
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-4">Sosyal Medya</h3>
+                    <h3 className="font-semibold text-gray-900 mb-4">{t("contact.socialMedia")}</h3>
                     <div className="flex space-x-4">
                       <Button 
                         type="primary" 
@@ -194,19 +196,19 @@ const ContactPage: React.FC = () => {
                     <Col xs={24} md={12}>
                       <Form.Item
                         name="firstName"
-                        label="Adınız"
-                        rules={[{ required: true, message: 'Lütfen adınızı giriniz' }]}
+                        label={t("contact.firstName")}
+                        rules={[{ required: true, message: t("contact.firstNameRequired") }]}
                       >
-                        <Input placeholder="Adınız" />
+                        <Input placeholder={t("contact.firstNamePlaceholder")} />
                       </Form.Item>
                     </Col>
                     <Col xs={24} md={12}>
                       <Form.Item
                         name="lastName"
-                        label="Soyadınız"
-                        rules={[{ required: true, message: 'Lütfen soyadınızı giriniz' }]}
+                        label={t("contact.lastName")}
+                        rules={[{ required: true, message: t("contact.lastNameRequired") }]}
                       >
-                        <Input placeholder="Soyadınız" />
+                        <Input placeholder={t("contact.lastNamePlaceholder")} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -215,49 +217,49 @@ const ContactPage: React.FC = () => {
                     <Col xs={24} md={12}>
                       <Form.Item
                         name="email"
-                        label="E-posta Adresiniz"
+                        label={t('contact.emailLabel')}
                         rules={[
-                          { required: true, message: 'Lütfen e-posta adresinizi giriniz' },
-                          { type: 'email', message: 'Geçerli bir e-posta adresi giriniz' }
+                          { required: true, message: t("contact.emailRequired") },
+                          { type: 'email', message: t("contact.emailInvalid") }
                         ]}
                       >
-                        <Input placeholder="ornek@email.com" />
+                        <Input placeholder={t("auth.emailPlaceholder")} />
                       </Form.Item>
                     </Col>
                     <Col xs={24} md={12}>
                       <Form.Item
                         name="phone"
-                        label="Telefon Numaranız"
-                        rules={[{ required: true, message: 'Lütfen telefon numaranızı giriniz' }]}
+                        label={t('contact.phoneLabel')}
+                        rules={[{ required: true, message: t("contact.phoneRequired") }]}
                       >
-                        <Input placeholder="+90 555 555 55 55" />
+                        <Input placeholder={t("contact.phonePlaceholder")} />
                       </Form.Item>
                     </Col>
                   </Row>
 
                   <Form.Item
                     name="subject"
-                    label="Konu"
-                    rules={[{ required: true, message: 'Lütfen konu seçiniz' }]}
+                    label={t("contact.subject")}
+                    rules={[{ required: true, message: t("contact.subjectRequired") }]}
                   >
-                    <Select placeholder="Konu seçiniz">
-                      <Option value="tour-info">Tur Bilgisi</Option>
-                      <Option value="reservation">Rezervasyon</Option>
-                      <Option value="complaint">Şikayet</Option>
-                      <Option value="suggestion">Öneri</Option>
-                      <Option value="corporate">Kurumsal İşbirliği</Option>
-                      <Option value="other">Diğer</Option>
+                    <Select placeholder={t("contact.selectSubject")}>
+                      <Option value="tour-info">{t("contact.tourInfo")}</Option>
+                      <Option value="reservation">{t("contact.reservation")}</Option>
+                      <Option value="complaint">{t("contact.complaint")}</Option>
+                      <Option value="suggestion">{t("contact.suggestion")}</Option>
+                      <Option value="corporate">{t("contact.corporate")}</Option>
+                      <Option value="other">{t("contact.other")}</Option>
                     </Select>
                   </Form.Item>
 
                   <Form.Item
                     name="message"
-                    label="Mesajınız"
-                    rules={[{ required: true, message: 'Lütfen mesajınızı yazınız' }]}
+                    label={t('contact.messageLabel')}
+                    rules={[{ required: true, message: t('contact.messageRequired') }]}
                   >
                     <TextArea 
                       rows={6} 
-                      placeholder="Mesajınızı detaylı bir şekilde yazınız..."
+                      placeholder={t('contact.messagePlaceholder')}
                       showCount 
                       maxLength={1000}
                     />
@@ -272,7 +274,7 @@ const ContactPage: React.FC = () => {
                       size="large"
                       className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 border-blue-600"
                     >
-                      Mesajı Gönder
+                      {t('contact.sendButton')}
                     </Button>
                   </Form.Item>
                 </Form>
@@ -281,7 +283,7 @@ const ContactPage: React.FC = () => {
               {/* Harita - GÜNCELLENMİŞ */}
               <Card className="shadow-lg border mt-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-gray-900">Ofisimiz</h3>
+                  <h3 className="text-xl font-bold text-gray-900">{t("contact.ourOffice")}</h3>
                   <a 
                     href={content.contactInfo.find(ci => ci.title === 'Adres')?.action || 'https://maps.google.com'} 
                     target="_blank" 
@@ -289,7 +291,7 @@ const ContactPage: React.FC = () => {
                     className="text-blue-600 hover:text-blue-800 flex items-center"
                   >
                     <EnvironmentFilled className="mr-2" />
-                    Haritada Görüntüle
+                    {t("contact.viewOnMap")}
                   </a>
                 </div>
                 <iframe

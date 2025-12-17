@@ -4,6 +4,7 @@ import { Table, Button, Tag, Space, Popconfirm, message, Input, Select } from 'a
 import { CheckOutlined, CloseOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 interface User {
   id: string;
@@ -17,6 +18,7 @@ interface User {
 
 const UserManagement: React.FC = () => {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -220,7 +222,7 @@ const UserManagement: React.FC = () => {
               size="small"
               disabled={isCurrentUser}
             >
-              <Select.Option value="user">Kullanıcı</Select.Option>
+              <Select.Option value="user">{t('admin.user')}</Select.Option>
               <Select.Option value="agent">Acente</Select.Option>
               <Select.Option value="admin">Admin</Select.Option>
             </Select>
@@ -235,11 +237,11 @@ const UserManagement: React.FC = () => {
       key: 'isApproved',
       render: (isApproved, record) => {
         if (record.role === 'admin' || record.role === 'agent') {
-          return <Tag color="green">Onaylı</Tag>;
+          return <Tag color="green">{t('admin.approved')}</Tag>;
         }
         return (
           <Tag color={isApproved ? 'green' : 'orange'}>
-            {isApproved ? 'Onaylandı' : 'Onay Bekliyor'}
+            {isApproved ? t('admin.approved') : t('admin.pending')}
           </Tag>
         );
       },
@@ -262,7 +264,7 @@ const UserManagement: React.FC = () => {
               size="small"
               onClick={() => handleApprove(record.id)}
             >
-              Onayla
+              {t('admin.approve')}
             </Button>
           )}
           {record.role === 'user' && record.isApproved && (
@@ -272,12 +274,12 @@ const UserManagement: React.FC = () => {
               size="small"
               onClick={() => handleReject(record.id)}
             >
-              Onayı Kaldır
+              {t('admin.reject')}
             </Button>
           )}
           {record.role !== 'admin' && (
             <Popconfirm
-              title="Kullanıcıyı silmek istediğinize emin misiniz?"
+              title={t('admin.deleteUserConfirm')}
               onConfirm={() => handleDelete(record.id)}
               okText="Evet"
               cancelText="Hayır"
@@ -297,8 +299,14 @@ const UserManagement: React.FC = () => {
   ];
 
   return (
-    <div>
-      <h1 style={{ marginBottom: '24px', fontSize: 'clamp(20px, 4vw, 24px)' }}>Kullanıcı Yönetimi</h1>
+    <div style={{ 
+      padding: isMobile ? '16px' : '24px',
+      background: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+      minHeight: '100%'
+    }}>
+      <h1 style={{ marginBottom: '24px', fontSize: 'clamp(20px, 4vw, 24px)' }}>{t('admin.userManagement')}</h1>
       
       <div style={{ 
         marginBottom: '16px', 
@@ -307,7 +315,7 @@ const UserManagement: React.FC = () => {
         gap: '16px' 
       }}>
         <Input
-          placeholder="Kullanıcı ara (ad, e-posta)"
+          placeholder={t('admin.searchPlaceholder')}
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}

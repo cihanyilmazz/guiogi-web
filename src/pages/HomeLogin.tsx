@@ -25,11 +25,13 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { tourService, Tour } from "../services/tourService";
+import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
 const TourDetail: React.FC = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [tour, setTour] = useState<Tour | null>(null);
@@ -162,7 +164,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-center">
                     <EnvironmentOutlined className="text-blue-500 text-xl mr-3" />
                     <div>
-                      <div className="font-medium">Lokasyon</div>
+                      <div className="font-medium">{t("homeLogin.location")}</div>
                       <div className="text-gray-600">{tour.location}</div>
                     </div>
                   </div>
@@ -170,7 +172,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-center">
                     <CalendarOutlined className="text-green-500 text-xl mr-3" />
                     <div>
-                      <div className="font-medium">Süre</div>
+                      <div className="font-medium">{t("homeLogin.duration")}</div>
                       <div className="text-gray-600">{tour.duration}</div>
                     </div>
                   </div>
@@ -178,7 +180,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-center">
                     <UserOutlined className="text-purple-500 text-xl mr-3" />
                     <div>
-                      <div className="font-medium">Grup Büyüklüğü</div>
+                      <div className="font-medium">{t("homeLogin.groupSize")}</div>
                       <div className="text-gray-600">{tour.groupSize}</div>
                     </div>
                   </div>
@@ -186,7 +188,7 @@ const TourDetail: React.FC = () => {
                   <div className="flex items-center">
                     <UserOutlined className="text-orange-500 text-xl mr-3" />
                     <div>
-                      <div className="font-medium">Rehber</div>
+                      <div className="font-medium">{t("homeLogin.guide")}</div>
                       <div className="text-gray-600">{tour.guide}</div>
                     </div>
                   </div>
@@ -213,7 +215,7 @@ const TourDetail: React.FC = () => {
                         `${tour.price} TL`
                       )}
                     </div>
-                    <div className="text-gray-500 mb-4">Kişi Başı</div>
+                    <div className="text-gray-500 mb-4">{t("homeLogin.perPerson")}</div>
                     <Button
                       type="primary"
                       size="large"
@@ -221,7 +223,7 @@ const TourDetail: React.FC = () => {
                       className="bg-blue-600 hover:bg-blue-700 h-12 text-lg font-semibold"
                       onClick={handleBookTour}
                     >
-                      Şimdi Rezervasyon Yap
+                      {t("homeLogin.bookNow")}
                     </Button>
                   </div>
                 )}
@@ -231,18 +233,18 @@ const TourDetail: React.FC = () => {
 
           {/* Detaylı Bilgiler Tabs */}
           <Tabs defaultActiveKey="1" className="bg-white p-6 rounded-lg shadow">
-            <TabPane tab="Tur Açıklaması" key="1">
+            <TabPane tab={t("homeLogin.tourDescription")} key="1">
               <div className="prose max-w-none">
-                <h3 className="text-2xl font-bold mb-4">Tur Hakkında</h3>
+                <h3 className="text-2xl font-bold mb-4">{t("homeLogin.aboutTour")}</h3>
                 <p className="text-gray-700 text-lg leading-relaxed">
                   {tour.description}
                 </p>
               </div>
             </TabPane>
 
-            <TabPane tab="Tur Programı" key="2">
+            <TabPane tab={t("homeLogin.tourProgram")} key="2">
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold mb-4">Tur Programı</h3>
+                <h3 className="text-2xl font-bold mb-4">{t("homeLogin.tourProgram")}</h3>
                 <List
                   dataSource={tour.highlights}
                   renderItem={(item, index) => (
@@ -254,7 +256,7 @@ const TourDetail: React.FC = () => {
                         <div>
                           <div className="font-medium">{item}</div>
                           <div className="text-gray-600 mt-1">
-                            Bu aktivite ile ilgili detaylı açıklama...
+                            {t("homeLogin.activityDescription")}
                           </div>
                         </div>
                       </div>
@@ -264,10 +266,10 @@ const TourDetail: React.FC = () => {
               </div>
             </TabPane>
 
-            <TabPane tab="Dahil Olanlar" key="3">
+            <TabPane tab={t("homeLogin.included")} key="3">
               <div className="space-y-4">
                 <h3 className="text-2xl font-bold mb-4">
-                  Pakete Dahil Olanlar
+                  {t("homeLogin.packageIncludes")}
                 </h3>
                 <Row gutter={[16, 16]}>
                   {tour.included.map((item, index) => (
@@ -282,40 +284,36 @@ const TourDetail: React.FC = () => {
               </div>
             </TabPane>
 
-            <TabPane tab="Önemli Bilgiler" key="4">
+            <TabPane tab={t("homeLogin.importantInfo")} key="4">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold mb-4">Önemli Bilgiler</h3>
+                <h3 className="text-2xl font-bold mb-4">{t("homeLogin.importantInfo")}</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-bold mb-2">İptal Politikası</h4>
+                    <h4 className="font-bold mb-2">{t("homeLogin.cancellationPolicy")}</h4>
                     <p className="text-gray-600">
-                      Tur tarihinden 7 gün öncesine kadar ücretsiz iptal. Son 7
-                      gün içinde %50 ücret kesintisi uygulanır.
+                      {t("homeLogin.cancellationPolicyDesc")}
                     </p>
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-bold mb-2">Gereken Belgeler</h4>
+                    <h4 className="font-bold mb-2">{t("homeLogin.requiredDocuments")}</h4>
                     <p className="text-gray-600">
-                      Kimlik kartı veya pasaport. 18 yaş altı için veli izin
-                      belgesi.
+                      {t("homeLogin.requiredDocumentsDesc")}
                     </p>
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-bold mb-2">Sağlık Uyarıları</h4>
+                    <h4 className="font-bold mb-2">{t("homeLogin.healthWarnings")}</h4>
                     <p className="text-gray-600">
-                      Hamileler ve kronik rahatsızlığı olanlar doktor onayı
-                      almalıdır.
+                      {t("homeLogin.healthWarningsDesc")}
                     </p>
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-bold mb-2">Ne Getirmeli?</h4>
+                    <h4 className="font-bold mb-2">{t("homeLogin.whatToBring")}dsdfsfsd</h4>
                     <p className="text-gray-600">
-                      Rahat kıyafetler, spor ayakkabı, şapka, güneş gözlüğü,
-                      fotoğraf makinesi.
+                      {t("homeLogin.whatToBringDesc")}
                     </p>
                   </div>
                 </div>
@@ -327,7 +325,7 @@ const TourDetail: React.FC = () => {
           {relatedTours.length > 0 && (
             <div className="mt-8">
               <Divider orientation="left">
-                <h3 className="text-2xl font-bold">Benzer Turlar</h3>
+                <h3 className="text-2xl font-bold">{t("homeLogin.similarTours")}</h3>
               </Divider>
 
               <Row gutter={[16, 16]}>

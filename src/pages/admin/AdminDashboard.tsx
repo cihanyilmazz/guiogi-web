@@ -1,5 +1,5 @@
 // pages/admin/AdminDashboard.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, Row, Col, Statistic, Table, Tag, Spin } from 'antd';
 import {
   UserOutlined,
@@ -8,8 +8,11 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n/config';
 
 const AdminDashboard: React.FC = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [stats, setStats] = useState({
@@ -32,6 +35,47 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  const userColumns = useMemo(() => [
+    {
+      title: t('contact.name'),
+      dataIndex: 'name',
+      key: 'name',
+      ellipsis: true,
+      width: isMobile ? 120 : undefined,
+    },
+    {
+      title: t('contact.email'),
+      dataIndex: 'email',
+      key: 'email',
+      ellipsis: true,
+      width: isMobile ? 150 : undefined,
+    },
+    {
+      title: t('admin.status'),
+      key: 'status',
+      width: isMobile ? 100 : undefined,
+      render: (_: any, record: any) => (
+        <Tag color={record.isApproved ? 'green' : 'orange'} style={{ fontSize: isMobile ? '11px' : '12px' }}>
+          {record.isApproved ? t('admin.approved') : t('admin.pending')}
+        </Tag>
+      ),
+    },
+    {
+      title: t('admin.registrationDate'),
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      width: isMobile ? 100 : undefined,
+      render: (date: string) => (
+        <span style={{ fontSize: isMobile ? '12px' : '14px' }}>
+          {isMobile 
+            ? new Date(date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'tr-TR', { day: '2-digit', month: '2-digit' })
+            : new Date(date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'tr-TR')
+          }
+        </span>
+      ),
+    },
+  ], [t, isMobile]);
 
   const fetchDashboardData = async () => {
     try {
@@ -80,47 +124,6 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const userColumns = [
-    {
-      title: 'Ad Soyad',
-      dataIndex: 'name',
-      key: 'name',
-      ellipsis: true,
-      width: isMobile ? 120 : undefined,
-    },
-    {
-      title: 'E-posta',
-      dataIndex: 'email',
-      key: 'email',
-      ellipsis: true,
-      width: isMobile ? 150 : undefined,
-    },
-    {
-      title: 'Durum',
-      key: 'status',
-      width: isMobile ? 100 : undefined,
-      render: (_: any, record: any) => (
-        <Tag color={record.isApproved ? 'green' : 'orange'} style={{ fontSize: isMobile ? '11px' : '12px' }}>
-          {record.isApproved ? 'Onaylandı' : 'Onay Bekliyor'}
-        </Tag>
-      ),
-    },
-    {
-      title: 'Kayıt Tarihi',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      width: isMobile ? 100 : undefined,
-      render: (date: string) => (
-        <span style={{ fontSize: isMobile ? '12px' : '14px' }}>
-          {isMobile 
-            ? new Date(date).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })
-            : new Date(date).toLocaleDateString('tr-TR')
-          }
-        </span>
-      ),
-    },
-  ];
-
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: isMobile ? '30px 20px' : '50px' }}>
@@ -130,13 +133,19 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: isMobile ? '0' : '0' }}>
+    <div style={{ 
+      padding: isMobile ? '16px' : '24px',
+      background: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+      minHeight: '100%'
+    }}>
       <h1 style={{ 
         marginBottom: isMobile ? '16px' : '24px', 
         fontSize: isMobile ? '20px' : 'clamp(20px, 4vw, 24px)',
         fontWeight: 600
       }}>
-        Dashboard
+        {t('admin.dashboard')}
       </h1>
       
       <Row 
@@ -164,7 +173,7 @@ const AdminDashboard: React.FC = () => {
             }}
           >
             <Statistic
-              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>Toplam Kullanıcı</span>}
+              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>{t('admin.totalUsers')}</span>}
               value={stats.totalUsers}
               prefix={<UserOutlined style={{ fontSize: isMobile ? '18px' : '24px' }} />}
               valueStyle={{ 
@@ -195,7 +204,7 @@ const AdminDashboard: React.FC = () => {
             }}
           >
             <Statistic
-              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>Onay Bekleyen</span>}
+              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>{t('admin.pendingUsers')}</span>}
               value={stats.pendingUsers}
               prefix={<ClockCircleOutlined style={{ fontSize: isMobile ? '18px' : '24px' }} />}
               valueStyle={{ 
@@ -226,7 +235,7 @@ const AdminDashboard: React.FC = () => {
             }}
           >
             <Statistic
-              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>Toplam Tur</span>}
+              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>{t('admin.totalTours')}</span>}
               value={stats.totalTours}
               prefix={<AppstoreOutlined style={{ fontSize: isMobile ? '18px' : '24px' }} />}
               valueStyle={{ 
@@ -257,7 +266,7 @@ const AdminDashboard: React.FC = () => {
             }}
           >
             <Statistic
-              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>Toplam Rezervasyon</span>}
+              title={<span style={{ fontSize: isMobile ? '13px' : '14px', marginBottom: '8px', display: 'block' }}>{t('admin.totalBookings')}</span>}
               value={stats.totalBookings}
               prefix={<BookOutlined style={{ fontSize: isMobile ? '18px' : '24px' }} />}
               valueStyle={{ 
@@ -271,7 +280,7 @@ const AdminDashboard: React.FC = () => {
       </Row>
 
       <Card 
-        title={<span style={{ fontSize: isMobile ? '16px' : '18px', fontWeight: 600 }}>Son Eklenen Kullanıcılar</span>} 
+        title={<span style={{ fontSize: isMobile ? '16px' : '18px', fontWeight: 600 }}>{t('admin.recentUsers')}</span>} 
         style={{ 
           marginBottom: isMobile ? '16px' : '24px',
           borderRadius: '8px',

@@ -21,6 +21,7 @@ import {
   UserAddOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -29,6 +30,7 @@ const { Item } = Form;
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +44,7 @@ const Register: React.FC = () => {
   }) => {
     try {
       if (values.password !== values.confirmPassword) {
-        throw new Error('Şifreler eşleşmiyor');
+        throw new Error(t('auth.passwordsNotMatch'));
       }
 
       setLoading(true);
@@ -57,7 +59,7 @@ const Register: React.FC = () => {
       
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Kayıt başarısız. Lütfen tekrar deneyin.');
+      setError(err.message || t('auth.registerError'));
     } finally {
       setLoading(false);
     }
@@ -69,16 +71,16 @@ const Register: React.FC = () => {
         <Card className="w-full max-w-md shadow-2xl border-0 rounded-2xl">
           <div className="text-center mb-8">
             <Title level={2} className="text-gray-800">
-              Guiaogi Turizm'e Kayıt Ol
+              {t('auth.registerTitle')}
             </Title>
             <Text className="text-gray-500">
-              Ücretsiz hesap oluşturun, fiyatları görün ve rezervasyon yapın
+              {t('auth.registerSubtitle')}
             </Text>
           </div>
 
           {error && (
             <Alert
-              message="Hata"
+              message={t('home.error')}
               description={error}
               type="error"
               showIcon
@@ -96,90 +98,90 @@ const Register: React.FC = () => {
           >
             <Item
               name="name"
-              label="Ad Soyad"
+              label={t('auth.name')}
               rules={[
-                { required: true, message: 'Lütfen adınızı ve soyadınızı girin' },
-                { min: 2, message: 'En az 2 karakter girin' }
+                { required: true, message: t('auth.nameRequired') },
+                { min: 2, message: t('auth.nameMinLength') }
               ]}
             >
               <Input
                 prefix={<UserOutlined className="text-gray-400" />}
-                placeholder="Adınız Soyadınız"
+                placeholder={t('auth.namePlaceholder')}
               />
             </Item>
             
             <Item
               name="email"
-              label="E-posta Adresi"
+              label={t('auth.emailLabel')}
               rules={[
-                { required: true, message: 'Lütfen e-posta adresinizi girin' },
-                { type: 'email', message: 'Geçerli bir e-posta adresi girin' }
+                { required: true, message: t('auth.emailRequired') },
+                { type: 'email', message: t('auth.emailInvalid') }
               ]}
             >
               <Input
                 prefix={<MailOutlined className="text-gray-400" />}
-                placeholder="ornek@email.com"
+                placeholder={t("auth.emailPlaceholder")}
               />
             </Item>
             
             <Item
               name="phone"
-              label="Telefon Numarası (İsteğe Bağlı)"
+              label={t('auth.phoneOptional')}
             >
               <Input
                 prefix={<PhoneOutlined className="text-gray-400" />}
-                placeholder="05XX XXX XX XX"
+                placeholder={t("auth.phonePlaceholder")}
               />
             </Item>
             
             <Item
               name="password"
-              label="Şifre"
+              label={t('auth.passwordLabel')}
               rules={[
-                { required: true, message: 'Lütfen şifrenizi girin' },
-                { min: 6, message: 'Şifre en az 6 karakter olmalı' }
+                { required: true, message: t('auth.passwordRequired') },
+                { min: 6, message: t('auth.passwordMinLength') }
               ]}
             >
               <Input.Password
                 prefix={<LockOutlined className="text-gray-400" />}
-                placeholder="Şifreniz"
+                placeholder={t('auth.passwordPlaceholder')}
                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               />
             </Item>
             
             <Item
               name="confirmPassword"
-              label="Şifre Tekrar"
+              label={t('auth.confirmPassword')}
               rules={[
-                { required: true, message: 'Lütfen şifrenizi tekrar girin' },
+                { required: true, message: t('auth.confirmPasswordRequired') },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue('password') === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Şifreler eşleşmiyor'));
+                    return Promise.reject(new Error(t('auth.passwordsNotMatch')));
                   },
                 }),
               ]}
             >
               <Input.Password
                 prefix={<LockOutlined className="text-gray-400" />}
-                placeholder="Şifrenizi tekrar girin"
+                placeholder={t('auth.confirmPasswordPlaceholder')}
                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               />
             </Item>
             
             <Item className="mb-0">
               <Text className="text-xs text-gray-500">
-                Hesap oluşturarak,{' '}
+                {t("auth.termsAccept")}{' '}
                 <Link to="/kullanim-kosullari" className="text-blue-600">
-                  Kullanım Koşulları
+                  {t("auth.termsOfUse")}
                 </Link>{' '}
-                ve{' '}
+                {t("auth.and")}{' '}
                 <Link to="/gizlilik-politikasi" className="text-blue-600">
-                  Gizlilik Politikası
+                  {t("auth.privacyPolicy")}
                 </Link>{' '}
-                'nı kabul etmiş olursunuz.
+                {t("auth.acceptTerms")}
               </Text>
             </Item>
             
@@ -193,20 +195,20 @@ const Register: React.FC = () => {
                 icon={<UserAddOutlined />}
                 className="h-12 text-lg font-semibold bg-green-600 hover:bg-green-700"
               >
-                Kayıt Ol
+                {t('auth.registerButton')}
               </Button>
             </Item>
           </Form>
 
           <Divider className="my-6">
-            <Text className="text-gray-400">veya</Text>
+            <Text className="text-gray-400">{t('auth.or')}</Text>
           </Divider>
 
           <div className="text-center mt-8 pt-6 border-t border-gray-200">
             <Text className="text-gray-600">
-              Zaten hesabınız var mı?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <Link to="/giris" className="text-blue-600 hover:text-blue-700 font-semibold">
-                Giriş Yapın
+                {t('auth.loginNow')}
               </Link>
             </Text>
           </div>

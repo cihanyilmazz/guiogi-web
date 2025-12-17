@@ -12,8 +12,10 @@ import {
   WhatsAppOutlined,
 } from '@ant-design/icons';
 import { blogService, BlogPost } from '../services/blogService';
+import { useTranslation } from 'react-i18next';
 
 const BlogDetail: React.FC = () => {
+  const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [blog, setBlog] = useState<BlogPost | null>(null);
@@ -102,9 +104,9 @@ const BlogDetail: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center py-20">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Blog yazısı bulunamadı</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('blogDetail.postNotFound')}</h2>
           <Button type="primary" onClick={() => navigate('/blog')}>
-            Blog Sayfasına Dön
+            {t('blogDetail.backToBlog')}
           </Button>
         </div>
       </div>
@@ -120,7 +122,7 @@ const BlogDetail: React.FC = () => {
           onClick={() => navigate('/blog')}
           className="mb-6"
         >
-          Blog Sayfasına Dön
+          {t('blogDetail.backToBlog')}
         </Button>
 
         <Row gutter={[24, 24]}>
@@ -164,13 +166,13 @@ const BlogDetail: React.FC = () => {
                 {blog.readingTime && (
                   <div className="flex items-center gap-2">
                     <ClockCircleOutlined />
-                    <span>{blog.readingTime} dakika okuma</span>
+                    <span>{blog.readingTime} {t('blogDetail.readingTime')}</span>
                   </div>
                 )}
                 {blog.views && (
                   <div className="flex items-center gap-2">
                     <EyeOutlined />
-                    <span>{blog.views} görüntülenme</span>
+                    <span>{blog.views} {t('blogDetail.views')}</span>
                   </div>
                 )}
               </div>
@@ -192,7 +194,7 @@ const BlogDetail: React.FC = () => {
 
               {/* Share Buttons */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-4">Paylaş:</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('blogDetail.share')}</h3>
                 <div className="flex gap-3">
                   <Button
                     icon={<FacebookOutlined />}
@@ -222,7 +224,7 @@ const BlogDetail: React.FC = () => {
           <Col xs={24} lg={8}>
             {/* Recent Blogs */}
             {relatedBlogs.length > 0 && (
-              <Card className="shadow-md" title="Son Yazılar">
+              <Card className="shadow-md" title={t('blogDetail.recentPosts')}>
                 <div className="space-y-4">
                   {relatedBlogs.map((relatedBlog) => (
                     <div

@@ -13,10 +13,12 @@ import {
 } from "@ant-design/icons";
 import HeroBanner from "../components/banner";
 import { tourService, Tour } from "../services/tourService";
+import { useTranslation } from "react-i18next";
 
 const { Meta } = Card;
 
 const Home: React.FC = () => {
+  const { t } = useTranslation();
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,40 +73,40 @@ useEffect(() => {
   const features = [
     {
       icon: <SafetyOutlined />,
-      title: "Güvenli Seyahat",
-      description: "Tüm turlarımız seyahat sigortası ile güvence altında",
+      title: t("home.safeTravel"),
+      description: t("home.safeTravelDesc"),
     },
     {
       icon: <ClockCircleOutlined />,
-      title: "7/24 Destek",
-      description: "Yol boyunca size destek sağlayan ekibimiz",
+      title: t("home.support24"),
+      description: t("home.support24Desc"),
     },
     {
       icon: <CheckCircleOutlined />,
-      title: "Kalite Garantisi",
-      description: "Yüksek standartlarda hizmet kalitesi",
+      title: t("home.qualityGuarantee"),
+      description: t("home.qualityGuaranteeDesc"),
     },
     {
       icon: <UserOutlined />,
-      title: "Uzman Rehberler",
-      description: "Alanında uzman, sertifikalı rehber kadromuz",
+      title: t("home.expertGuides"),
+      description: t("home.expertGuidesDesc"),
     },
   ];
 
   const whyChooseUs = [
-    "20+ yıllık seyahat deneyimi",
-    "5000+ mutlu müşteri",
-    "50+ farklı tur rotası",
-    "%98 müşteri memnuniyeti",
-    "Eko-turizm ilkeleri",
-    "Kişiye özel tur planlama",
+    "20+ " + t("home.yearsExperience"),
+    "5000+ " + t("home.happyCustomers"),
+    "50+ " + t("home.tourOptions"),
+    "%98 " + t("home.satisfactionRate"),
+    t("home.ecoPrinciples"),
+    t("home.customTourPlanning"),
   ];
 
   // Loading durumu
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" tip="Turlar yükleniyor..." />
+        <Spin size="large" tip={t('home.loadingTours')} />
       </div>
     );
   }
@@ -114,13 +116,13 @@ useEffect(() => {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <Alert
-          message="Hata"
+          message={t('home.error')}
           description={error}
           type="error"
           showIcon
           action={
             <Button size="small" danger onClick={() => window.location.reload()}>
-              Tekrar Dene
+              {t('home.tryAgain')}
             </Button>
           }
         />
@@ -139,14 +141,10 @@ useEffect(() => {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-                Türkiye'nin En Özel Turlarını Keşfedin
+                {t("home.welcomeTitle")}
               </h2>
               <p className="text-gray-600 text-lg mb-6">
-                Guiaogi Turizm olarak, 20 yılı aşkın deneyimimizle Türkiye'nin
-                dört bir yanındaki eşsiz güzellikleri keşfetmeniz için özenle
-                hazırlanmış tur paketleri sunuyoruz. Her bütçeye ve her zevke
-                uygun seçeneklerimizle unutulmaz anılar biriktirmenize yardımcı
-                oluyoruz.
+                {t("home.welcomeDesc")}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {whyChooseUs.map((item, index) => (
@@ -167,10 +165,10 @@ useEffect(() => {
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                Neden Guiaogi Turizm?
+                {t("home.whyChooseUsTitle")}
               </h2>
               <p className="text-gray-600">
-                Size özel sunduğumuz avantajlar ve garantiler
+                {t("home.whyChooseUsSubtitle")}
               </p>
             </div>
 
@@ -199,10 +197,10 @@ useEffect(() => {
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                Öne Çıkan Turlarımız
+                {t('home.featuredTours')}
               </h2>
               <p className="text-gray-600 mb-4">
-                En çok tercih edilen ve en yüksek puan alan tur paketlerimiz
+                {t('home.featuredToursDesc')}
               </p>
             </div>
 
@@ -252,7 +250,7 @@ useEffect(() => {
                           className="bg-blue-600 hover:bg-blue-700 font-medium"
                           onClick={() => navigate(`/tour/${tour.id}`)}
                         >
-                          Detaylı Bilgi ve Teklif Al
+                          {t('home.viewDetails')}
                         </Button>
                       </div>,
                     ]}
@@ -291,7 +289,7 @@ useEffect(() => {
                           {/* Tur Özellikleri */}
                           <div className="pt-3 border-t border-gray-100">
                             <p className="text-xs font-medium text-gray-700 mb-2">
-                              Tur Öne Çıkanları:
+                              {t('home.tourHighlights')}:
                             </p>
                             <div className="flex flex-wrap gap-1">
                               {tour.highlights.slice(0, 3).map((highlight, index) => (
@@ -314,8 +312,8 @@ useEffect(() => {
             
             {/* Gösterilen tur sayısı */}
             <div className="mt-8 text-center text-gray-500 text-sm">
-              {Math.min(tours.length, TOURS_TO_DISPLAY)} tur gösteriliyor
-              {tours.length > TOURS_TO_DISPLAY && ` (toplam ${tours.length} tur)`}
+              {Math.min(tours.length, TOURS_TO_DISPLAY)} {t("home.toursShowing")}
+              {tours.length > TOURS_TO_DISPLAY && ` (${t("home.totalTours")} ${tours.length})`}
             </div>
           </div>
         </div>
@@ -325,11 +323,11 @@ useEffect(() => {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
-                Güveninizin Göstergesi
+                {t("home.trustIndicator")}
               </h2>
               <div className="w-24 h-1 bg-blue-500 mx-auto mb-6"></div>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                20 yılı aşkın deneyimimizin rakamlarla ifadesi
+                {t("home.trustIndicatorDesc")}
               </p>
             </div>
 
@@ -339,7 +337,7 @@ useEffect(() => {
                   20+
                 </div>
                 <div className="text-gray-600 text-sm md:text-base">
-                  Yıllık Deneyim
+                  {t("home.yearsExperience")}
                 </div>
               </div>
 
@@ -348,7 +346,7 @@ useEffect(() => {
                   {tours.length}+
                 </div>
                 <div className="text-gray-600 text-sm md:text-base">
-                  Tur Seçeneği
+                  {t("home.tourOptions")}
                 </div>
               </div>
 
@@ -357,7 +355,7 @@ useEffect(() => {
                   5000+
                 </div>
                 <div className="text-gray-600 text-sm md:text-base">
-                  Mutlu Müşteri
+                  {t("home.happyCustomers")}
                 </div>
               </div>
 
@@ -366,7 +364,7 @@ useEffect(() => {
                   %98
                 </div>
                 <div className="text-gray-600 text-sm md:text-base">
-                  Memnuniyet Oranı
+                  {t("home.satisfactionRate")}
                 </div>
               </div>
             </div>
@@ -387,13 +385,11 @@ useEffect(() => {
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-3xl mx-auto text-center text-white">
               <h2 className="text-2xl md:text-4xl font-bold mb-6">
-                Hayalinizdeki Tatil Sadece Bir Tık Uzağınızda
+                {t("home.dreamVacationTitle")}
               </h2>
 
               <p className="text-gray-200 text-lg leading-relaxed mb-8">
-                Türkiye'nin en güzel rotalarında, uzman rehberler eşliğinde
-                benzersiz deneyimler yaşayın. Size özel hazırlanmış tur
-                paketlerimizle unutulmaz anılar biriktirin.
+                {t("home.dreamVacationDesc")}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -403,14 +399,14 @@ useEffect(() => {
                   className="bg-white text-gray-900 hover:bg-gray-100 border-white hover:border-gray-100 h-12 px-8 font-semibold"
                   onClick={() => window.open('tel:02121234567')}
                 >
-                  📞 HEMEN ARAYIN
+                  {t('home.callNow')}
                 </Button>
                 <Button
                   size="large"
                   className="bg-transparent text-white hover:bg-white/20 border-2 border-white h-12 px-8 font-semibold"
                   onClick={() => navigate('/iletisim')}
                 >
-                  ✉️ TEKLİF İSTE
+                  {t('home.requestQuote')}
                 </Button>
               </div>
             </div>
@@ -422,10 +418,10 @@ useEffect(() => {
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                Nasıl Çalışıyoruz?
+                {t("home.howItWorks")}
               </h2>
               <p className="text-gray-600">
-                Tur rezervasyon sürecimiz sadece 3 kolay adımdan oluşuyor
+                {t("home.howItWorksDesc")}
               </p>
             </div>
 
@@ -435,10 +431,9 @@ useEffect(() => {
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-bold text-gray-700">1</span>
                   </div>
-                  <h3 className="text-lg font-semibold mb-3">Tur Seçimi</h3>
+                  <h3 className="text-lg font-semibold mb-3">{t("home.step1Title")}</h3>
                   <p className="text-gray-600">
-                    Size en uygun tur paketini seçin veya özel tur talebinizi
-                    iletin
+                    {t("home.step1Desc")}
                   </p>
                 </div>
               </Col>
@@ -447,10 +442,9 @@ useEffect(() => {
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-bold text-gray-700">2</span>
                   </div>
-                  <h3 className="text-lg font-semibold mb-3">Rezervasyon</h3>
+                  <h3 className="text-lg font-semibold mb-3">{t("home.step2Title")}</h3>
                   <p className="text-gray-600">
-                    Online formu doldurarak veya telefonla kolayca rezervasyon
-                    yapın
+                    {t("home.step2Desc")}
                   </p>
                 </div>
               </Col>
@@ -460,11 +454,10 @@ useEffect(() => {
                     <span className="text-2xl font-bold text-gray-700">3</span>
                   </div>
                   <h3 className="text-lg font-semibold mb-3">
-                    Keyfini Çıkarın
+                    {t("home.step3Title")}
                   </h3>
                   <p className="text-gray-600">
-                    Tüm detaylar bizde, siz sadece unutulmaz tatilinizin tadını
-                    çıkarın
+                    {t("home.step3Desc")}
                   </p>
                 </div>
               </Col>
@@ -477,12 +470,10 @@ useEffect(() => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                Size Özel Tur Paketleri İçin
+                {t('home.customPackagesTitle')}
               </h3>
               <p className="text-gray-600 mb-6">
-                İhtiyaçlarınıza uygun tur paketleri, özel fiyat teklifleri ve
-                detaylı bilgi için bizimle iletişime geçin. Uzman ekibimiz size
-                en uygun seçenekleri sunmak için hazır.
+                {t('home.customPackagesDesc')}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button

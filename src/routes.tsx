@@ -19,6 +19,7 @@ import BookingManagement from "./pages/admin/BookingManagement";
 import AboutManagement from "./pages/admin/AboutManagement";
 import ContactManagement from "./pages/admin/ContactManagement";
 import BlogManagement from "./pages/admin/BlogManagement";
+import LanguageManagement from "./pages/admin/LanguageManagement";
 import AgentLayout from "./pages/agent/AgentLayout";
 import AgentTourManagement from "./pages/agent/AgentTourManagement";
 import AgentBookings from "./pages/agent/AgentBookings";
@@ -52,7 +53,7 @@ const routes: RouteType[] = [
   {
     path: "/admin",
     element: (
-      <ProtectedRoute requiredRole="admin">
+      <ProtectedRoute requiredRole="admin" requireApproval={false}>
         <AdminLayout />
       </ProtectedRoute>
     ),
@@ -64,12 +65,13 @@ const routes: RouteType[] = [
       { path: "about", element: <AboutManagement /> },
       { path: "contact", element: <ContactManagement /> },
       { path: "blogs", element: <BlogManagement /> },
+      { path: "languages", element: <LanguageManagement /> },
     ],
   },
   {
     path: "/agent",
     element: (
-      <ProtectedRoute requiredRole="agent">
+      <ProtectedRoute requiredRole="agent" requireApproval={false}>
         <AgentLayout />
       </ProtectedRoute>
     ),

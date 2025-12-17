@@ -233,16 +233,16 @@
 
 .agent-content {
   margin: 24px;
-  padding: 24px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
   min-height: calc(100vh - 140px);
 }
 
 .agent-content.mobile {
   margin: 16px;
-  padding: 16px;
+  padding: 0;
   min-height: calc(100vh - 80px);
 }
 

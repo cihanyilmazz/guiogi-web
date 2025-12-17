@@ -38,6 +38,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { bookingService } from "../services/bookingService";
+import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -59,6 +60,7 @@ interface Booking {
 }
 
 const Profile: React.FC = () => {
+  const { t } = useTranslation();
   const { user, updateUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -72,10 +74,10 @@ const Profile: React.FC = () => {
   // Oturum kontrolü
   useEffect(() => {
     if (!isAuthenticated) {
-      message.warning("Bu sayfayı görüntülemek için giriş yapmalısınız.");
+      message.warning(t("profile.mustLogin"));
       navigate("/giris");
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, t]);
 
   // Kullanıcı bilgilerini forma yükle
   useEffect(() => {
@@ -122,10 +124,10 @@ const Profile: React.FC = () => {
         ...values,
       });
 
-      message.success("Profil bilgileriniz başarıyla güncellendi");
+      message.success(t("profile.updateSuccess"));
       setEditMode(false);
     } catch (error) {
-      message.error("Profil güncellenirken bir hata oluştu");
+      message.error(t("profile.updateError"));
     } finally {
       setLoading(false);
     }
@@ -134,7 +136,7 @@ const Profile: React.FC = () => {
   // Rezervasyon iptal et
   const handleCancelBooking = async () => {
     if (!selectedBooking || !user?.id) {
-      message.error("Rezervasyon bilgisi bulunamadı");
+      message.error(t("profile.cancelError"));
       return;
     }
 
@@ -153,7 +155,7 @@ const Profile: React.FC = () => {
       setBookings(userBookings);
       
       message.success({
-        content: `Rezervasyon #${bookingNumber} iptal edildi. İptal Edilen Rezervasyonlar bölümünde görüntüleyebilirsiniz.`,
+        content: `${t("profile.bookingNumber")} #${bookingNumber} ${t("profile.status.cancelled")}. ${t("profile.cancelledReservations")} ${t("profile.viewDetails")}.`,
         duration: 4,
       });
       
@@ -162,7 +164,7 @@ const Profile: React.FC = () => {
     } catch (error: any) {
       console.error('İptal hatası:', error);
       
-      const errorMessage = error.message || "Rezervasyon iptal edilirken bir hata oluştu";
+      const errorMessage = error.message || t("profile.cancelError");
       message.error(errorMessage);
       
       // Hata durumunda rezervasyonları yeniden yükle
@@ -194,13 +196,13 @@ const Profile: React.FC = () => {
   const getStatusTag = (status: string) => {
     switch (status) {
       case "confirmed":
-        return <Tag color="green">Onaylandı</Tag>;
+        return <Tag color="green">{t("profile.status.confirmed")}</Tag>;
       case "pending":
-        return <Tag color="orange">Beklemede</Tag>;
+        return <Tag color="orange">{t("profile.status.pending")}</Tag>;
       case "cancelled":
-        return <Tag color="red">İptal Edildi</Tag>;
+        return <Tag color="red">{t("profile.status.cancelled")}</Tag>;
       case "completed":
-        return <Tag color="blue">Tamamlandı</Tag>;
+        return <Tag color="blue">{t("profile.status.completed")}</Tag>;
       default:
         return <Tag>{status}</Tag>;
     }
@@ -210,11 +212,11 @@ const Profile: React.FC = () => {
   const getPaymentTag = (status: string) => {
     switch (status) {
       case "paid":
-        return <Tag color="success">Ödendi</Tag>;
+        return <Tag color="success">{t("profile.payment.paid")}</Tag>;
       case "pending":
-        return <Tag color="warning">Ödeme Bekleniyor</Tag>;
+        return <Tag color="warning">{t("profile.payment.pending")}</Tag>;
       case "refunded":
-        return <Tag color="default">İade Edildi</Tag>;
+        return <Tag color="default">{t("profile.payment.refunded")}</Tag>;
       default:
         return <Tag>{status}</Tag>;
     }
@@ -240,9 +242,9 @@ const Profile: React.FC = () => {
         <div className="container mx-auto px-4 py-8">
           {/* Başlık */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Profilim</h1>
+            <h1 className="text-3xl font-bold text-gray-800">{t("profile.title")}</h1>
             <p className="text-gray-600">
-              Hesap bilgilerinizi yönetin ve rezervasyonlarınızı görüntüleyin
+              {t("profile.subtitle")}
             </p>
           </div>
 
@@ -262,7 +264,7 @@ const Profile: React.FC = () => {
                   <p className="text-gray-500">{user?.email}</p>
                   <div className="mt-2">
                     <Tag color="blue" className="text-sm">
-                      Premium Üye
+                      {t("profile.premiumMember")}
                     </Tag>
                   </div>
                 </div>
@@ -272,31 +274,31 @@ const Profile: React.FC = () => {
                 {/* Hızlı İstatistikler */}
                 <div className="space-y-4">
                   <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                    <span className="text-gray-600 font-medium">Toplam Rezervasyon</span>
+                    <span className="text-gray-600 font-medium">{t("profile.totalReservations")}</span>
                     <span className="font-bold text-gray-800 text-lg">
                       {bookings.length}
                     </span>
                   </div>
                   <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                    <span className="text-gray-600 font-medium">Aktif Rezervasyon</span>
+                    <span className="text-gray-600 font-medium">{t("profile.activeReservations")}</span>
                     <span className="font-bold text-green-600 text-lg">
                       {bookings.filter((b) => b.status === "confirmed" || b.status === "pending").length}
                     </span>
                   </div>
                   <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                    <span className="text-gray-600 font-medium">Tamamlanan</span>
+                    <span className="text-gray-600 font-medium">{t("profile.completed")}</span>
                     <span className="font-bold text-blue-600 text-lg">
                       {bookings.filter((b) => b.status === "completed").length}
                     </span>
                   </div>
                   <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-                    <span className="text-gray-600 font-medium">İptal Edilen</span>
+                    <span className="text-gray-600 font-medium">{t("profile.cancelled")}</span>
                     <span className="font-bold text-red-600 text-lg">
                       {bookings.filter((b) => b.status === "cancelled").length}
                     </span>
                   </div>
                   <div className="flex justify-between items-center pt-2">
-                    <span className="text-gray-600 font-medium">Üyelik Tarihi</span>
+                    <span className="text-gray-600 font-medium">{t("profile.membershipDate")}</span>
                     <span className="text-gray-800 font-semibold">
                       {user?.createdAt 
                         ? new Date(user.createdAt).toLocaleDateString('tr-TR', { 
@@ -304,7 +306,7 @@ const Profile: React.FC = () => {
                             month: '2-digit', 
                             year: 'numeric' 
                           })
-                        : 'Bilinmiyor'}
+                        : t("profile.unknown")}
                     </span>
                   </div>
                 </div>
@@ -342,14 +344,14 @@ const Profile: React.FC = () => {
                     tab={
                       <span>
                         <UserOutlined />
-                        Profil Bilgileri
+                        {t("profile.personalInfo")}
                       </span>
                     }
                     key="profile"
                   >
                     <div className="flex justify-between items-center mb-6">
                       <h3 className="text-xl font-bold text-gray-800">
-                        Kişisel Bilgiler
+                        {t("profile.personalInfo")}
                       </h3>
                       <Button
                         type={editMode ? "default" : "primary"}
@@ -363,7 +365,7 @@ const Profile: React.FC = () => {
                         }}
                         loading={loading}
                       >
-                        {editMode ? "Kaydet" : "Düzenle"}
+                        {editMode ? t("profile.save") : t("profile.edit")}
                       </Button>
                     </div>
 
@@ -377,38 +379,38 @@ const Profile: React.FC = () => {
                         <Col xs={24} md={12}>
                           <Item
                             name="name"
-                            label="Ad Soyad"
+                            label={t("profile.name")}
                             rules={[
                               {
                                 required: true,
-                                message: "Lütfen adınızı girin",
+                                message: t("profile.nameRequired"),
                               },
                             ]}
                           >
                             <Input
                               prefix={<UserOutlined />}
-                              placeholder="Adınız Soyadınız"
+                              placeholder={t("profile.namePlaceholder")}
                             />
                           </Item>
                         </Col>
                         <Col xs={24} md={12}>
                           <Item
                             name="email"
-                            label="E-posta"
+                            label={t("profile.email")}
                             rules={[
                               {
                                 required: true,
-                                message: "Lütfen e-posta adresinizi girin",
+                                message: t("profile.emailRequired"),
                               },
                               {
                                 type: "email",
-                                message: "Geçerli bir e-posta adresi girin",
+                                message: t("profile.emailInvalid"),
                               },
                             ]}
                           >
                             <Input
                               prefix={<MailOutlined />}
-                              placeholder="ornek@email.com"
+                              placeholder={t("profile.emailPlaceholder")}
                               type="email"
                             />
                           </Item>
@@ -417,41 +419,41 @@ const Profile: React.FC = () => {
 
                       <Row gutter={16}>
                         <Col xs={24} md={12}>
-                          <Item name="phone" label="Telefon">
+                          <Item name="phone" label={t("profile.phone")}>
                             <Input
                               prefix={<PhoneOutlined />}
-                              placeholder="(555) 123 45 67"
+                              placeholder={t("profile.phonePlaceholder")}
                             />
                           </Item>
                         </Col>
                         <Col xs={24} md={12}>
-                          <Item name="address" label="Adres">
+                          <Item name="address" label={t("profile.address")}>
                             <Input
                               prefix={<EnvironmentOutlined />}
-                              placeholder="Adresiniz"
+                              placeholder={t("profile.addressPlaceholder")}
                             />
                           </Item>
                         </Col>
                       </Row>
 
-                      <Item name="preferences" label="Tercihler (Opsiyonel)">
+                      <Item name="preferences" label={t("profile.preferences")}>
                         <Input.TextArea
                           rows={3}
-                          placeholder="Özel tercihleriniz, alerjileriniz, diyet kısıtlamalarınız vb..."
+                          placeholder={t("profile.preferencesPlaceholder")}
                         />
                       </Item>
 
                       {editMode && (
                         <div className="flex justify-end space-x-3 mt-6">
                           <Button onClick={() => setEditMode(false)}>
-                            İptal
+                            {t("profile.cancel")}
                           </Button>
                           <Button
                             type="primary"
                             htmlType="submit"
                             loading={loading}
                           >
-                            Güncelle
+                            {t("profile.update")}
                           </Button>
                         </div>
                       )}
@@ -463,7 +465,7 @@ const Profile: React.FC = () => {
                     tab={
                       <span>
                         <HistoryOutlined />
-                        Rezervasyonlarım
+                        {t("profile.myReservations")}
                         <Badge
                           count={activeBookings.length}
                           style={{ marginLeft: 8 }}
@@ -476,7 +478,7 @@ const Profile: React.FC = () => {
                       <div className="text-center py-12">
                         <Spin size="large" />
                         <p className="mt-4 text-gray-500">
-                          Rezervasyonlar yükleniyor...
+                          {t("profile.loadingReservations")}
                         </p>
                       </div>
                     ) : (
@@ -485,7 +487,7 @@ const Profile: React.FC = () => {
                         {activeBookings.length > 0 && (
                           <div className="mb-8">
                             <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                              Aktif Rezervasyonlar
+                              {t("profile.activeReservationsTitle")}
                             </h4>
                             <List
                               dataSource={activeBookings}
@@ -497,7 +499,7 @@ const Profile: React.FC = () => {
                                       type="link"
                                       onClick={() => goToTourDetail(booking.tourId)}
                                     >
-                                      Tur Detayı
+                                      {t("profile.tourDetail")}
                                     </Button>,
                                     (booking.status === "confirmed" || booking.status === "pending") && (
                                       <Button
@@ -509,7 +511,7 @@ const Profile: React.FC = () => {
                                           setCancelModalVisible(true);
                                         }}
                                       >
-                                        İptal Et
+                                        {t("profile.cancelReservation")}
                                       </Button>
                                     ),
                                   ].filter(Boolean)}
@@ -578,7 +580,7 @@ const Profile: React.FC = () => {
                         {/* İptal Edilen Rezervasyonlar */}
                         <div className="mt-8">
                           <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                            İptal Edilen Rezervasyonlar
+                            {t("profile.cancelledReservations")}
                           </h4>
                           {bookings.filter(b => b.status === 'cancelled').length > 0 ? (
                             <List
@@ -664,7 +666,7 @@ const Profile: React.FC = () => {
                             <div className="text-center py-8 bg-gray-50 rounded-lg">
                               <CloseCircleOutlined className="text-3xl text-gray-300 mb-3" />
                               <p className="text-gray-500">
-                                İptal edilen rezervasyonunuz bulunmuyor.
+                                {t("profile.noCancelledReservations")}
                               </p>
                             </div>
                           )}
@@ -674,7 +676,7 @@ const Profile: React.FC = () => {
                         {bookings.filter(b => b.status === 'completed').length > 0 && (
                           <div className="mt-8">
                             <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                              Geçmiş Rezervasyonlar
+                              {t("profile.pastReservations")}
                             </h4>
                             <List
                               dataSource={bookings.filter(b => b.status === 'completed')}
@@ -763,17 +765,16 @@ const Profile: React.FC = () => {
                           <div className="text-center py-12">
                             <HistoryOutlined className="text-4xl text-gray-300 mb-4" />
                             <h4 className="text-lg font-medium text-gray-600 mb-2">
-                              Henüz rezervasyonunuz bulunmuyor
+                              {t("profile.noReservationsYet")}
                             </h4>
                             <p className="text-gray-500 mb-6">
-                              İlk rezervasyonunuzu yaparak unutulmaz bir seyahat
-                              deneyimi yaşayın.
+                              {t("profile.noReservationsDesc")}
                             </p>
                             <Button
                               type="primary"
                               onClick={() => navigate("/turlar")}
                             >
-                              Turları Keşfet
+                              {t("profile.exploreTours")}
                             </Button>
                           </div>
                         )}
@@ -789,7 +790,7 @@ const Profile: React.FC = () => {
 
       {/* Rezervasyon İptal Modal'ı */}
       <Modal
-        title="Rezervasyon İptali"
+        title={t("profile.reservationCancel")}
         open={cancelModalVisible}
         onCancel={() => {
           setCancelModalVisible(false);
@@ -803,7 +804,7 @@ const Profile: React.FC = () => {
               setSelectedBooking(null);
             }}
           >
-            Vazgeç
+            {t("profile.cancel")}
           </Button>,
           <Button
             key="submit"
@@ -814,31 +815,29 @@ const Profile: React.FC = () => {
               handleCancelBooking();
             }}
           >
-            Evet, İptal Et
+            {t("profile.cancelButton")}
           </Button>,
         ]}
       >
         {selectedBooking && (
           <div>
             <Alert
-              message="Dikkat"
+              message={t("profile.reservationCancel")}
               description={
                 <div>
                   <p className="mb-2">
-                    <strong>{selectedBooking.tourTitle}</strong> turu için
-                    yapmış olduğunuz rezervasyonu iptal etmek istediğinize emin
-                    misiniz?
+                    <strong>{selectedBooking.tourTitle}</strong> {t("profile.cancelConfirm")}
                   </p>
                   <ul className="list-disc pl-5 text-gray-600">
                     <li>
-                      Rezervasyon numarası: {selectedBooking.bookingNumber}
+                      {t("profile.reservationNumber")} {selectedBooking.bookingNumber}
                     </li>
-                    <li>Seyahat tarihi: {selectedBooking.travelDate}</li>
-                    <li>Kişi sayısı: {selectedBooking.persons}</li>
-                    <li>Toplam tutar: {selectedBooking.totalPrice} TL</li>
+                    <li>{t("profile.travelDate")} {selectedBooking.travelDate}</li>
+                    <li>{t("profile.persons")}: {selectedBooking.persons}</li>
+                    <li>{t("profile.totalAmount")} {selectedBooking.totalPrice} TL</li>
                   </ul>
                   <p className="mt-3 text-red-600 font-medium">
-                    İptal işleminden sonra ödemeniz iade edilecektir.
+                    {t("profile.refundNote")}
                   </p>
                 </div>
               }

@@ -19,6 +19,7 @@ import {
   LoginOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -27,6 +28,7 @@ const { Item } = Form;
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +40,7 @@ const Login: React.FC = () => {
       await login(values.email, values.password);
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.');
+      setError(err.message || t('auth.checkInfo'));
     } finally {
       setLoading(false);
     }
@@ -58,16 +60,16 @@ const Login: React.FC = () => {
         <Card className="w-full max-w-md shadow-2xl border-0 rounded-2xl">
           <div className="text-center mb-8">
             <Title level={2} className="text-gray-800">
-              Guiaogi Turizm'e Giriş Yap
+              {t('auth.loginTitle')}
             </Title>
             <Text className="text-gray-500">
-              Fiyatları görmek ve rezervasyon yapmak için giriş yapın
+              {t('auth.loginSubtitle')}
             </Text>
           </div>
 
           {error && (
             <Alert
-              message="Hata"
+              message={t('home.error')}
               description={error}
               type="error"
               showIcon
@@ -85,36 +87,36 @@ const Login: React.FC = () => {
           >
             <Item
               name="email"
-              label="E-posta Adresi"
+              label={t('auth.emailLabel')}
               rules={[
-                { required: true, message: 'Lütfen e-posta adresinizi girin' },
-                { type: 'email', message: 'Geçerli bir e-posta adresi girin' }
+                { required: true, message: t('auth.emailRequired') },
+                { type: 'email', message: t('auth.emailInvalid') }
               ]}
             >
               <Input
                 prefix={<MailOutlined className="text-gray-400" />}
-                placeholder="ornek@email.com"
+                placeholder={t("auth.emailPlaceholder")}
               />
             </Item>
             
             <Item
               name="password"
-              label="Şifre"
+              label={t('auth.passwordLabel')}
               rules={[
-                { required: true, message: 'Lütfen şifrenizi girin' },
-                { min: 6, message: 'Şifre en az 6 karakter olmalı' }
+                { required: true, message: t('auth.passwordRequired') },
+                { min: 6, message: t('auth.passwordMinLength') }
               ]}
             >
               <Input.Password
                 prefix={<LockOutlined className="text-gray-400" />}
-                placeholder="Şifreniz"
+                placeholder={t('auth.passwordPlaceholder')}
                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
               />
             </Item>
             
             <div className="flex justify-between items-center mb-6">
               <Link to="/sifremi-unuttum" className="text-blue-600 hover:text-blue-700 text-sm">
-                Şifremi Unuttum?
+                {t('auth.forgotPassword')}
               </Link>
             </div>
             
@@ -128,13 +130,13 @@ const Login: React.FC = () => {
                 icon={<LoginOutlined />}
                 className="h-12 text-lg font-semibold bg-blue-600 hover:bg-blue-700"
               >
-                Giriş Yap
+                {t('auth.loginButton')}
               </Button>
             </Item>
           </Form>
 
           <Divider className="my-6">
-            <Text className="text-gray-400">veya</Text>
+            <Text className="text-gray-400">{t("auth.or")}</Text>
           </Divider>
 
           <div className="text-center">
@@ -145,15 +147,15 @@ const Login: React.FC = () => {
               onClick={handleDemoLogin}
               className="mb-4"
             >
-              🚀 Demo Hesap ile Giriş Yap
+              {t('auth.demoLogin')}
             </Button>
           </div>
 
           <div className="text-center mt-8 pt-6 border-t border-gray-200">
             <Text className="text-gray-600">
-              Henüz hesabınız yok mu?{' '}
+              {t('auth.dontHaveAccount')}{' '}
               <Link to="/kayit" className="text-blue-600 hover:text-blue-700 font-semibold">
-                Hemen Kayıt Olun
+                {t('auth.registerNow')}
               </Link>
             </Text>
           </div>

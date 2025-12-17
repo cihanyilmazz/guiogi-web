@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Input, Select, Spin, Tag, Row, Col, Empty } from 'antd';
 import { SearchOutlined, CalendarOutlined, ClockCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { blogService, BlogPost } from '../services/blogService';
+import { useTranslation } from 'react-i18next';
 
 const { Search } = Input;
 const { Option } = Select;
 
 const BlogPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>([]);
@@ -97,10 +99,10 @@ const BlogPage: React.FC = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Blog
+            {t('blog.title')}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Seyahat ipuçları, destinasyon rehberleri ve seyahat dünyasından haberler
+            {t("blog.blogDesc")}
           </p>
         </div>
 
@@ -109,7 +111,7 @@ const BlogPage: React.FC = () => {
           <Row gutter={[16, 16]}>
             <Col xs={24} md={16}>
               <Search
-                placeholder="Blog ara..."
+                placeholder={t('blog.searchPlaceholder')}
                 allowClear
                 enterButton={<SearchOutlined />}
                 size="large"
@@ -120,13 +122,13 @@ const BlogPage: React.FC = () => {
             </Col>
             <Col xs={24} md={8}>
               <Select
-                placeholder="Kategori Seç"
+                placeholder={t("blog.selectCategory")}
                 size="large"
                 style={{ width: '100%' }}
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                <Option value="all">Tüm Kategoriler</Option>
+                <Option value="all">{t('blog.allCategories')}</Option>
                 {categories.map(category => (
                   <Option key={category} value={category}>{category}</Option>
                 ))}
@@ -137,7 +139,7 @@ const BlogPage: React.FC = () => {
 
         {/* Blog List */}
         {filteredBlogs.length === 0 ? (
-          <Empty description="Blog yazısı bulunamadı" />
+          <Empty description={t('blog.noPostsFound')} />
         ) : (
           <Row gutter={[24, 24]}>
             {filteredBlogs.map((blog) => (
@@ -192,7 +194,7 @@ const BlogPage: React.FC = () => {
                       {blog.readingTime && (
                         <span className="flex items-center gap-1">
                           <ClockCircleOutlined />
-                          {blog.readingTime} dk
+                          {blog.readingTime} {t("blog.minutes")}
                         </span>
                       )}
                       {blog.views && (

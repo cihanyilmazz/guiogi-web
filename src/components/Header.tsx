@@ -1,7 +1,7 @@
 // components/Header.tsx - güncelleyin
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Button, Avatar, Dropdown, Menu } from "antd";
+import { Button, Avatar, Dropdown, Menu, Select } from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
@@ -15,14 +15,52 @@ import {
   YoutubeFilled,
   DashboardOutlined,
   AppstoreOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import logoImage from "../assets/images/logo.png";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { t, i18n } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [availableLanguages, setAvailableLanguages] = useState([
+    { code: 'tr', name: t("common.turkish") },
+    { code: 'en', name: t("common.english") },
+  ]);
+
+  useEffect(() => {
+    // localStorage'dan dilleri yükle
+    const loadLanguages = async () => {
+      try {
+        const response = await fetch('http://localhost:3005/languages');
+        if (response.ok) {
+          const langs = await response.json();
+          const activeLangs = (Array.isArray(langs) ? langs : [])
+            .filter((l: any) => l.isActive !== false)
+            .map((l: any) => ({
+              code: l.code,
+              name: l.nativeName || l.name,
+            }));
+          
+          if (activeLangs.length > 0) {
+            setAvailableLanguages(activeLangs);
+          }
+        }
+      } catch (error) {
+        // API yoksa default dilleri kullan
+        console.log('Languages API not available, using defaults');
+      }
+    };
+    
+    loadLanguages();
+  }, []);
+
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   const handleLogout = () => {
     logout();
@@ -39,14 +77,14 @@ const Header: React.FC = () => {
             icon={<DashboardOutlined />}
             onClick={() => navigate("/admin")}
           >
-            Admin Paneli
+            {t("header.adminPanel")}
           </Menu.Item>
           <Menu.Item
             key="agent"
             icon={<AppstoreOutlined />}
             onClick={() => navigate("/agent/tours")}
           >
-            Acente Paneli
+            {t("header.agentPanel")}
           </Menu.Item>
           <Menu.Divider />
         </>
@@ -58,7 +96,7 @@ const Header: React.FC = () => {
             icon={<AppstoreOutlined />}
             onClick={() => navigate("/agent/tours")}
           >
-            Acente Paneli
+            {t("header.agentPanel")}
           </Menu.Item>
           <Menu.Divider />
         </>
@@ -68,11 +106,11 @@ const Header: React.FC = () => {
         icon={<UserOutlined />}
         onClick={() => navigate("/profil")}
       >
-        Profilim
+        {t("header.profile")}
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        Çıkış Yap
+        {t("header.logout")}
       </Menu.Item>
     </Menu>
   );
@@ -263,7 +301,7 @@ const Header: React.FC = () => {
                   e.currentTarget.style.backgroundColor = "";
                 }}
               >
-                <span className="relative z-10">Ana Sayfa</span>
+                <span className="relative z-10">{t("common.home")}</span>
                 <span
                   className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ backgroundColor: "rgba(158, 1, 2, 0.1)" }}
@@ -281,7 +319,7 @@ const Header: React.FC = () => {
                   e.currentTarget.style.backgroundColor = "";
                 }}
               >
-                <span className="relative z-10">Turlar</span>
+                <span className="relative z-10">{t("common.tours")}</span>
                 <span
                   className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ backgroundColor: "rgba(158, 1, 2, 0.1)" }}
@@ -299,7 +337,7 @@ const Header: React.FC = () => {
                   e.currentTarget.style.backgroundColor = "";
                 }}
               >
-                <span className="relative z-10">Hakkımızda</span>
+                <span className="relative z-10">{t("common.about")}</span>
                 <span
                   className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ backgroundColor: "rgba(158, 1, 2, 0.1)" }}
@@ -317,7 +355,7 @@ const Header: React.FC = () => {
                   e.currentTarget.style.backgroundColor = "";
                 }}
               >
-                <span className="relative z-10">Blog</span>
+                <span className="relative z-10">{t("common.blog")}</span>
                 <span
                   className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ backgroundColor: "rgba(158, 1, 2, 0.1)" }}
@@ -335,7 +373,7 @@ const Header: React.FC = () => {
                   e.currentTarget.style.backgroundColor = "";
                 }}
               >
-                <span className="relative z-10">İletişim</span>
+                <span className="relative z-10">{t("common.contact")}</span>
                 <span
                   className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ backgroundColor: "rgba(158, 1, 2, 0.1)" }}
@@ -345,6 +383,19 @@ const Header: React.FC = () => {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
+              {/* Language Selector */}
+              <Select
+                value={i18n.language}
+                onChange={changeLanguage}
+                style={{ width: 120 }}
+                suffixIcon={<GlobalOutlined />}
+              >
+                {availableLanguages.map(lang => (
+                  <Select.Option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </Select.Option>
+                ))}
+              </Select>
               {isAuthenticated ? (
                 <Dropdown overlay={userMenu} placement="bottomRight">
                   <div
@@ -395,7 +446,7 @@ const Header: React.FC = () => {
                       e.currentTarget.style.backgroundColor = "";
                     }}
                   >
-                    Giriş Yap
+                    {t("common.login")}
                   </Button>
                   <Button
                     type="primary"
@@ -415,7 +466,7 @@ const Header: React.FC = () => {
                       e.currentTarget.style.borderColor = "#9E0102";
                     }}
                   >
-                    Kayıt Ol
+                    {t("common.register")}
                   </Button>
                 </>
               )}
@@ -423,6 +474,20 @@ const Header: React.FC = () => {
 
             {/* Mobile Menu Button & Auth */}
             <div className="flex items-center space-x-2 lg:hidden">
+              {/* Language Selector Mobile */}
+              <Select
+                value={i18n.language}
+                onChange={changeLanguage}
+                style={{ width: 100 }}
+                size="small"
+                suffixIcon={<GlobalOutlined />}
+              >
+                {availableLanguages.map(lang => (
+                  <Select.Option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </Select.Option>
+                ))}
+              </Select>
               {isAuthenticated ? (
                 <Dropdown overlay={userMenu} placement="bottomRight">
                   <div
@@ -471,7 +536,7 @@ const Header: React.FC = () => {
                       e.currentTarget.style.backgroundColor = "";
                     }}
                   >
-                    Giriş
+                    {t("common.login")}
                   </Button>
                   <Button
                     type="primary"
@@ -491,7 +556,7 @@ const Header: React.FC = () => {
                       e.currentTarget.style.borderColor = "#9E0102";
                     }}
                   >
-                    Kayıt
+                    {t("common.register")}
                   </Button>
                 </div>
               )}
@@ -536,7 +601,7 @@ const Header: React.FC = () => {
                     e.currentTarget.style.borderColor = "";
                   }}
                 >
-                  Ana Sayfa
+                  {t("common.home")}
                 </Link>
                 <Link
                   to="/turlar"
@@ -553,7 +618,7 @@ const Header: React.FC = () => {
                     e.currentTarget.style.borderColor = "";
                   }}
                 >
-                  Turlar
+                  {t("common.tours")}
                 </Link>
                 <Link
                   to="/hakkimizda"
@@ -570,7 +635,7 @@ const Header: React.FC = () => {
                     e.currentTarget.style.borderColor = "";
                   }}
                 >
-                  Hakkımızda
+                  {t("common.about")}
                 </Link>
                 <Link
                   to="/blog"
@@ -587,7 +652,7 @@ const Header: React.FC = () => {
                     e.currentTarget.style.borderColor = "";
                   }}
                 >
-                  Blog
+                  {t("common.blog")}
                 </Link>
                 <Link
                   to="/iletisim"
@@ -604,7 +669,7 @@ const Header: React.FC = () => {
                     e.currentTarget.style.borderColor = "";
                   }}
                 >
-                  İletişim
+                  {t("common.contact")}
                 </Link>
                 {!isAuthenticated && (
                   <div className="pt-3 border-t border-gray-200 flex flex-col space-y-2">
@@ -629,7 +694,7 @@ const Header: React.FC = () => {
                         e.currentTarget.style.borderColor = "#9E0102";
                       }}
                     >
-                      Kayıt Ol
+                      {t("common.register")}
                     </Button>
                   </div>
                 )}
