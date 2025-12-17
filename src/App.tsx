@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Spin } from 'antd';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
-import Footer from './components/Footer';
+import Footer from './components/footer';
 import routes from './routes';
 import i18n, { loadLanguage, addLanguage } from './i18n/config';
 
