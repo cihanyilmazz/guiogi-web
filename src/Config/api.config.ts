@@ -1,7 +1,7 @@
 // Config/api.config.ts
 
 export const API_CONFIG = {
-    BASE_URL: "http://localhost:3005/api",
+    BASE_URL: "http://49.13.94.27:3005/api",
     ENDPOINTS: {
       TOURS: "/tours",
       TOUR_BY_ID: "/tours/:id",
