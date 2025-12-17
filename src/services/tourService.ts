@@ -367,7 +367,7 @@ class TourService {
     try {
       // Önce json-server'dan direkt çek (en güncel veri için)
       try {
-        const dbResponse = await fetch('http://localhost:3005/tours');
+        const dbResponse = await fetch('http://49.13.94.27/:3005/tours');
         if (dbResponse.ok) {
           const tours = await dbResponse.json();
           if (tours && Array.isArray(tours) && tours.length > 0) {
@@ -383,7 +383,7 @@ class TourService {
 
       // API endpoint'ini dene
       try {
-        const response = await fetch('http://localhost:3005/api/tours');
+        const response = await fetch('http://49.13.94.27/:3005/api/tours');
         if (response.ok) {
           const data = await response.json();
           if (data && Array.isArray(data) && data.length > 0) {
@@ -429,7 +429,7 @@ class TourService {
     try {
       // Önce direkt API'den çekmeyi dene
       try {
-        const response = await fetch(`http://localhost:3005/tours/${id}`);
+        const response = await fetch(`http://49.13.94.27/:3005/tours/${id}`);
         if (response.ok) {
           const tour = await response.json();
           if (tour) {

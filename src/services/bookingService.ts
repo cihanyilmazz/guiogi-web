@@ -23,7 +23,7 @@ export interface Booking {
         // Önce API'den mevcut rezervasyonları çek
         let bookings: Booking[] = [];
         try {
-          const response = await fetch('http://localhost:3005/bookings');
+          const response = await fetch('http://49.13.94.27/:3005/bookings');
           if (response.ok) {
             bookings = await response.json();
           }
@@ -45,7 +45,7 @@ export interface Booking {
         
         // API'ye kaydet
         try {
-          const response = await fetch('http://localhost:3005/bookings', {
+          const response = await fetch('http://49.13.94.27/:3005/bookings', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export interface Booking {
       try {
         // Önce API'den çekmeyi dene
         try {
-          const response = await fetch(`http://localhost:3005/bookings?userId=${userId}`);
+          const response = await fetch(`http://49.13.94.27/:3005/bookings?userId=${userId}`);
           if (response.ok) {
             const bookings = await response.json();
             return Array.isArray(bookings) ? bookings : [];
@@ -102,7 +102,7 @@ export interface Booking {
         
         // API'den tüm rezervasyonları çek
         try {
-          const getAllResponse = await fetch('http://localhost:3005/bookings');
+          const getAllResponse = await fetch('http://49.13.94.27/:3005/bookings');
           if (getAllResponse.ok) {
             allBookings = await getAllResponse.json();
             booking = allBookings.find((b: Booking) => b.id === bookingId && String(b.userId) === String(userId));
@@ -136,7 +136,7 @@ export interface Booking {
         
         // API'ye kaydet (PUT kullanarak tam güncelleme)
         try {
-          const response = await fetch(`http://localhost:3005/bookings/${bookingId}`, {
+          const response = await fetch(`http://49.13.94.27/:3005/bookings/${bookingId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ export interface Booking {
               // Önce mevcut cancelledBookings'i al
               let cancelledBookings: Booking[] = [];
               try {
-                const cancelledResponse = await fetch('http://localhost:3005/cancelledBookings');
+                const cancelledResponse = await fetch('http://49.13.94.27/:3005/cancelledBookings');
                 if (cancelledResponse.ok) {
                   cancelledBookings = await cancelledResponse.json();
                 } else if (cancelledResponse.status === 404) {
@@ -172,7 +172,7 @@ export interface Booking {
               // İptal edilen rezervasyonu ekle (eğer zaten yoksa)
               const alreadyExists = cancelledBookings.some((b: Booking) => b.id === bookingId);
               if (!alreadyExists) {
-                const addCancelledResponse = await fetch('http://localhost:3005/cancelledBookings', {
+                const addCancelledResponse = await fetch('http://49.13.94.27/:3005/cancelledBookings', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -278,7 +278,7 @@ export interface Booking {
       try {
         // API'den güncelle
         try {
-          const response = await fetch(`http://localhost:3005/bookings/${bookingId}`, {
+          const response = await fetch(`http://49.13.94.27/:3005/bookings/${bookingId}`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',

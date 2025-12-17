@@ -70,7 +70,7 @@ const defaultAboutContent: AboutContent = {
 class AboutService {
   async getAboutContent(): Promise<AboutContent> {
     try {
-      const response = await fetch('http://localhost:3005/about');
+      const response = await fetch('http://49.13.94.27/:3005/about');
       if (response.ok) {
         const data = await response.json();
         // Eğer array dönerse ilk elemanı al, değilse direkt kullan
@@ -96,7 +96,7 @@ class AboutService {
       let response;
       if (existing.id) {
         // Güncelleme
-        response = await fetch(`http://localhost:3005/about/${existing.id}`, {
+        response = await fetch(`http://49.13.94.27/:3005/about/${existing.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ class AboutService {
         });
       } else {
         // Yeni oluştur
-        response = await fetch('http://localhost:3005/about', {
+        response = await fetch('http://49.13.94.27/:3005/about', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

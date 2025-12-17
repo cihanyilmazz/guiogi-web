@@ -40,7 +40,7 @@ const UserManagement: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3005/users');
+      const response = await fetch('http://49.13.94.27/:3005/users');
       if (response.ok) {
         const data = await response.json();
         const usersArray = Array.isArray(data) ? data : [];
@@ -65,7 +65,7 @@ const UserManagement: React.FC = () => {
       const user = users.find(u => u.id === userId);
       if (!user) return;
 
-      const response = await fetch(`http://localhost:3005/users/${userId}`, {
+      const response = await fetch(`http://49.13.94.27/:3005/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const UserManagement: React.FC = () => {
       const user = users.find(u => u.id === userId);
       if (!user) return;
 
-      const response = await fetch(`http://localhost:3005/users/${userId}`, {
+      const response = await fetch(`http://49.13.94.27/:3005/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ const UserManagement: React.FC = () => {
 
   const handleDelete = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:3005/users/${userId}`, {
+      const response = await fetch(`http://49.13.94.27/:3005/users/${userId}`, {
         method: 'DELETE',
       });
 
@@ -139,7 +139,7 @@ const UserManagement: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:3005/users/${userId}`, {
+      const response = await fetch(`http://49.13.94.27/:3005/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

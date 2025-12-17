@@ -35,7 +35,7 @@ const Header: React.FC = () => {
     // localStorage'dan dilleri yükle
     const loadLanguages = async () => {
       try {
-        const response = await fetch('http://localhost:3005/languages');
+        const response = await fetch('http://49.13.94.27/:3005/languages');
         if (response.ok) {
           const langs = await response.json();
           const activeLangs = (Array.isArray(langs) ? langs : [])

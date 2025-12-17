@@ -23,7 +23,7 @@ export interface BlogPost {
 class BlogService {
   async getAllBlogs(): Promise<BlogPost[]> {
     try {
-      const response = await fetch('http://localhost:3005/blogs');
+      const response = await fetch('http://49.13.94.27/:3005/blogs');
       if (response.ok) {
         const data = await response.json();
         const blogs = Array.isArray(data) ? data : [];
@@ -42,7 +42,7 @@ class BlogService {
 
   async getAllBlogsForAdmin(): Promise<BlogPost[]> {
     try {
-      const response = await fetch('http://localhost:3005/blogs');
+      const response = await fetch('http://49.13.94.27/:3005/blogs');
       if (response.ok) {
         const data = await response.json();
         const blogs = Array.isArray(data) ? data : [];
@@ -59,7 +59,7 @@ class BlogService {
 
   async getBlogById(id: string | number): Promise<BlogPost | null> {
     try {
-      const response = await fetch(`http://localhost:3005/blogs/${id}`);
+      const response = await fetch(`http://49.13.94.27/:3005/blogs/${id}`);
       if (response.ok) {
         const blog = await response.json();
         return blog;
@@ -157,7 +157,7 @@ class BlogService {
         readingTime: this.calculateReadingTime(blogData.content),
       };
 
-      const response = await fetch('http://localhost:3005/blogs', {
+      const response = await fetch('http://49.13.94.27/:3005/blogs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ class BlogService {
         updatedBlog.slug = this.generateSlug(blogData.title);
       }
 
-      const response = await fetch(`http://localhost:3005/blogs/${id}`, {
+      const response = await fetch(`http://49.13.94.27/:3005/blogs/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -219,7 +219,7 @@ class BlogService {
 
   async deleteBlog(id: string | number): Promise<void> {
     try {
-      const response = await fetch(`http://localhost:3005/blogs/${id}`, {
+      const response = await fetch(`http://49.13.94.27/:3005/blogs/${id}`, {
         method: 'DELETE',
       });
 
