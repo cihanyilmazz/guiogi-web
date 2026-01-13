@@ -39,7 +39,7 @@ const AgentBookings: React.FC = () => {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://49.13.94.27/:3005/bookings');
+      const response = await fetch('http://guiaogi.com/bookings');
       if (response.ok) {
         const data = await response.json();
         const bookingsArray = Array.isArray(data) ? data : [];
@@ -83,7 +83,7 @@ const AgentBookings: React.FC = () => {
 
   const handleStatusChange = async (bookingId: string | number, newStatus: string) => {
     try {
-      const response = await fetch(`http://49.13.94.27/:3005/bookings/${bookingId}`, {
+      const response = await fetch(`http://guiaogi.com/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const AgentBookings: React.FC = () => {
 
   const handlePaymentStatusChange = async (bookingId: string | number, newPaymentStatus: string) => {
     try {
-      const response = await fetch(`http://49.13.94.27/:3005/bookings/${bookingId}`, {
+      const response = await fetch(`http://guiaogi.com/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -93,7 +93,7 @@ const defaultContactContent: ContactContent = {
 class ContactService {
   async getContactContent(): Promise<ContactContent> {
     try {
-      const response = await fetch('http://49.13.94.27/:3005/contact');
+      const response = await fetch('http://guiaogi.com/contact');
       if (response.ok) {
         const data = await response.json();
         // Eğer array dönerse ilk elemanı al, değilse direkt kullan
@@ -119,7 +119,7 @@ class ContactService {
       let response;
       if (existing.id) {
         // Güncelleme
-        response = await fetch(`http://49.13.94.27/:3005/contact/${existing.id}`, {
+        response = await fetch(`http://guiaogi.com/contact/${existing.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ class ContactService {
         });
       } else {
         // Yeni oluştur
-        response = await fetch('http://49.13.94.27/:3005/contact', {
+        response = await fetch('http://guiaogi.com/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

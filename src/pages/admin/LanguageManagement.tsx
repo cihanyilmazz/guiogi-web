@@ -111,7 +111,7 @@ const LanguageManagement: React.FC = () => {
   const fetchLanguages = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://49.13.94.27/:3005/languages');
+      const response = await fetch('http://guiaogi.com/languages');
       if (response.ok) {
         const data = await response.json();
         setLanguages(Array.isArray(data) ? data : []);
@@ -245,7 +245,7 @@ const LanguageManagement: React.FC = () => {
       await addLanguage(langCode, translationsData);
       
       try {
-        await fetch(`http://49.13.94.27/:3005/translations/${langCode}`, {
+        await fetch(`http://guiaogi.com/translations/${langCode}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -286,7 +286,7 @@ const LanguageManagement: React.FC = () => {
 
   const handleDeleteLanguage = useCallback(async (code: string) => {
     try {
-      const response = await fetch(`http://49.13.94.27/:3005/languages/${code}`, {
+      const response = await fetch(`http://guiaogi.com/languages/${code}`, {
         method: 'DELETE',
       });
       
@@ -313,7 +313,7 @@ const LanguageManagement: React.FC = () => {
       };
 
       if (editingLanguage) {
-        const response = await fetch(`http://49.13.94.27/:3005/languages/${editingLanguage.code}`, {
+        const response = await fetch(`http://guiaogi.com/languages/${editingLanguage.code}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -333,7 +333,7 @@ const LanguageManagement: React.FC = () => {
         await addLanguage(langData.code, newTranslations);
         
         try {
-          const response = await fetch('http://49.13.94.27/:3005/languages', {
+          const response = await fetch('http://guiaogi.com/languages', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -40,14 +40,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     try {
       // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:37',message:'Fetching users from json-server',data:{url:'http://49.13.94.27/:3005/users?email='+encodeURIComponent(email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:37',message:'Fetching users from json-server',data:{url:'http://guiaogi.com/users?email='+encodeURIComponent(email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
 
       // json-server'dan email ile kullanıcıyı bul
       let response;
       try {
         // Önce /api/users deneyelim
-        response = await fetch(`http://49.13.94.27/:3005/api/users?email=${encodeURIComponent(email)}`, {
+        response = await fetch(`http://guiaogi.com/api/users?email=${encodeURIComponent(email)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -61,10 +61,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         // 404 ise /users endpoint'ini dene
         if (response.status === 404) {
           // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:55',message:'404 error - trying alternative endpoint',data:{alternativeUrl:'http://49.13.94.27/:3005/users?email='+encodeURIComponent(email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:55',message:'404 error - trying alternative endpoint',data:{alternativeUrl:'http://guiaogi.com/users?email='+encodeURIComponent(email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
           // #endregion
           
-          response = await fetch(`http://49.13.94.27/:3005/users?email=${encodeURIComponent(email)}`, {
+          response = await fetch(`http://guiaogi.com/users?email=${encodeURIComponent(email)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -167,13 +167,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       // Önce email'in zaten kullanılıp kullanılmadığını kontrol et
       // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:157',message:'Checking if email already exists',data:{email:userData.email,checkUrl:'http://49.13.94.27/:3005/api/users?email='+encodeURIComponent(userData.email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:157',message:'Checking if email already exists',data:{email:userData.email,checkUrl:'http://guiaogi.com/api/users?email='+encodeURIComponent(userData.email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
 
       let emailCheckResponse;
       try {
         // Önce /api/users endpoint'ini dene
-        emailCheckResponse = await fetch(`http://49.13.94.27/:3005/api/users?email=${encodeURIComponent(userData.email)}`, {
+        emailCheckResponse = await fetch(`http://guiaogi.com/api/users?email=${encodeURIComponent(userData.email)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -187,10 +187,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         // 404 ise /users endpoint'ini dene
         if (emailCheckResponse.status === 404) {
           // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:174',message:'404 error - trying alternative endpoint for email check',data:{alternativeUrl:'http://49.13.94.27/:3005/users?email='+encodeURIComponent(userData.email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:174',message:'404 error - trying alternative endpoint for email check',data:{alternativeUrl:'http://guiaogi.com/users?email='+encodeURIComponent(userData.email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
           // #endregion
           
-          emailCheckResponse = await fetch(`http://49.13.94.27/:3005/users?email=${encodeURIComponent(userData.email)}`, {
+          emailCheckResponse = await fetch(`http://guiaogi.com/users?email=${encodeURIComponent(userData.email)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -242,17 +242,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       };
 
       // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:68',message:'Preparing fetch request',data:{url:'http://49.13.94.27/:3005/api/users',userData:newUser},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:68',message:'Preparing fetch request',data:{url:'http://guiaogi.com/api/users',userData:newUser},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
 
       // json-server API'sine POST isteği gönder
       let response;
       try {
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:75',message:'Fetch request starting',data:{url:'http://49.13.94.27/:3005/api/users'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:75',message:'Fetch request starting',data:{url:'http://guiaogi.com/api/users'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
         // #endregion
         
-        response = await fetch('http://49.13.94.27/:3005/api/users', {
+        response = await fetch('http://guiaogi.com/api/users', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -285,11 +285,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         // json-server endpoint formatını kontrol et - /api/users yerine /users deneyelim
         if (response.status === 404) {
           // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:109',message:'404 error - trying alternative endpoint',data:{originalUrl:'http://49.13.94.27/:3005/api/users',alternativeUrl:'http://49.13.94.27/:3005/users'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:109',message:'404 error - trying alternative endpoint',data:{originalUrl:'http://guiaogi.com/api/users',alternativeUrl:'http://guiaogi.com/users'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
           // #endregion
           
           // /api/users 404 verdi, /users deneyelim
-          const altResponse = await fetch('http://49.13.94.27/:3005/users', {
+          const altResponse = await fetch('http://guiaogi.com/users', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

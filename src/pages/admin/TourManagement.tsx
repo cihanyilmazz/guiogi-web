@@ -49,7 +49,7 @@ const TourManagement: React.FC = () => {
   const fetchTours = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://49.13.94.27/:3005/tours');
+      const response = await fetch('http://guiaogi.com/tours');
       if (response.ok) {
         const data = await response.json();
         const toursArray = Array.isArray(data) ? data : [];
@@ -88,7 +88,7 @@ const TourManagement: React.FC = () => {
 
   const handleDelete = async (tourId: string | number) => {
     try {
-      const response = await fetch(`http://49.13.94.27/:3005/tours/${tourId}`, {
+      const response = await fetch(`http://guiaogi.com/tours/${tourId}`, {
         method: 'DELETE',
       });
 
@@ -121,7 +121,7 @@ const TourManagement: React.FC = () => {
 
       if (editingTour) {
         // Güncelleme
-        const response = await fetch(`http://49.13.94.27/:3005/tours/${editingTour.id}`, {
+        const response = await fetch(`http://guiaogi.com/tours/${editingTour.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const TourManagement: React.FC = () => {
           coverImage: values.coverImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
         };
 
-        const response = await fetch('http://49.13.94.27/:3005/tours', {
+        const response = await fetch('http://guiaogi.com/tours', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

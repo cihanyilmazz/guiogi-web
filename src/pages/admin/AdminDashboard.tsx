@@ -82,15 +82,15 @@ const AdminDashboard: React.FC = () => {
       setLoading(true);
       
       // Kullanıcıları çek
-      const usersResponse = await fetch('http://49.13.94.27/:3005/users');
+      const usersResponse = await fetch('http://guiaogi.com/users');
       const users = usersResponse.ok ? await usersResponse.json() : [];
       
       // Turları çek
-      const toursResponse = await fetch('http://49.13.94.27/:3005/tours');
+      const toursResponse = await fetch('http://guiaogi.com/tours');
       const tours = toursResponse.ok ? await toursResponse.json() : [];
       
       // Rezervasyonları çek
-      const bookingsResponse = await fetch('http://49.13.94.27/:3005/bookings');
+      const bookingsResponse = await fetch('http://guiaogi.com/bookings');
       const bookings = bookingsResponse.ok ? await bookingsResponse.json() : [];
 
       const totalUsers = users.filter((u: any) => u.role === 'user').length;

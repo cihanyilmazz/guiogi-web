@@ -27,7 +27,7 @@ export interface User {
     token: string;
   }
   
-  const API_URL = 'http://49.13.94.27/:3005/api';
+  const API_URL = 'http://guiaogi.com/api';
   
   class AuthService {
     private getHeaders(): HeadersInit {
