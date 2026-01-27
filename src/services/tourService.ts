@@ -367,23 +367,23 @@ class TourService {
     try {
       // Önce json-server'dan direkt çek (en güncel veri için)
       try {
-        const dbResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours``);
+        const dbResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours`);
         if (dbResponse.ok) {
           const tours = await dbResponse.json();
           if (tours && Array.isArray(tours) && tours.length > 0) {
-            console.log(`${ tours.length } tur json - server'dan yüklendi`);
+            console.log(`${tours.length} tur json-server'dan yüklendi`);
             // localStorage'a cache olarak kaydet
             localStorage.setItem('tours', JSON.stringify(tours));
-        return tours;
-      }
+            return tours;
+          }
         }
-      } catch(dbError) {
-    console.log('json-server\'dan veri çekilemedi, alternatif kaynaklar deneniyor...');
-  }
+      } catch (dbError) {
+        console.log('json-server\'dan veri çekilemedi, alternatif kaynaklar deneniyor...');
+      }
 
       // API endpoint'ini dene
       try {
-  const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3005/api'}/tours``);
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3005/api'}/tours`);
         if (response.ok) {
           const data = await response.json();
           if (data && Array.isArray(data) && data.length > 0) {
@@ -400,133 +400,133 @@ class TourService {
       if (localTours) {
         const parsedTours = JSON.parse(localTours);
         if (Array.isArray(parsedTours) && parsedTours.length > 0) {
-          console.log(`${ parsedTours.length } tur localStorage'dan yüklendi (cache)`);
+          console.log(`${parsedTours.length} tur localStorage'dan yüklendi (cache)`);
           return parsedTours;
-}
+        }
       }
 
-// En son çare olarak mock verileri kullan
-console.log('Mock veriler kullanılıyor...');
-localStorage.setItem('tours', JSON.stringify(mockTours));
-return mockTours;
+      // En son çare olarak mock verileri kullan
+      console.log('Mock veriler kullanılıyor...');
+      localStorage.setItem('tours', JSON.stringify(mockTours));
+      return mockTours;
     } catch (error) {
-  console.error('Turlar yüklenirken hata:', error);
-  // Hata durumunda localStorage'dan dene
-  try {
-    const localTours = localStorage.getItem('tours');
-    if (localTours) {
-      return JSON.parse(localTours);
+      console.error('Turlar yüklenirken hata:', error);
+      // Hata durumunda localStorage'dan dene
+      try {
+        const localTours = localStorage.getItem('tours');
+        if (localTours) {
+          return JSON.parse(localTours);
+        }
+      } catch (e) {
+        console.error('localStorage\'dan yükleme hatası:', e);
+      }
+      // Son çare mock veriler
+      return mockTours;
     }
-  } catch (e) {
-    console.error('localStorage\'dan yükleme hatası:', e);
-  }
-  // Son çare mock veriler
-  return mockTours;
-}
   }
 
-  async getTourById(id: number | string): Promise < Tour > {
-  try {
-    // Önce direkt API'den çekmeyi dene
+  async getTourById(id: number | string): Promise<Tour> {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours/${id}`);
-      if(response.ok) {
-  const tour = await response.json();
-  if (tour) {
-    return tour;
-  }
-}
+      // Önce direkt API'den çekmeyi dene
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours/${id}`);
+        if (response.ok) {
+          const tour = await response.json();
+          if (tour) {
+            return tour;
+          }
+        }
       } catch (apiError) {
-  console.log('API\'den tur çekilemedi, tüm turlardan aranıyor...');
-}
+        console.log('API\'den tur çekilemedi, tüm turlardan aranıyor...');
+      }
 
-// API'den bulunamazsa tüm turlardan ara
-const tours = await this.getAllTours();
-const tour = tours.find(t => String(t.id) === String(id));
+      // API'den bulunamazsa tüm turlardan ara
+      const tours = await this.getAllTours();
+      const tour = tours.find(t => String(t.id) === String(id));
 
-if (!tour) {
-  throw new Error(`ID: ${id} olan tur bulunamadı`);
-}
+      if (!tour) {
+        throw new Error(`ID: ${id} olan tur bulunamadı`);
+      }
 
-return tour;
+      return tour;
     } catch (error) {
-  console.error('Tur detayları yüklenirken hata:', error);
-  throw error;
-}
+      console.error('Tur detayları yüklenirken hata:', error);
+      throw error;
+    }
   }
 
-  async getRelatedTours(category: string, excludeId: number | string): Promise < Tour[] > {
-  try {
-    const tours = await this.getAllTours();
-    return tours
-      .filter(t => t.category === category && String(t.id) !== String(excludeId))
-      .slice(0, 4); // Maksimum 4 tur döndür (tek satırda 3-4 tane gösterilebilir)
-  } catch(error) {
-    console.error('İlgili turlar yüklenirken hata:', error);
-    return [];
-  }
-}
-
-  async searchTours(query: string, category ?: string, location ?: string): Promise < Tour[] > {
-  try {
-    const tours = await this.getAllTours();
-    let filtered = tours;
-
-    // Metin araması
-    if(query && query.trim()) {
-  const searchQuery = query.toLowerCase().trim();
-  filtered = filtered.filter(tour =>
-    tour.title.toLowerCase().includes(searchQuery) ||
-    tour.description.toLowerCase().includes(searchQuery) ||
-    tour.location.toLowerCase().includes(searchQuery) ||
-    tour.category.toLowerCase().includes(searchQuery)
-  );
-}
-
-// Kategori filtresi
-if (category && category.trim()) {
-  filtered = filtered.filter(tour => tour.category === category);
-}
-
-// Lokasyon filtresi
-if (location && location.trim()) {
-  filtered = filtered.filter(tour =>
-    tour.location.toLowerCase().includes(location.toLowerCase())
-  );
-}
-
-return filtered;
+  async getRelatedTours(category: string, excludeId: number | string): Promise<Tour[]> {
+    try {
+      const tours = await this.getAllTours();
+      return tours
+        .filter(t => t.category === category && String(t.id) !== String(excludeId))
+        .slice(0, 4); // Maksimum 4 tur döndür (tek satırda 3-4 tane gösterilebilir)
     } catch (error) {
-  console.error('Tur araması yapılırken hata:', error);
-  return [];
-}
+      console.error('İlgili turlar yüklenirken hata:', error);
+      return [];
+    }
   }
 
-  async getAllCategories(): Promise < string[] > {
-  try {
-    const tours = await this.getAllTours();
-    const categories = Array.from(new Set(tours.map(tour => tour.category)))
-      .filter(cat => cat && cat.trim() !== '')
-      .sort();
-    return categories;
-  } catch(error) {
-    console.error('Kategoriler yüklenirken hata:', error);
-    return [];
-  }
-}
+  async searchTours(query: string, category?: string, location?: string): Promise<Tour[]> {
+    try {
+      const tours = await this.getAllTours();
+      let filtered = tours;
 
-  async getAllLocations(): Promise < string[] > {
-  try {
-    const tours = await this.getAllTours();
-    const locations = Array.from(new Set(tours.map(tour => tour.location)))
-      .filter(loc => loc && loc.trim() !== '')
-      .sort();
-    return locations;
-  } catch(error) {
-    console.error('Lokasyonlar yüklenirken hata:', error);
-    return [];
+      // Metin araması
+      if (query && query.trim()) {
+        const searchQuery = query.toLowerCase().trim();
+        filtered = filtered.filter(tour =>
+          tour.title.toLowerCase().includes(searchQuery) ||
+          tour.description.toLowerCase().includes(searchQuery) ||
+          tour.location.toLowerCase().includes(searchQuery) ||
+          tour.category.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Kategori filtresi
+      if (category && category.trim()) {
+        filtered = filtered.filter(tour => tour.category === category);
+      }
+
+      // Lokasyon filtresi
+      if (location && location.trim()) {
+        filtered = filtered.filter(tour =>
+          tour.location.toLowerCase().includes(location.toLowerCase())
+        );
+      }
+
+      return filtered;
+    } catch (error) {
+      console.error('Tur araması yapılırken hata:', error);
+      return [];
+    }
   }
-}
+
+  async getAllCategories(): Promise<string[]> {
+    try {
+      const tours = await this.getAllTours();
+      const categories = Array.from(new Set(tours.map(tour => tour.category)))
+        .filter(cat => cat && cat.trim() !== '')
+        .sort();
+      return categories;
+    } catch (error) {
+      console.error('Kategoriler yüklenirken hata:', error);
+      return [];
+    }
+  }
+
+  async getAllLocations(): Promise<string[]> {
+    try {
+      const tours = await this.getAllTours();
+      const locations = Array.from(new Set(tours.map(tour => tour.location)))
+        .filter(loc => loc && loc.trim() !== '')
+        .sort();
+      return locations;
+    } catch (error) {
+      console.error('Lokasyonlar yüklenirken hata:', error);
+      return [];
+    }
+  }
 }
 
 export const tourService = new TourService();

@@ -23,60 +23,60 @@ class BookingService {
       // Önce API'den mevcut rezervasyonları çek
       let bookings: Booking[] = [];
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings``);
-          if (response.ok) {
-            bookings = await response.json();
-          }
-        } catch (apiError) {
-          console.log('API\'den rezervasyonlar çekilemedi, localStorage kullanılıyor...');
-          bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings`);
+        if (response.ok) {
+          bookings = await response.json();
         }
-        
-        const newBooking: Booking = {
-          ...bookingData,
-          id: bookings.length > 0 ? Math.max(...bookings.map((b: Booking) => b.id)) + 1 : 1,
-          bookingNumber: `BKG - ${ Date.now() }`,
-          createdAt: new Date().toISOString(),
-          status: bookingData.status || 'pending',
-          paymentStatus: bookingData.paymentStatus || 'pending'
-        };
-        
-        bookings.push(newBooking);
-        
-        // API'ye kaydet
-        try {
-          const response = await fetch(`${ import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005' } / bookings`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newBooking),
-          });
-          
-          if (response.ok) {
-            const savedBooking = await response.json();
-            // localStorage'a da kaydet (backup)
-            localStorage.setItem('bookings', JSON.stringify(bookings));
-            return savedBooking;
-          }
-        } catch (apiError) {
-          console.log('API\'ye kaydedilemedi, localStorage kullanılıyor...');
-        }
-        
-        // API başarısız olursa localStorage'a kaydet
-        localStorage.setItem('bookings', JSON.stringify(bookings));
-        return newBooking;
-      } catch (error) {
-        console.error('Rezervasyon oluşturma hatası:', error);
-        throw new Error('Rezervasyon oluşturulamadı');
+      } catch (apiError) {
+        console.log('API\'den rezervasyonlar çekilemedi, localStorage kullanılıyor...');
+        bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
       }
-    }
-  
-    async getUserBookings(userId: string | number): Promise<Booking[]> {
+
+      const newBooking: Booking = {
+        ...bookingData,
+        id: bookings.length > 0 ? Math.max(...bookings.map((b: Booking) => b.id)) + 1 : 1,
+        bookingNumber: `BKG - ${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        status: bookingData.status || 'pending',
+        paymentStatus: bookingData.paymentStatus || 'pending'
+      };
+
+      bookings.push(newBooking);
+
+      // API'ye kaydet
       try {
-        // Önce API'den çekmeyi dene
-        try {
-          const response = await fetch(`${ import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005' } / bookings`?userId=${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newBooking),
+        });
+
+        if (response.ok) {
+          const savedBooking = await response.json();
+          // localStorage'a da kaydet (backup)
+          localStorage.setItem('bookings', JSON.stringify(bookings));
+          return savedBooking;
+        }
+      } catch (apiError) {
+        console.log('API\'ye kaydedilemedi, localStorage kullanılıyor...');
+      }
+
+      // API başarısız olursa localStorage'a kaydet
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      return newBooking;
+    } catch (error) {
+      console.error('Rezervasyon oluşturma hatası:', error);
+      throw new Error('Rezervasyon oluşturulamadı');
+    }
+  }
+
+  async getUserBookings(userId: string | number): Promise<Booking[]> {
+    try {
+      // Önce API'den çekmeyi dene
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings?userId=${userId}`);
         if (response.ok) {
           const bookings = await response.json();
           return Array.isArray(bookings) ? bookings : [];

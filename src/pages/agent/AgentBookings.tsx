@@ -83,7 +83,7 @@ const AgentBookings: React.FC = () => {
 
   const handleStatusChange = async (bookingId: string | number, newStatus: string) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings`/${bookingId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const AgentBookings: React.FC = () => {
 
   const handlePaymentStatusChange = async (bookingId: string | number, newPaymentStatus: string) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings`/${bookingId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ const AgentBookings: React.FC = () => {
   ];
 
   return (
-    <div style={{ 
+    <div style={{
       padding: isMobile ? '16px' : '24px',
       background: '#fff',
       borderRadius: '8px',
@@ -210,14 +210,14 @@ const AgentBookings: React.FC = () => {
       minHeight: '100%'
     }}>
       <h1 style={{ marginBottom: '24px', fontSize: 'clamp(20px, 4vw, 24px)' }}>{t('agent.bookings')}</h1>
-      
+
       <div style={{ overflowX: 'auto' }}>
         <Table
           columns={columns}
           dataSource={bookings}
           rowKey="id"
           loading={loading}
-          pagination={{ 
+          pagination={{
             pageSize: 10,
             showSizeChanger: false,
             responsive: true,
