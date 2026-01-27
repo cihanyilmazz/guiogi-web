@@ -93,7 +93,7 @@ const defaultContactContent: ContactContent = {
 class ContactService {
   async getContactContent(): Promise<ContactContent> {
     try {
-      const response = await fetch('http://guiaogi.com/contact');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/contact`);
       if (response.ok) {
         const data = await response.json();
         // Eğer array dönerse ilk elemanı al, değilse direkt kullan
@@ -105,7 +105,7 @@ class ContactService {
     } catch (error) {
       console.error('Contact içeriği yüklenirken hata:', error);
     }
-    
+
     // Fallback olarak default içeriği döndür
     return defaultContactContent;
   }
@@ -119,7 +119,7 @@ class ContactService {
       let response;
       if (existing.id) {
         // Güncelleme
-        response = await fetch(`http://guiaogi.com/contact/${existing.id}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/contact/${existing.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ class ContactService {
         });
       } else {
         // Yeni oluştur
-        response = await fetch('http://guiaogi.com/contact', {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/contact`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -150,6 +150,7 @@ class ContactService {
 }
 
 export const contactService = new ContactService();
+
 
 
 

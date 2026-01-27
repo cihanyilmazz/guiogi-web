@@ -1,7 +1,8 @@
 // Config/api.config.ts
 
 export const API_CONFIG = {
-    BASE_URL: "http://49.13.94.27:3005/api",
+    BASE_URL: import.meta.env.VITE_API_URL || "http://localhost:3005/api",
+    BASE_URL_NO_API: import.meta.env.VITE_API_BASE_URL || "http://localhost:3005",
     ENDPOINTS: {
       TOURS: "/tours",
       TOUR_BY_ID: "/tours/:id",

@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "server": "json-server --watch db.json --port 3005",
     "start": "vite",
+    "start:dev": "vite --mode development",
+    "start:prod": "vite --mode production",
     "dev": "concurrently \"npm run server\" \"npm start\""
   },
   "dependencies": {

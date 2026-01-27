@@ -40,7 +40,7 @@ const UserManagement: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://guiaogi.com/users');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users`);
       if (response.ok) {
         const data = await response.json();
         const usersArray = Array.isArray(data) ? data : [];
@@ -65,7 +65,7 @@ const UserManagement: React.FC = () => {
       const user = users.find(u => u.id === userId);
       if (!user) return;
 
-      const response = await fetch(`http://guiaogi.com/users/${userId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const UserManagement: React.FC = () => {
       const user = users.find(u => u.id === userId);
       if (!user) return;
 
-      const response = await fetch(`http://guiaogi.com/users/${userId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ const UserManagement: React.FC = () => {
 
   const handleDelete = async (userId: string) => {
     try {
-      const response = await fetch(`http://guiaogi.com/users/${userId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users/${userId}`, {
         method: 'DELETE',
       });
 
@@ -139,12 +139,12 @@ const UserManagement: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`http://guiaogi.com/users/${userId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           role: newRole,
           // Agent ve admin rolleri otomatik onaylı
           isApproved: newRole === 'admin' || newRole === 'agent' ? true : user.isApproved,
@@ -170,7 +170,7 @@ const UserManagement: React.FC = () => {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+    const matchesSearch =
       user.name.toLowerCase().includes(searchText.toLowerCase()) ||
       user.email.toLowerCase().includes(searchText.toLowerCase());
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
@@ -209,10 +209,10 @@ const UserManagement: React.FC = () => {
           agent: 'Acente',
           user: 'Kullanıcı',
         };
-        
+
         // Sadece kendi rolünü değiştirmesini engelle
         const isCurrentUser = currentUser?.id === record.id;
-        
+
         return (
           <Space>
             <Select
@@ -299,7 +299,7 @@ const UserManagement: React.FC = () => {
   ];
 
   return (
-    <div style={{ 
+    <div style={{
       padding: isMobile ? '16px' : '24px',
       background: '#fff',
       borderRadius: '8px',
@@ -307,12 +307,12 @@ const UserManagement: React.FC = () => {
       minHeight: '100%'
     }}>
       <h1 style={{ marginBottom: '24px', fontSize: 'clamp(20px, 4vw, 24px)' }}>{t('admin.userManagement')}</h1>
-      
-      <div style={{ 
-        marginBottom: '16px', 
-        display: 'flex', 
+
+      <div style={{
+        marginBottom: '16px',
+        display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
-        gap: '16px' 
+        gap: '16px'
       }}>
         <Input
           placeholder={t('admin.searchPlaceholder')}
@@ -339,7 +339,7 @@ const UserManagement: React.FC = () => {
           dataSource={filteredUsers}
           rowKey="id"
           loading={loading}
-          pagination={{ 
+          pagination={{
             pageSize: 10,
             showSizeChanger: false,
             responsive: true,

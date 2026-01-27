@@ -77,11 +77,11 @@ const AdminLayout: React.FC = () => {
       setLoadingNotifications(true);
       
       // Kullanıcıları çek
-      const usersResponse = await fetch('http://guiaogi.com/users');
+      const usersResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users`);
       const users = usersResponse.ok ? await usersResponse.json() : [];
       
       // Rezervasyonları çek
-      const bookingsResponse = await fetch('http://guiaogi.com/bookings');
+      const bookingsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/bookings`);
       const bookings = bookingsResponse.ok ? await bookingsResponse.json() : [];
 
       const notificationList: NotificationItem[] = [];

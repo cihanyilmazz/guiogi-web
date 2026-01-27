@@ -23,14 +23,14 @@ export interface BlogPost {
 class BlogService {
   async getAllBlogs(): Promise<BlogPost[]> {
     try {
-      const response = await fetch('http://guiaogi.com/blogs');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/blogs`);
       if (response.ok) {
         const data = await response.json();
         const blogs = Array.isArray(data) ? data : [];
         // Yayınlanmış blogları ve tarihe göre sırala
         return blogs
           .filter((blog: BlogPost) => blog.isPublished)
-          .sort((a: BlogPost, b: BlogPost) => 
+          .sort((a: BlogPost, b: BlogPost) =>
             new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
           );
       }
@@ -42,12 +42,12 @@ class BlogService {
 
   async getAllBlogsForAdmin(): Promise<BlogPost[]> {
     try {
-      const response = await fetch('http://guiaogi.com/blogs');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/blogs`);
       if (response.ok) {
         const data = await response.json();
         const blogs = Array.isArray(data) ? data : [];
         // Tüm blogları tarihe göre sırala
-        return blogs.sort((a: BlogPost, b: BlogPost) => 
+        return blogs.sort((a: BlogPost, b: BlogPost) =>
           new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
         );
       }
@@ -59,7 +59,7 @@ class BlogService {
 
   async getBlogById(id: string | number): Promise<BlogPost | null> {
     try {
-      const response = await fetch(`http://guiaogi.com/blogs/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/blogs/${id}`);
       if (response.ok) {
         const blog = await response.json();
         return blog;
@@ -157,7 +157,7 @@ class BlogService {
         readingTime: this.calculateReadingTime(blogData.content),
       };
 
-      const response = await fetch('http://guiaogi.com/blogs', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/blogs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ class BlogService {
         ...blogData,
         id,
         updatedAt: new Date().toISOString(),
-        readingTime: blogData.content 
+        readingTime: blogData.content
           ? this.calculateReadingTime(blogData.content)
           : existingBlog.readingTime,
       };
@@ -198,7 +198,7 @@ class BlogService {
         updatedBlog.slug = this.generateSlug(blogData.title);
       }
 
-      const response = await fetch(`http://guiaogi.com/blogs/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/blogs/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -219,7 +219,7 @@ class BlogService {
 
   async deleteBlog(id: string | number): Promise<void> {
     try {
-      const response = await fetch(`http://guiaogi.com/blogs/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/blogs/${id}`, {
         method: 'DELETE',
       });
 
@@ -253,6 +253,7 @@ class BlogService {
 }
 
 export const blogService = new BlogService();
+
 
 
 

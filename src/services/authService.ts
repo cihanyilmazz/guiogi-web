@@ -27,7 +27,7 @@ export interface User {
     token: string;
   }
   
-  const API_URL = 'http://guiaogi.com/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005/api';
   
   class AuthService {
     private getHeaders(): HeadersInit {

@@ -49,7 +49,7 @@ const AgentTourManagement: React.FC = () => {
   const fetchTours = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://guiaogi.com/tours');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours`);
       if (response.ok) {
         const data = await response.json();
         const toursArray = Array.isArray(data) ? data : [];
@@ -88,7 +88,7 @@ const AgentTourManagement: React.FC = () => {
 
   const handleDelete = async (tourId: string | number) => {
     try {
-      const response = await fetch(`http://guiaogi.com/tours/${tourId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours/${tourId}`, {
         method: 'DELETE',
       });
 
@@ -109,7 +109,7 @@ const AgentTourManagement: React.FC = () => {
       // Array alanlarını düzenle
       const tourData = {
         ...values,
-        included: values.included && values.included.length > 0 
+        included: values.included && values.included.length > 0
           ? values.included.filter((item: string) => item && item.trim() !== '')
           : [],
         highlights: values.highlights && values.highlights.length > 0
@@ -121,7 +121,7 @@ const AgentTourManagement: React.FC = () => {
 
       if (editingTour) {
         // Güncelleme
-        const response = await fetch(`http://guiaogi.com/tours/${editingTour.id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours/${editingTour.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const AgentTourManagement: React.FC = () => {
           coverImage: values.coverImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
         };
 
-        const response = await fetch('http://guiaogi.com/tours', {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/tours`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -229,25 +229,25 @@ const AgentTourManagement: React.FC = () => {
   ];
 
   return (
-    <div style={{ 
+    <div style={{
       padding: isMobile ? '16px' : '24px',
       background: '#fff',
       borderRadius: '8px',
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
       minHeight: '100%'
     }}>
-      <div style={{ 
-        display: 'flex', 
+      <div style={{
+        display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between', 
+        justifyContent: 'space-between',
         alignItems: isMobile ? 'flex-start' : 'center',
         marginBottom: '24px',
         gap: isMobile ? '16px' : '0'
       }}>
         <h1 style={{ margin: 0, fontSize: 'clamp(20px, 4vw, 24px)' }}>{t('agent.tourManagement')}</h1>
-        <Button 
-          type="primary" 
-          icon={<PlusOutlined />} 
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
           onClick={handleAdd}
           block={isMobile}
         >
@@ -261,7 +261,7 @@ const AgentTourManagement: React.FC = () => {
           dataSource={tours}
           rowKey="id"
           loading={loading}
-          pagination={{ 
+          pagination={{
             pageSize: 10,
             showSizeChanger: false,
             responsive: true,
@@ -319,8 +319,8 @@ const AgentTourManagement: React.FC = () => {
             label="Açıklama"
             rules={[{ required: true, message: 'Açıklama gerekli' }]}
           >
-            <Input.TextArea 
-              rows={4} 
+            <Input.TextArea
+              rows={4}
               placeholder="Tur hakkında detaylı açıklama..."
             />
           </Form.Item>
@@ -411,8 +411,8 @@ const AgentTourManagement: React.FC = () => {
                 label="Fiyat (TL)"
                 rules={[{ required: true, message: 'Fiyat gerekli' }]}
               >
-                <InputNumber 
-                  min={0} 
+                <InputNumber
+                  min={0}
                   style={{ width: '100%' }}
                   placeholder="0"
                 />
@@ -423,8 +423,8 @@ const AgentTourManagement: React.FC = () => {
                 name="discount"
                 label="İndirim (%)"
               >
-                <InputNumber 
-                  min={0} 
+                <InputNumber
+                  min={0}
                   max={100}
                   style={{ width: '100%' }}
                   placeholder="0"
@@ -439,8 +439,8 @@ const AgentTourManagement: React.FC = () => {
                 name="rating"
                 label="Değerlendirme (0-5)"
               >
-                <InputNumber 
-                  min={0} 
+                <InputNumber
+                  min={0}
                   max={5}
                   step={0.1}
                   style={{ width: '100%' }}
@@ -453,7 +453,7 @@ const AgentTourManagement: React.FC = () => {
                 name="reviewCount"
                 label="Yorum Sayısı"
               >
-                <InputNumber 
+                <InputNumber
                   min={0}
                   style={{ width: '100%' }}
                   placeholder="0"
@@ -485,10 +485,10 @@ const AgentTourManagement: React.FC = () => {
                     </Space>
                   ))}
                   <Form.Item>
-                    <Button 
-                      type="dashed" 
-                      onClick={() => add()} 
-                      block 
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
                       icon={<PlusCircleOutlined />}
                     >
                       Hizmet Ekle
@@ -522,10 +522,10 @@ const AgentTourManagement: React.FC = () => {
                     </Space>
                   ))}
                   <Form.Item>
-                    <Button 
-                      type="dashed" 
-                      onClick={() => add()} 
-                      block 
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
                       icon={<PlusCircleOutlined />}
                     >
                       Özellik Ekle

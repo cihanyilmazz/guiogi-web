@@ -70,7 +70,7 @@ const defaultAboutContent: AboutContent = {
 class AboutService {
   async getAboutContent(): Promise<AboutContent> {
     try {
-      const response = await fetch('http://guiaogi.com/about');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/about`);
       if (response.ok) {
         const data = await response.json();
         // Eğer array dönerse ilk elemanı al, değilse direkt kullan
@@ -82,7 +82,7 @@ class AboutService {
     } catch (error) {
       console.error('About içeriği yüklenirken hata:', error);
     }
-    
+
     // Fallback olarak default içeriği döndür
     return defaultAboutContent;
   }
@@ -96,7 +96,7 @@ class AboutService {
       let response;
       if (existing.id) {
         // Güncelleme
-        response = await fetch(`http://guiaogi.com/about/${existing.id}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/about/${existing.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ class AboutService {
         });
       } else {
         // Yeni oluştur
-        response = await fetch('http://guiaogi.com/about', {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/about`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -127,6 +127,7 @@ class AboutService {
 }
 
 export const aboutService = new AboutService();
+
 
 
 

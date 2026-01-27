@@ -1,24 +1,24 @@
 // pages/admin/LanguageManagement.tsx
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { 
-  Table, 
-  Button, 
-  Space, 
-  Modal, 
-  Form, 
-  Input, 
-  Select, 
-  message, 
-  Card, 
+import {
+  Table,
+  Button,
+  Space,
+  Modal,
+  Form,
+  Input,
+  Select,
+  message,
+  Card,
   Tabs,
   Tag,
   Popconfirm,
   Divider,
   InputNumber
 } from 'antd';
-import { 
-  PlusOutlined, 
-  EditOutlined, 
+import {
+  PlusOutlined,
+  EditOutlined,
   DeleteOutlined,
   GlobalOutlined,
   SaveOutlined,
@@ -111,7 +111,7 @@ const LanguageManagement: React.FC = () => {
   const fetchLanguages = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://guiaogi.com/languages');
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/languages`);
       if (response.ok) {
         const data = await response.json();
         setLanguages(Array.isArray(data) ? data : []);
@@ -138,7 +138,7 @@ const LanguageManagement: React.FC = () => {
     try {
       setLoading(true);
       let translationsData: any = {};
-      
+
       const savedTranslations = localStorage.getItem(`translations_${langCode}`);
       if (savedTranslations) {
         translationsData = JSON.parse(savedTranslations);
@@ -165,7 +165,7 @@ const LanguageManagement: React.FC = () => {
           translationsData = JSON.parse(JSON.stringify(trModule.default || {}));
         }
       }
-      
+
       setTranslations(translationsData);
       const flatList = flattenTranslations(translationsData);
       setTreeData(flatList);
@@ -179,12 +179,12 @@ const LanguageManagement: React.FC = () => {
 
   const flattenTranslations = useCallback((obj: any, path: string[] = []): TranslationItem[] => {
     const items: TranslationItem[] = [];
-    
+
     for (const key in obj) {
       const currentPath = [...path, key];
       const fullKey = currentPath.join('.');
       const value = obj[key];
-      
+
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         items.push(...flattenTranslations(value, currentPath));
       } else {
@@ -195,15 +195,15 @@ const LanguageManagement: React.FC = () => {
         });
       }
     }
-    
+
     return items;
   }, []);
 
   const filteredTranslations = useMemo(() => {
     if (!searchText) return treeData;
     const lowerSearch = searchText.toLowerCase();
-    return treeData.filter(item => 
-      item.key.toLowerCase().includes(lowerSearch) || 
+    return treeData.filter(item =>
+      item.key.toLowerCase().includes(lowerSearch) ||
       item.value.toLowerCase().includes(lowerSearch)
     );
   }, [treeData, searchText]);
@@ -213,24 +213,24 @@ const LanguageManagement: React.FC = () => {
       const keys = key.split('.');
       const newTranslations = { ...translations };
       let current = newTranslations;
-      
+
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
           current[keys[i]] = {};
         }
         current = current[keys[i]];
       }
-      
+
       current[keys[keys.length - 1]] = value;
       setTranslations(newTranslations);
       setEditingKey(null);
-      
+
       // Update flat list
-      const updatedList = treeData.map(item => 
+      const updatedList = treeData.map(item =>
         item.key === key ? { ...item, value } : item
       );
       setTreeData(updatedList);
-      
+
       await saveTranslations(selectedLanguage, newTranslations);
       message.success('Çeviri kaydedildi');
     } catch (error) {
@@ -243,9 +243,9 @@ const LanguageManagement: React.FC = () => {
     try {
       localStorage.setItem(`translations_${langCode}`, JSON.stringify(translationsData));
       await addLanguage(langCode, translationsData);
-      
+
       try {
-        await fetch(`http://guiaogi.com/translations/${langCode}`, {
+        await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/translations/${langCode}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -286,10 +286,10 @@ const LanguageManagement: React.FC = () => {
 
   const handleDeleteLanguage = useCallback(async (code: string) => {
     try {
-      const response = await fetch(`http://guiaogi.com/languages/${code}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/languages/${code}`, {
         method: 'DELETE',
       });
-      
+
       if (response.ok || response.status === 404) {
         setLanguages(languages.filter(l => l.code !== code));
         message.success('Dil silindi');
@@ -304,7 +304,7 @@ const LanguageManagement: React.FC = () => {
   const handleSaveLanguage = useCallback(async (values: any) => {
     try {
       setLoading(true);
-      
+
       const langData: Language = {
         code: values.code.toLowerCase(),
         name: values.name,
@@ -313,14 +313,14 @@ const LanguageManagement: React.FC = () => {
       };
 
       if (editingLanguage) {
-        const response = await fetch(`http://guiaogi.com/languages/${editingLanguage.code}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/languages/${editingLanguage.code}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(langData),
         });
-        
+
         if (response.ok || response.status === 404) {
           setLanguages(languages.map(l => l.code === editingLanguage.code ? langData : l));
           message.success('Dil güncellendi');
@@ -328,19 +328,19 @@ const LanguageManagement: React.FC = () => {
       } else {
         const baseTranslations = await import(`../../i18n/locales/tr`);
         const newTranslations = JSON.parse(JSON.stringify(baseTranslations.default));
-        
+
         await saveTranslations(langData.code, newTranslations);
         await addLanguage(langData.code, newTranslations);
-        
+
         try {
-          const response = await fetch('http://guiaogi.com/languages', {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/languages`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(langData),
           });
-          
+
           if (response.ok) {
             const savedLang = await response.json();
             setLanguages([...languages, savedLang]);
@@ -353,7 +353,7 @@ const LanguageManagement: React.FC = () => {
           message.success('Yeni dil eklendi (offline mode)');
         }
       }
-      
+
       setModalVisible(false);
       form.resetFields();
     } catch (error) {
@@ -372,8 +372,8 @@ const LanguageManagement: React.FC = () => {
       width: 300,
       fixed: 'left' as const,
       render: (text: string) => (
-        <code style={{ 
-          fontSize: '12px', 
+        <code style={{
+          fontSize: '12px',
           color: '#1890ff',
           backgroundColor: '#f0f0f0',
           padding: '2px 6px',
@@ -401,15 +401,15 @@ const LanguageManagement: React.FC = () => {
                 autoFocus
               />
               <Space>
-                <Button 
-                  type="primary" 
+                <Button
+                  type="primary"
                   size="small"
                   icon={<CheckOutlined />}
                   onClick={() => handleSaveTranslation(record.key, editingValue)}
                 >
                   Kaydet
                 </Button>
-                <Button 
+                <Button
                   size="small"
                   icon={<CloseOutlined />}
                   onClick={() => {
@@ -424,8 +424,8 @@ const LanguageManagement: React.FC = () => {
           );
         }
         return (
-          <div 
-            style={{ 
+          <div
+            style={{
               padding: '8px',
               backgroundColor: '#f5f5f5',
               borderRadius: '4px',
@@ -606,7 +606,7 @@ const LanguageManagement: React.FC = () => {
                     </Button>
                   </Space>
                 </div>
-                
+
                 <Table
                   columns={translationColumns}
                   dataSource={filteredTranslations}
@@ -689,8 +689,8 @@ const LanguageManagement: React.FC = () => {
               { pattern: /^[a-z]{2}$/, message: '2 harfli ISO kod giriniz (örn: tr, en, de)' },
             ]}
           >
-            <Input 
-              placeholder="tr, en, de, fr, es..." 
+            <Input
+              placeholder="tr, en, de, fr, es..."
               disabled={true}
               maxLength={2}
             />
@@ -701,8 +701,8 @@ const LanguageManagement: React.FC = () => {
             label="Dil Adı (İngilizce)"
             rules={[{ required: true, message: 'Dil adı gerekli' }]}
           >
-            <Input 
-              placeholder="Turkish, English, German..." 
+            <Input
+              placeholder="Turkish, English, German..."
               disabled={!editingLanguage}
             />
           </Form.Item>
@@ -712,8 +712,8 @@ const LanguageManagement: React.FC = () => {
             label="Yerel Ad"
             rules={[{ required: true, message: 'Yerel ad gerekli' }]}
           >
-            <Input 
-              placeholder="Türkçe, English, Deutsch..." 
+            <Input
+              placeholder="Türkçe, English, Deutsch..."
               disabled={!editingLanguage}
             />
           </Form.Item>

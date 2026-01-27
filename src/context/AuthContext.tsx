@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       let response;
       try {
         // Önce /api/users deneyelim
-        response = await fetch(`http://guiaogi.com/api/users?email=${encodeURIComponent(email)}`, {
+        response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3005/api'}/users`?email=${encodeURIComponent(email)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:55',message:'404 error - trying alternative endpoint',data:{alternativeUrl:'http://guiaogi.com/users?email='+encodeURIComponent(email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
           // #endregion
           
-          response = await fetch(`http://guiaogi.com/users?email=${encodeURIComponent(email)}`, {
+          response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users`?email=${encodeURIComponent(email)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       let emailCheckResponse;
       try {
         // Önce /api/users endpoint'ini dene
-        emailCheckResponse = await fetch(`http://guiaogi.com/api/users?email=${encodeURIComponent(userData.email)}`, {
+        emailCheckResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3005/api'}/users`?email=${encodeURIComponent(userData.email)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:174',message:'404 error - trying alternative endpoint for email check',data:{alternativeUrl:'http://guiaogi.com/users?email='+encodeURIComponent(userData.email)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
           // #endregion
           
-          emailCheckResponse = await fetch(`http://guiaogi.com/users?email=${encodeURIComponent(userData.email)}`, {
+          emailCheckResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users`?email=${encodeURIComponent(userData.email)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -252,7 +252,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         fetch('http://127.0.0.1:7242/ingest/a29d79da-c2fb-4547-a375-e0d59332ce77',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:75',message:'Fetch request starting',data:{url:'http://guiaogi.com/api/users'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
         // #endregion
         
-        response = await fetch('http://guiaogi.com/api/users', {
+        response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3005/api'}/users``, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -289,7 +289,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           // #endregion
           
           // /api/users 404 verdi, /users deneyelim
-          const altResponse = await fetch('http://guiaogi.com/users', {
+          const altResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/users``, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

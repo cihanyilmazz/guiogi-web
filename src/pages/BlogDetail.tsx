@@ -35,7 +35,7 @@ const BlogDetail: React.FC = () => {
     try {
       setLoading(true);
       const blogData = await blogService.getBlogBySlug(slug);
-      
+
       if (!blogData) {
         navigate('/blog');
         return;

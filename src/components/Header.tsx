@@ -35,7 +35,7 @@ const Header: React.FC = () => {
     // localStorage'dan dilleri yükle
     const loadLanguages = async () => {
       try {
-        const response = await fetch('http://guiaogi.com/languages');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3005'}/languages`);
         if (response.ok) {
           const langs = await response.json();
           const activeLangs = (Array.isArray(langs) ? langs : [])
