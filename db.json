@@ -656,7 +656,7 @@
       "createdAt": "2025-12-13T12:57:27.271Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "userId": "admin1",
       "tourId": 4,
       "tourTitle": "Karadeniz Yayla Turu",
@@ -672,7 +672,7 @@
       "createdAt": "2025-12-13T15:17:56.854Z"
     },
     {
-      "id": 5,
+      "id": "5",
       "userId": "da75",
       "tourId": "1765643667197",
       "tourTitle": "11111",
@@ -705,6 +705,19 @@
       "bookingNumber": "BKG-1765629779880",
       "createdAt": "2025-12-13T12:42:59.880Z",
       "cancelledAt": "2025-12-13T13:04:57.414Z"
+    },
+    {
+      "id": "dcc2",
+      "location": "AuthContext.tsx:129",
+      "message": "Login error caught",
+      "data": {
+        "errorMessage": "Unexpected token '<', \"<!doctype \"... is not valid JSON",
+        "errorName": "SyntaxError"
+      },
+      "timestamp": 1769546163918,
+      "sessionId": "debug-session",
+      "runId": "run1",
+      "hypothesisId": "E"
     }
   ],
   "about": [
