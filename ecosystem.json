@@ -1,0 +1,21 @@
+{
+    "apps": [
+        {
+            "name": "guiogi-api",
+            "script": "npm",
+            "args": "run server",
+            "env": {
+                "NODE_ENV": "production",
+                "PORT": 3005
+            }
+        },
+        {
+            "name": "guiogi-web",
+            "script": "npm",
+            "args": "run preview",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        }
+    ]
+}
