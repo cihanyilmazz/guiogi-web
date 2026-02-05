@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import tr from './locales/tr';
 import en from './locales/en';
+import es from './locales/es';
 
 // Dinamik dil yükleme fonksiyonu
 export const loadLanguage = async (langCode: string) => {
@@ -23,6 +24,9 @@ export const loadLanguage = async (langCode: string) => {
     } else if (langCode === 'en') {
       i18n.addResourceBundle('en', 'translation', en, true, true);
       return en;
+    } else if (langCode === 'es') {
+      i18n.addResourceBundle('es', 'translation', es, true, true);
+      return es;
     } else {
       // Yeni dil için dinamik import dene
       try {
@@ -53,6 +57,9 @@ i18n
       },
       en: {
         translation: en,
+      },
+      es: {
+        translation: es,
       },
     },
     fallbackLng: 'tr',

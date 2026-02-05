@@ -15,6 +15,7 @@ export default {
     "language": "Language",
     "turkish": "Turkish",
     "english": "English",
+    "spanish": "Spanish",
     "loading": "Loading..."
   },
   "header": {

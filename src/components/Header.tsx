@@ -29,6 +29,7 @@ const Header: React.FC = () => {
   const [availableLanguages, setAvailableLanguages] = useState([
     { code: 'tr', name: t("common.turkish") },
     { code: 'en', name: t("common.english") },
+    { code: 'es', name: t("common.spanish") },
   ]);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const Header: React.FC = () => {
               code: l.code,
               name: l.nativeName || l.name,
             }));
-          
+
           if (activeLangs.length > 0) {
             setAvailableLanguages(activeLangs);
           }
@@ -54,7 +55,7 @@ const Header: React.FC = () => {
         console.log('Languages API not available, using defaults');
       }
     };
-    
+
     loadLanguages();
   }, []);
 

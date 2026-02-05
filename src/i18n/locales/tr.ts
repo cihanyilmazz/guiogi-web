@@ -15,6 +15,7 @@ export default {
     "language": "Dil",
     "turkish": "Türkçe",
     "english": "İngilizce",
+    "spanish": "İspanyolca",
     "loading": "Yükleniyor..."
   },
   "header": {
